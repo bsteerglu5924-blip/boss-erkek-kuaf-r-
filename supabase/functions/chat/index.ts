@@ -135,18 +135,18 @@ const SYSTEM_PROMPT = `Sen BOSS Erkek Kuaförü'nün online randevu asistanısı
 - Telefon: 0545 116 62 05
 - WhatsApp: ${WHATSAPP_URL}
 - Çalışma saatleri: Her gün 08:30 – 20:30
-- Ekip: Ali Şengül (Matematiksel Kesim uzmanı), Murat Cankaya (saç, sakal ve tıraş ustası), Furkan Akar (protez saç uygulamaları ustası)
+- Ekip: Ali Şengül (Matematiksel Kesim uzmanı), Murat Cankaya (saç, sakal ve tıraş ustası), Furkan Akar (protez saç uygulamaları ustası), Beytullah Özbek, Ahmet Tarık Örnek
 - Öne çıkan uzmanlıklar: matematiksel kesim, protez saç, altın oran kaş tasarımı
 
 ## Araçların
-- list_services: güncel hizmet listesi, süreleri ve fiyat durumu
+- list_services: güncel hizmet listesi, süreleri ve fiyatlar
 - list_barbers: çalışan berberler
 - get_available_slots: belirli bir berber, hizmet ve tarih için boş saatler
 - create_appointment: randevuyu oluşturur
 
 ## Kurallar
-1. Hizmet, süre veya fiyat sorulduğunda MUTLAKA list_services çağır. Ezberden hizmet adı ya da süre söyleme.
-2. Bir hizmetin fiyatı kesinleşmemişse ASLA fiyat uydurma veya tahmin etme. "Fiyat bilgisi için 0545 116 62 05'i arayabilirsiniz" de.
+1. Hizmet, süre veya fiyat sorulduğunda MUTLAKA list_services çağır. Ezberden hizmet adı, süre ya da fiyat söyleme.
+2. Fiyatı kesinleşmemiş hizmetlerde ASLA fiyat uydurma veya tahmin etme. "Fiyat bilgisi için 0545 116 62 05'i arayabilirsiniz" de. Aralık olarak verilen fiyatları (örn. protez saç) aralık olarak aktar, tek sayıya indirgeme.
 3. Boş saat sorulduğunda MUTLAKA get_available_slots çağır. Saat uydurma.
 4. Randevu oluşturmadan önce hizmet, berber, tarih, saat, ad soyad ve telefonu özetle ve müşteriden açık onay iste ("Onaylıyor musunuz?"). Müşteri açıkça onaylamadan create_appointment ÇAĞIRMA.
 5. Ad soyad ve telefon numarası olmadan randevu oluşturma.
@@ -156,6 +156,7 @@ const SYSTEM_PROMPT = `Sen BOSS Erkek Kuaförü'nün online randevu asistanısı
 9. Emin olmadığın hiçbir şeyi söyleme. Bilmediğinde WhatsApp'a veya telefona yönlendir.
 10. "Randevunuz oluşturuldu" cümlesini SADECE create_appointment aracı bu turda başarılı sonuç döndürdüyse kur. Araç çağırmadan ya da araçtan HATA döndüyse asla randevu oluşturulduğunu söyleme; onun yerine sorunu açıkla ve telefona/WhatsApp'a yönlendir.
 11. Bir aracın sonucunu hatırladığını varsayma. Saat, tarih veya fiyat söylemen gereken her turda ilgili aracı yeniden çağır.
+12. Müşteri ne önerdiğini sorarsa ya da kararsızsa, list_services sonucunda en_cok_tercih_edilen alanı true olan paketi öner.
 
 ## Üslup
 - Kibar, sıcak ama kısa. Genelde 2-4 cümle.
@@ -167,7 +168,7 @@ const TOOLS = [
   {
     name: "list_services",
     description:
-      "Salonun aktif hizmetlerini, sürelerini ve fiyat durumunu döndürür. " +
+      "Salonun aktif hizmetlerini, sürelerini ve fiyatlarını döndürür. " +
       "Hizmet, süre veya fiyat sorulduğunda her zaman çağır.",
     input_schema: { type: "object" as const, properties: {}, required: [] },
   },
@@ -236,7 +237,7 @@ async function runTool(
   if (name === "list_services") {
     const { data, error } = await db
       .from("services")
-      .select("name,description,duration_minutes,price_try,price_is_final")
+      .select("name,description,duration_minutes,price_try,price_is_final,price_note,is_featured")
       .eq("active", true)
       .order("sort_order");
     if (error) return "Hizmetler okunamadı.";
@@ -245,9 +246,13 @@ async function runTool(
         ad: s.name,
         aciklama: s.description,
         sure_dakika: s.duration_minutes,
-        fiyat: s.price_is_final
-          ? `${s.price_try} TL`
-          : "Fiyat kesinleşmedi — telefonla bilgi alınmalı, tahmin etme",
+        // price_note doluysa (orn. protez sac araligi) fiyat tek sayi degildir.
+        fiyat: s.price_note
+          ? s.price_note
+          : (s.price_is_final
+            ? `${s.price_try} TL`
+            : "Fiyat kesinleşmedi — telefonla bilgi alınmalı, tahmin etme"),
+        en_cok_tercih_edilen: s.is_featured === true,
       })),
     );
   }

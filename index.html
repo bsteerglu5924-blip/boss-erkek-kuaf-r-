@@ -53,17 +53,30 @@
     "opens": "08:30",
     "closes": "20:30"
   },
+  "priceRange": "500 TL - 30.000 TL",
+  "employee": [
+    { "@type": "Person", "name": "Ali Şengül", "jobTitle": "Matematiksel Kesim Uzmanı" },
+    { "@type": "Person", "name": "Murat Cankaya", "jobTitle": "Saç, Sakal ve Tıraş Ustası" },
+    { "@type": "Person", "name": "Furkan Akar", "jobTitle": "Protez Saç Uygulamaları Ustası" },
+    { "@type": "Person", "name": "Beytullah Özbek", "jobTitle": "Usta Berber" },
+    { "@type": "Person", "name": "Ahmet Tarık Örnek", "jobTitle": "Usta Berber" }
+  ],
   "hasOfferCatalog": {
     "@type": "OfferCatalog",
     "name": "Hizmetlerimiz",
     "itemListElement": [
-      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Matematiksel Kesim" } },
-      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Saç Kesimi" } },
+      { "@type": "Offer", "priceCurrency": "TRY", "price": "600", "itemOffered": { "@type": "Service", "name": "Matematiksel Kesim" } },
+      { "@type": "Offer", "priceCurrency": "TRY", "price": "700", "itemOffered": { "@type": "Service", "name": "Matematiksel Kesim + Sakal" } },
+      { "@type": "Offer", "priceCurrency": "TRY", "price": "500", "itemOffered": { "@type": "Service", "name": "Saç Kesimi" } },
+      { "@type": "Offer", "priceCurrency": "TRY", "price": "600", "itemOffered": { "@type": "Service", "name": "Saç + Sakal" } },
+      { "@type": "Offer", "priceCurrency": "TRY", "price": "800", "itemOffered": { "@type": "Service", "name": "Komple Bakım Paketi" } },
+      { "@type": "Offer", "priceCurrency": "TRY", "price": "1500", "itemOffered": { "@type": "Service", "name": "Saç Boyama" } },
+      { "@type": "Offer", "priceCurrency": "TRY", "price": "3000", "itemOffered": { "@type": "Service", "name": "Keratin Bakımı" } },
+      { "@type": "Offer", "priceCurrency": "TRY", "priceSpecification": { "@type": "PriceSpecification", "priceCurrency": "TRY", "minPrice": "13000", "maxPrice": "30000" }, "itemOffered": { "@type": "Service", "name": "Protez Saç" } },
+      { "@type": "Offer", "priceCurrency": "TRY", "price": "1250", "itemOffered": { "@type": "Service", "name": "Protez Saç Bakımı" } },
       { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Sakal & Tıraş" } },
-      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Protez Saç Merkezi" } },
       { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Altın Oran Kaş Tasarımı" } },
-      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Cilt Bakımı" } },
-      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Özel Bakım Paketleri" } }
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Cilt Bakımı" } }
     ]
   }
 }
@@ -316,6 +329,42 @@ section{ padding-block: clamp(3.5rem, 9vh, 6.5rem); }
 }
 .service-card h3{ text-transform: uppercase; }
 .service-card p{ color: var(--ink-soft); font-size: var(--fs-small); }
+.service-price{
+  margin-top: auto;
+  padding-top: 0.4rem;
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--brass-text);
+}
+.service-price small{
+  display:block;
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--ink-soft);
+}
+.service-price.is-ask{ font-size: 1.05rem; }
+
+/* One cikan paket */
+.service-card.is-featured{
+  background: color-mix(in srgb, var(--brass) 10%, var(--bg));
+  box-shadow: inset 0 0 0 2px var(--brass);
+}
+.service-card.is-featured:hover{ background: color-mix(in srgb, var(--brass) 15%, var(--bg)); }
+.service-badge{
+  align-self: flex-start;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  background: var(--brass);
+  color: var(--brass-ink);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
 /* ============ ATMOSPHERE BAND ============ */
 .atmosphere{
@@ -428,6 +477,19 @@ section{ padding-block: clamp(3.5rem, 9vh, 6.5rem); }
 .pick-card.is-selected{ border-color: var(--brass); background: color-mix(in srgb, var(--brass) 12%, var(--surface-hi)); }
 .pick-card strong{ font-size: 1rem; }
 .pick-card small{ color: var(--ink-soft); font-size: var(--fs-small); }
+.pick-card.is-featured{ border-color: var(--brass); background: color-mix(in srgb, var(--brass) 8%, var(--surface-hi)); }
+.pick-card.is-featured.is-selected{ background: color-mix(in srgb, var(--brass) 16%, var(--surface-hi)); }
+.pick-badge{
+  align-self: flex-start;
+  padding: 0.22rem 0.6rem;
+  border-radius: 999px;
+  background: var(--brass);
+  color: var(--brass-ink);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
 .slot-grid{ display:flex; flex-wrap:wrap; gap: 0.6rem; }
 .slot-btn{
@@ -779,44 +841,84 @@ footer{ padding-block: 2.5rem 6rem; }
       <div class="section-head reveal">
         <span class="eyebrow">Hizmetlerimiz</span>
         <h2>Neler Yapıyoruz</h2>
-        <p>Klasikten moderne, her tarza uygun bakım hizmetleri.</p>
+        <p>Klasikten moderne, her tarza uygun bakım hizmetleri ve güncel fiyatlarımız.</p>
       </div>
     </div>
+    <!-- DIKKAT: Bu kartlar supabase/seed.sql'deki services tablosuyla elle
+         senkron tutulur. Fiyat veya süre değiştirirken ikisini de güncelleyin. -->
     <div class="services-grid">
       <div class="service-card reveal">
         <span class="service-num">01</span>
         <h3>Matematiksel Kesim</h3>
         <p>Yüz hattı ve kafa yapısına oranlanarak hesaplanan, imza kesim tekniğimiz.</p>
+        <span class="service-price">600 TL<small>45 dakika</small></span>
       </div>
       <div class="service-card reveal">
         <span class="service-num">02</span>
-        <h3>Saç Kesimi</h3>
-        <p>Yüz hattınıza ve tarzınıza uygun, makas ve tıraş makinesiyle detaylı kesim.</p>
+        <h3>Matematiksel Kesim + Sakal</h3>
+        <p>İmza matematiksel kesimimiz ve ardından sakal şekillendirme.</p>
+        <span class="service-price">700 TL<small>60 dakika</small></span>
       </div>
       <div class="service-card reveal">
         <span class="service-num">03</span>
-        <h3>Sakal &amp; Tıraş</h3>
-        <p>Klasik jilet tıraşı, sakal şekillendirme ve bakımı.</p>
+        <h3>Saç Kesimi</h3>
+        <p>Yüz hattınıza ve tarzınıza uygun, makas ve tıraş makinesiyle detaylı kesim.</p>
+        <span class="service-price">500 TL<small>30 dakika</small></span>
       </div>
       <div class="service-card reveal">
         <span class="service-num">04</span>
-        <h3>Protez Saç Merkezi</h3>
-        <p>Saç dökülmesine karşı protez saç uygulama ve danışmanlık hizmeti.</p>
+        <h3>Saç + Sakal</h3>
+        <p>Saç kesimi ve sakal şekillendirme birlikte.</p>
+        <span class="service-price">600 TL<small>45 dakika</small></span>
       </div>
-      <div class="service-card reveal">
+      <div class="service-card is-featured reveal">
+        <span class="service-badge">En Çok Tercih Edilen</span>
         <span class="service-num">05</span>
-        <h3>Altın Oran Kaş Tasarımı</h3>
-        <p>Yüz simetrinize göre ölçülü, doğal duruşlu kaş şekillendirme.</p>
+        <h3>Komple Bakım Paketi</h3>
+        <p>Saç kesimi, sakal, kaş alımı, yüz maskesi, saç maskesi, fön ve yıkama — hepsi tek seansta.</p>
+        <span class="service-price">800 TL<small>90 dakika</small></span>
       </div>
       <div class="service-card reveal">
         <span class="service-num">06</span>
-        <h3>Cilt Bakımı</h3>
-        <p>Tıraş sonrası yatıştırıcı bakım ve yüz temizliği uygulamaları.</p>
+        <h3>Saç Boyama</h3>
+        <p>Doğal duruşlu, tarzınıza uygun saç boyama uygulaması.</p>
+        <span class="service-price">1.500 TL<small>60 dakika</small></span>
       </div>
       <div class="service-card reveal">
         <span class="service-num">07</span>
-        <h3>Özel Bakım Paketleri</h3>
-        <p>Saç, sakal ve cilt bakımını tek seansta birleştiren komple bakım.</p>
+        <h3>Keratin Bakımı</h3>
+        <p>Saçı besleyen, pürüzsüzleştiren ve parlaklık kazandıran keratin uygulaması.</p>
+        <span class="service-price">3.000 TL<small>120 dakika</small></span>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-num">08</span>
+        <h3>Protez Saç</h3>
+        <p>Saç dökülmesine karşı protez saç uygulaması ve danışmanlık.</p>
+        <span class="service-price">13.000 – 30.000 TL<small>Saç tipi ve uygulamaya göre değişir</small></span>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-num">09</span>
+        <h3>Protez Saç Bakımı</h3>
+        <p>Mevcut protez saçın temizliği, bakımı ve yeniden uygulanması.</p>
+        <span class="service-price">1.250 TL<small>60 dakika</small></span>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-num">10</span>
+        <h3>Sakal &amp; Tıraş</h3>
+        <p>Klasik jilet tıraşı, sakal şekillendirme ve bakımı.</p>
+        <span class="service-price is-ask">Fiyat için arayın<small>20 dakika</small></span>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-num">11</span>
+        <h3>Altın Oran Kaş Tasarımı</h3>
+        <p>Yüz simetrinize göre ölçülü, doğal duruşlu kaş şekillendirme.</p>
+        <span class="service-price is-ask">Fiyat için arayın<small>15 dakika</small></span>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-num">12</span>
+        <h3>Cilt Bakımı</h3>
+        <p>Tıraş sonrası yatıştırıcı bakım ve yüz temizliği uygulamaları.</p>
+        <span class="service-price is-ask">Fiyat için arayın<small>20 dakika</small></span>
       </div>
     </div>
   </section>
@@ -878,7 +980,7 @@ footer{ padding-block: 2.5rem 6rem; }
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow">Ekibimiz</span>
-        <h2>Usta Ellerimiz</h2>
+        <h2>Ustalarımız</h2>
         <p>Her koltukta deneyimli, işine özen gösteren bir berber.</p>
       </div>
       <div class="experience">
@@ -893,6 +995,14 @@ footer{ padding-block: 2.5rem 6rem; }
         <div class="exp-item reveal">
           <h3>Furkan Akar</h3>
           <p>Protez saç uygulamalarında usta.</p>
+        </div>
+        <div class="exp-item reveal">
+          <h3>Beytullah Özbek</h3>
+          <p>Usta berber.</p>
+        </div>
+        <div class="exp-item reveal">
+          <h3>Ahmet Tarık Örnek</h3>
+          <p>Usta berber.</p>
         </div>
       </div>
     </div>
@@ -1188,7 +1298,7 @@ footer{ padding-block: 2.5rem 6rem; }
     async function loadServices(){
       const { data, error } = await supabase
         .from('services')
-        .select('id,name,description,duration_minutes,price_try,price_is_final')
+        .select('id,name,description,duration_minutes,price_try,price_is_final,price_note,is_featured')
         .eq('active', true)
         .order('sort_order');
       if(error || !data || !data.length){
@@ -1200,9 +1310,14 @@ footer{ padding-block: 2.5rem 6rem; }
       data.forEach(s => {
         const card = document.createElement('button');
         card.type = 'button';
-        card.className = 'pick-card';
-        const priceLabel = s.price_is_final ? money.format(s.price_try) : 'Fiyat için bilgi alın';
-        card.innerHTML = `<strong>${s.name}</strong><small>${s.duration_minutes} dk · ${priceLabel}</small>`;
+        card.className = 'pick-card' + (s.is_featured ? ' is-featured' : '');
+        // price_note, tek sayiya sigmayan fiyatlar icin (orn. protez sac araligi).
+        const priceLabel = s.price_note
+          ? s.price_note
+          : (s.price_is_final ? money.format(s.price_try) : 'Fiyat için bilgi alın');
+        const badge = s.is_featured
+          ? '<span class="pick-badge">En Çok Tercih Edilen</span>' : '';
+        card.innerHTML = `${badge}<strong>${s.name}</strong><small>${s.duration_minutes} dk · ${priceLabel}</small>`;
         card.addEventListener('click', () => {
           state.service = s;
           els.serviceList.querySelectorAll('.pick-card').forEach(c => c.classList.remove('is-selected'));
