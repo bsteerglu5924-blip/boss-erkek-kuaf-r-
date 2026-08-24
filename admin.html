@@ -84,6 +84,44 @@
   }
   .blocked-row:last-child{ border-bottom:none; }
   .blocked-row strong{ font-variant-numeric: tabular-nums; }
+
+  .chat-row{
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .chat-row:last-child{ border-bottom:none; }
+  .chat-summary{
+    display:flex; flex-wrap:wrap; gap: 0.6rem 1rem; align-items:center;
+    width:100%; text-align:left;
+    background:transparent; border:none; padding:0; cursor:pointer;
+    font-family: var(--font-body); color: var(--ink);
+  }
+  .chat-when{ font-weight:700; font-variant-numeric: tabular-nums; flex:none; }
+  .chat-preview{
+    flex:1; min-width: 160px;
+    color: var(--ink-soft); font-size: var(--fs-small);
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .chat-count{ font-size: var(--fs-label); letter-spacing:0.08em; text-transform:uppercase; color: var(--ink-soft); flex:none; }
+  .chat-transcript{
+    margin-top: 0.9rem;
+    display:flex; flex-direction:column; gap: 0.5rem;
+    padding: 0.9rem;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .chat-bubble{
+    max-width: 80%;
+    padding: 0.55rem 0.8rem;
+    border-radius: 12px;
+    font-size: var(--fs-small);
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .chat-bubble.user{ align-self:flex-end; background: var(--brass); color: var(--brass-ink); border-bottom-right-radius:4px; }
+  .chat-bubble.assistant{ align-self:flex-start; background: var(--surface-hi); border:1px solid var(--line); border-bottom-left-radius:4px; }
 </style>
 </head>
 <body>
@@ -165,6 +203,14 @@
       <div id="blockedList"><p class="booking-empty">Yükleniyor…</p></div>
     </div>
 
+    <div class="panel">
+      <h2>Sohbetler</h2>
+      <div class="filters">
+        <button type="button" class="btn btn-ghost btn-sm" id="refreshChats">Yenile</button>
+      </div>
+      <div id="chatList"><p class="booking-empty">Yükleniyor…</p></div>
+    </div>
+
   </section>
 
 </main>
@@ -205,6 +251,7 @@
       loadBarbersIntoSelect();
       loadAppointments();
       loadBlockedTimes();
+      loadChats();
     }
   }
 
@@ -367,6 +414,95 @@
     blockedMsg.innerHTML = `<span class="status-badge is-good"><span class="status-dot" aria-hidden="true"></span>Eklendi.</span>`;
     loadBlockedTimes();
   });
+
+  // ============ CHATS ============
+  const chatList = document.getElementById('chatList');
+
+  async function loadChats(){
+    chatList.innerHTML = '<p class="booking-empty">Yükleniyor…</p>';
+    const { data: sessions, error } = await supabase
+      .from('chat_sessions')
+      .select('id,created_at,last_message_at,user_message_count,booked_appointment_id')
+      .order('last_message_at', { ascending: false })
+      .limit(50);
+
+    if(error){
+      chatList.innerHTML = '<p class="booking-empty">Sohbetler yüklenemedi.</p>';
+      return;
+    }
+    if(!sessions.length){
+      chatList.innerHTML = '<p class="booking-empty">Henüz sohbet yok.</p>';
+      return;
+    }
+
+    // Her oturumun ilk müşteri mesajını önizleme olarak göster.
+    const { data: firsts } = await supabase
+      .from('chat_messages')
+      .select('session_id,content,created_at')
+      .in('session_id', sessions.map(s => s.id))
+      .eq('role', 'user')
+      .order('created_at');
+
+    const preview = {};
+    (firsts || []).forEach(m => {
+      if(!preview[m.session_id]) preview[m.session_id] = m.content;
+    });
+
+    chatList.innerHTML = '';
+    sessions.forEach(s => {
+      const row = document.createElement('div');
+      row.className = 'chat-row';
+
+      const when = new Date(s.last_message_at);
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'chat-summary';
+      btn.innerHTML = `
+        <span class="chat-when">${dl.format(when)} ${tl.format(when)}</span>
+        <span class="chat-preview">${preview[s.id] ? preview[s.id].replace(/</g, '&lt;') : '—'}</span>
+        ${s.booked_appointment_id ? '<span class="status-badge is-good"><span class="status-dot" aria-hidden="true"></span>Randevu alındı</span>' : ''}
+        <span class="chat-count">${s.user_message_count} mesaj</span>
+      `;
+
+      const transcript = document.createElement('div');
+      transcript.className = 'chat-transcript hidden';
+      let loaded = false;
+
+      btn.addEventListener('click', async () => {
+        const willOpen = transcript.classList.contains('hidden');
+        transcript.classList.toggle('hidden', !willOpen);
+        if(!willOpen || loaded) return;
+        loaded = true;
+        transcript.innerHTML = '<p class="booking-empty">Yükleniyor…</p>';
+        const { data: rows, error: msgErr } = await supabase
+          .from('chat_messages')
+          .select('role,content,created_at')
+          .eq('session_id', s.id)
+          .neq('role', 'tool')          // araç turları teknik detay, gösterilmez
+          .order('created_at');
+        // Sadece araç çağıran, metin üretmeyen asistan turlarını da atla.
+        const msgs = (rows || []).filter(m => m.content && m.content.trim());
+        if(msgErr || !msgs.length){
+          transcript.innerHTML = '<p class="booking-empty">Mesajlar yüklenemedi.</p>';
+          loaded = false;
+          return;
+        }
+        transcript.innerHTML = '';
+        msgs.forEach(m => {
+          const bubble = document.createElement('div');
+          bubble.className = 'chat-bubble ' + m.role;
+          bubble.textContent = m.content;
+          transcript.appendChild(bubble);
+        });
+      });
+
+      row.appendChild(btn);
+      row.appendChild(transcript);
+      chatList.appendChild(row);
+    });
+  }
+
+  document.getElementById('refreshChats').addEventListener('click', loadChats);
 </script>
 
 </body>
