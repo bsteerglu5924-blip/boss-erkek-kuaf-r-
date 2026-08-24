@@ -1,6 +1,9 @@
 # Installer / unrelated binaries
 Git-2.55.0.4-64-bit.exe
 
+# Gizli anahtarlar / secrets - asla commit edilmemeli
+GIZLI-BILGILER.md
+
 # Unused source/reference images not referenced by index.html
 ChatGPT Image*.png
 agustin-fernandez-*.jpg
