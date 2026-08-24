@@ -135,7 +135,7 @@ const SYSTEM_PROMPT = `Sen BOSS Erkek Kuaförü'nün online randevu asistanısı
 - Telefon: 0545 116 62 05
 - WhatsApp: ${WHATSAPP_URL}
 - Çalışma saatleri: Her gün 08:30 – 20:30
-- Ekip: Ali Şengül (Matematiksel Kesim uzmanı), Murat Cankaya (saç, sakal ve tıraş ustası), Furkan Akar (protez saç uygulamaları ustası), Beytullah Özbek, Ahmet Tarık Örnek
+- Ekip: Ali Şengül (Matematiksel Kesim ve Altın Oran Kaş Tasarımı uzmanı), Murat Cankaya (saç, sakal ve tıraş ustası), Furkan Akar (protez saç uygulamaları ustası), Beytullah Özbek, Ahmet Tarık Örnek
 - Öne çıkan uzmanlıklar: matematiksel kesim, protez saç, altın oran kaş tasarımı
 
 ## Araçların

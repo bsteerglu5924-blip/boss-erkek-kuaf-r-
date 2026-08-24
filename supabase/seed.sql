@@ -3,7 +3,7 @@
 -- digerini de guncelleyin.
 
 insert into barbers (name, slug, title, sort_order) values
-  ('Ali Şengül', 'ali-sengul', 'Matematiksel Kesim Uzmanı', 1),
+  ('Ali Şengül', 'ali-sengul', 'Matematiksel Kesim ve Altın Oran Kaş Tasarımı Uzmanı', 1),
   ('Murat Cankaya', 'murat-cankaya', 'Saç, Sakal ve Tıraş Ustası', 2),
   ('Furkan Akar', 'furkan-akar', 'Protez Saç Uygulamaları Ustası', 3),
   ('Beytullah Özbek', 'beytullah-ozbek', 'Usta Berber', 4),
@@ -51,15 +51,19 @@ insert into services (name, slug, description, duration_minutes, price_try, pric
 
   ('Sakal & Tıraş', 'sakal-tiras',
    'Klasik jilet tıraşı, sakal şekillendirme ve bakımı.',
-   20, null, false, null, false, 10),
+   20, 300, true, null, false, 10),
 
   ('Altın Oran Kaş Tasarımı', 'kas-tasarimi',
-   'Yüz simetrinize göre ölçülü, doğal duruşlu kaş şekillendirme.',
-   15, null, false, null, false, 11),
+   'Yüz simetrinize göre ölçülü, doğal duruşlu kaş şekillendirme. Ali Şengül''ün uzmanlık alanı.',
+   15, 350, true, null, false, 11),
+
+  ('Kaş Alımı', 'kas-alimi',
+   'Kaş çevresinin temizlenip düzeltilmesi.',
+   10, 200, true, null, false, 12),
 
   ('Cilt Bakımı', 'cilt-bakimi',
    'Tıraş sonrası yatıştırıcı bakım ve yüz temizliği uygulamaları.',
-   20, null, false, null, false, 12)
+   20, null, false, null, false, 13)
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
