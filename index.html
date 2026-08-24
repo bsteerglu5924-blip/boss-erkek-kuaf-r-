@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BOSS Erkek Kuaförü</title>
+<meta name="description" content="BOSS Erkek Kuaförü — Erzincan Merkez'de matematiksel kesim, protez saç ve altın oran kaş tasarımı dahil premium erkek bakım hizmeti. Randevu için WhatsApp veya telefon." />
+<meta name="robots" content="index, follow" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="business.business" />
+<meta property="og:title" content="BOSS Erkek Kuaförü" />
+<meta property="og:description" content="Erzincan Merkez'de matematiksel kesim, protez saç ve altın oran kaş tasarımı dahil premium erkek bakım hizmeti." />
+<meta property="og:image" content="galeri-magaza.jpg" />
+<meta property="og:locale" content="tr_TR" />
+<meta property="business:contact_data:street_address" content="İnönü, Ordu Cd. Selimoğlu İş Hanı Zemin Kat" />
+<meta property="business:contact_data:locality" content="Erzincan Merkez" />
+<meta property="business:contact_data:postal_code" content="24000" />
+<meta property="business:contact_data:country_name" content="Türkiye" />
+<meta property="business:contact_data:phone_number" content="+905461168205" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="BOSS Erkek Kuaförü" />
+<meta name="twitter:description" content="Erzincan Merkez'de matematiksel kesim, protez saç ve altın oran kaş tasarımı dahil premium erkek bakım hizmeti." />
+<meta name="twitter:image" content="galeri-magaza.jpg" />
+
+<!-- Local Business / GEO structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HairSalon",
+  "name": "BOSS Erkek Kuaförü",
+  "image": "galeri-magaza.jpg",
+  "telephone": "+905461168205",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "İnönü Mahallesi, Ordu Caddesi, Selimoğlu İş Hanı Zemin Kat",
+    "postalCode": "24000",
+    "addressLocality": "Erzincan Merkez",
+    "addressRegion": "Erzincan",
+    "addressCountry": "TR"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 39.7476021,
+    "longitude": 39.4908903
+  },
+  "hasMap": "https://www.google.com/maps/place/BOSS+ERKEK+KUAF%C3%96R%C3%9C/@39.7476021,39.4908903,17z/data=!3m1!4b1!4m6!3m5!1s0x40700dcca935f189:0xe549893e044ffec4!8m2!3d39.7476021!4d39.4908903",
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+    "opens": "08:30",
+    "closes": "20:30"
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Hizmetlerimiz",
+    "itemListElement": [
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Matematiksel Kesim" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Saç Kesimi" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Sakal & Tıraş" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Protez Saç Merkezi" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Altın Oran Kaş Tasarımı" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Cilt Bakımı" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Özel Bakım Paketleri" } }
+    ]
+  }
+}
+</script>
+
+<link rel="icon" type="image/png" href="logo.png" />
+<link rel="apple-touch-icon" href="logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+
+/* ============ TOKENS ============ */
+:root{
+  --bg: #EAE2CE;
+  --surface: #DDD1B2;
+  --surface-hi: #F4EFDF;
+  --ink: #211C13;
+  --ink-soft: #5B563F;
+  --brass: #8C6A34;
+  --brass-ink: #FFFFFF;
+  --oxblood: #6E2430;
+  --line: rgba(33,28,19,0.16);
+  --shadow: 0 18px 40px -22px rgba(33,28,19,0.35);
+
+  --font-display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --font-body: "Work Sans", "Segoe UI", system-ui, sans-serif;
+
+  --fs-h1: clamp(3.2rem, 11vw, 8.5rem);
+  --fs-h2: clamp(2rem, 5vw, 3.4rem);
+  --fs-h3: clamp(1.2rem, 2.4vw, 1.6rem);
+  --fs-lead: clamp(1.05rem, 2vw, 1.3rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.875rem;
+  --fs-label: 0.75rem;
+
+  --container: 1180px;
+  --radius: 3px;
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg: #15130F;
+    --surface: #201C16;
+    --surface-hi: #2A251C;
+    --ink: #F3EEE4;
+    --ink-soft: #B7AE9B;
+    --brass: #C79A54;
+    --brass-ink: #171310;
+    --oxblood: #B04654;
+    --line: rgba(243,238,228,0.14);
+    --shadow: 0 22px 50px -20px rgba(0,0,0,0.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg: #15130F;
+  --surface: #201C16;
+  --surface-hi: #2A251C;
+  --ink: #F3EEE4;
+  --ink-soft: #B7AE9B;
+  --brass: #C79A54;
+  --brass-ink: #171310;
+  --oxblood: #B04654;
+  --line: rgba(243,238,228,0.14);
+  --shadow: 0 22px 50px -20px rgba(0,0,0,0.6);
+}
+
+/* ============ RESET-ish ============ */
+*,*::before,*::after{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  *,*::before,*::after{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+body{
+  margin:0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+h1,h2,h3{ margin:0; font-family: var(--font-display); text-wrap: balance; letter-spacing: 0.01em; }
+p{ margin:0; }
+a{ color: inherit; text-decoration: none; }
+img,svg{ display:block; max-width:100%; }
+.container{ max-width: var(--container); margin-inline:auto; padding-inline: clamp(1.25rem, 4vw, 3rem); }
+.eyebrow{
+  font-family: var(--font-body);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+::selection{ background: var(--brass); color: var(--brass-ink); }
+:focus-visible{ outline: 2px solid var(--brass); outline-offset: 3px; }
+
+/* ============ STRIPE BAND (barber pole motif, used twice) ============ */
+.stripe-band{
+  height: 10px;
+  width: 100%;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--oxblood) 0 18px,
+    var(--brass) 18px 36px,
+    var(--surface-hi) 36px 54px
+  );
+  background-size: 76px 76px;
+  animation: stripe-slide 3.2s linear infinite;
+}
+@keyframes stripe-slide{ to{ background-position: 76px 0; } }
+
+/* ============ HEADER ============ */
+header{
+  position: sticky; top:0; z-index: 40;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.nav{
+  display:flex; align-items:center; justify-content:space-between;
+  padding-block: 0.9rem;
+}
+.brand{
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: 0.03em;
+  display:flex; align-items:center; gap:0.6rem;
+}
+.brand-logo{
+  height: 44px;
+  width: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.brand small{
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+.nav-links{ display:flex; align-items:center; gap: clamp(1rem,2vw,2rem); }
+.nav-links a:not(.btn){
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--ink-soft);
+  transition: color .2s ease;
+}
+.nav-links a:not(.btn):hover{ color: var(--brass); }
+.nav-phone{ display:none; }
+@media (min-width: 640px){ .nav-phone{ display:inline; } }
+
+/* ============ BUTTONS ============ */
+.btn{
+  display:inline-flex; align-items:center; gap:0.5rem;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-small);
+  letter-spacing: 0.03em;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  cursor:pointer;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+  white-space: nowrap;
+}
+.btn-primary{ background: var(--brass); color: var(--brass-ink); }
+.btn-primary:hover{ transform: translateY(-2px); box-shadow: var(--shadow); }
+.btn-ghost{ background: transparent; color: var(--ink); border-color: var(--line); }
+.btn-ghost:hover{ border-color: var(--brass); color: var(--brass); }
+.btn-sm{ padding: 0.6rem 1.1rem; font-size: 0.8rem; }
+
+/* ============ HERO ============ */
+.hero{
+  position: relative;
+  padding-block: clamp(3.5rem, 10vh, 7rem) clamp(3rem, 8vh, 5rem);
+  overflow: hidden;
+}
+.hero-grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2rem, 6vw, 4rem);
+}
+.hero-word{
+  font-size: var(--fs-h1);
+  font-weight: 900;
+  line-height: 0.86;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.hero-word span{
+  display:block;
+  opacity: 0;
+  transform: translateY(0.4em);
+  animation: rise .8s cubic-bezier(.2,.8,.2,1) forwards;
+}
+.hero-word span:nth-child(2){ animation-delay: .12s; color: var(--brass); }
+@keyframes rise{ to{ opacity:1; transform: translateY(0); } }
+
+.hero-lead{
+  margin-top: 1.4rem;
+  max-width: 46ch;
+  font-size: var(--fs-lead);
+  color: var(--ink-soft);
+}
+.hero-cta{
+  margin-top: 2.2rem;
+  display:flex; flex-wrap:wrap; gap: 0.9rem;
+}
+.hero-meta{
+  margin-top: 2.4rem;
+  display:flex; gap: 1.75rem;
+  font-size: var(--fs-small);
+  color: var(--ink-soft);
+  flex-wrap: wrap;
+}
+.hero-meta strong{ color: var(--ink); font-weight: 600; }
+
+/* ============ HERO HEADLINE PHOTO WASH ============ */
+.hero-headline{
+  position: relative;
+  isolation: isolate;
+}
+.hero-headline::before{
+  content:"";
+  position:absolute;
+  inset: -14% -10%;
+  background: url('arka-plan-doku.jpg') center 45% / cover no-repeat;
+  filter: blur(6px) grayscale(45%) brightness(1.05);
+  opacity: 0.55;
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 22%, black 78%, transparent);
+          mask-image: linear-gradient(90deg, transparent, black 22%, black 78%, transparent);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ============ SECTION SCAFFOLD ============ */
+section{ padding-block: clamp(3.5rem, 9vh, 6.5rem); }
+.section-head{
+  display:flex; flex-direction:column; gap: 0.6rem;
+  margin-bottom: clamp(2rem, 5vw, 3.25rem);
+  max-width: 62ch;
+}
+.section-head h2{ font-size: var(--fs-h2); text-transform: uppercase; }
+.section-head p{ color: var(--ink-soft); font-size: var(--fs-lead); }
+
+.reveal{ opacity:0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.in{ opacity:1; transform: translateY(0); }
+
+/* ============ INTRO / STATEMENT ============ */
+.statement{
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.statement-grid{
+  display:grid; gap: 2.5rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 860px){
+  .statement-grid{ grid-template-columns: 0.9fr 1.1fr; align-items:center; }
+}
+.statement-quote{
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.6rem, 3.4vw, 2.5rem);
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+.statement-quote em{
+  font-style: normal;
+  color: var(--brass);
+}
+.statement-body p{ color: var(--ink-soft); font-size: var(--fs-body); }
+.statement-body p + p{ margin-top: 1rem; }
+
+/* ============ SERVICES ============ */
+.services-grid{
+  display:grid; gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 620px){
+  .services-grid{ grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 980px){
+  .services-grid{ grid-template-columns: repeat(4, 1fr); }
+}
+.service-card{
+  background: var(--bg);
+  padding: 2rem 1.6rem;
+  display:flex; flex-direction:column; gap:0.9rem;
+  transition: background .2s ease;
+}
+.service-card:hover{ background: var(--surface); }
+.service-num{
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--brass);
+  letter-spacing: 0.08em;
+}
+.service-card h3{ text-transform: uppercase; }
+.service-card p{ color: var(--ink-soft); font-size: var(--fs-small); }
+
+/* ============ ATMOSPHERE BAND ============ */
+.atmosphere{
+  height: clamp(220px, 38vw, 420px);
+  background-image: linear-gradient(180deg, rgba(15,12,7,.3), rgba(15,12,7,.6)), url('arka-plan-doku.jpg');
+  background-size: cover;
+  background-position: center 35%;
+}
+
+/* ============ GALLERY ============ */
+.gallery-grid{
+  display:grid; gap: 1.5rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 760px){
+  .gallery-grid{ grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1000px){
+  .gallery-grid{ grid-template-columns: repeat(3, 1fr); }
+}
+.gallery-item{
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  aspect-ratio: 4/3;
+}
+.gallery-item img{
+  width:100%; height:100%; object-fit: cover;
+  display:block;
+  transition: transform .5s ease;
+}
+.gallery-item:hover img{ transform: scale(1.05); }
+.gallery-caption{
+  position: absolute; left:0; right:0; bottom:0;
+  padding: 1rem 1.2rem;
+  background: linear-gradient(0deg, rgba(0,0,0,.65), transparent);
+  color: #fff;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* ============ EXPERIENCE STRIP ============ */
+.experience{
+  display:grid; gap: 2.5rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 860px){
+  .experience{ grid-template-columns: repeat(3, 1fr); }
+}
+.exp-item{
+  border-top: 2px solid var(--brass);
+  padding-top: 1.1rem;
+}
+.exp-item h3{ font-size: var(--fs-h3); text-transform: uppercase; margin-bottom: 0.5rem; }
+.exp-item p{ color: var(--ink-soft); font-size: var(--fs-small); }
+
+/* ============ CONTACT ============ */
+.contact{ background: var(--surface); border-top: 1px solid var(--line); }
+.contact-grid{
+  display:grid; gap: 2.5rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 900px){
+  .contact-grid{ grid-template-columns: 1.1fr 0.9fr; }
+}
+.contact-card{
+  background: var(--surface-hi);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(1.75rem, 4vw, 2.75rem);
+  box-shadow: var(--shadow);
+}
+.info-row{
+  display:flex; gap: 1rem; align-items:flex-start;
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.info-row:first-child{ padding-top:0; }
+.info-row:last-child{ border-bottom:none; padding-bottom:0; }
+.info-icon{
+  flex: none; width: 2.1rem; height: 2.1rem;
+  border-radius: 50%;
+  display:grid; place-items:center;
+  background: var(--bg);
+  color: var(--brass);
+  border: 1px solid var(--line);
+}
+.info-icon svg{ width: 1.05rem; height: 1.05rem; }
+.info-label{ font-size: var(--fs-label); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); }
+.info-value{ font-weight: 600; font-size: 1.05rem; margin-top: 0.15rem; }
+.info-value.tabular{ font-variant-numeric: tabular-nums; }
+
+.contact-cta{
+  display:flex; flex-direction:column; gap:1rem;
+  justify-content:center;
+  padding: clamp(1.75rem, 4vw, 2.75rem);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+}
+.contact-cta h3{ font-size: var(--fs-h3); text-transform: uppercase; }
+.contact-cta p{ color: var(--ink-soft); font-size: var(--fs-small); }
+.contact-cta .btn{ justify-content:center; }
+
+/* ============ MAP ============ */
+.map-card{
+  margin-top: clamp(2rem, 5vw, 3.25rem);
+  position: relative;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap: 0.9rem;
+  height: 260px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  text-align:center;
+  background:
+    radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--brass) 16%, transparent) 0%, transparent 60%),
+    repeating-linear-gradient(0deg, var(--line) 0 1px, transparent 1px 44px),
+    repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 44px),
+    var(--surface-hi);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.map-card:hover{ transform: translateY(-2px); }
+.map-pin{
+  width: 3rem; height: 3rem;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: var(--oxblood);
+  border: 1px solid var(--line);
+  display:grid; place-items:center;
+  box-shadow: var(--shadow);
+}
+.map-pin svg{ transform: rotate(45deg); width: 1.3rem; height: 1.3rem; color: var(--brass-ink); }
+.map-card strong{ font-family: var(--font-display); text-transform: uppercase; font-size: 1.15rem; letter-spacing: 0.02em; }
+.map-card span{ font-size: var(--fs-small); color: var(--ink-soft); }
+
+/* ============ FOOTER ============ */
+footer{ padding-block: 2.5rem 6rem; }
+.footer-grid{
+  display:flex; flex-wrap:wrap; gap: 1rem;
+  justify-content:space-between; align-items:center;
+}
+.footer-brand{ font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; text-transform:uppercase; display:flex; align-items:center; gap:0.6rem; }
+.footer-logo{ height: 32px; width: 32px; border-radius: 50%; object-fit: cover; }
+.footer-note{ font-size: var(--fs-small); color: var(--ink-soft); }
+
+/* ============ FLOATING WHATSAPP ============ */
+.float-cta{
+  position: fixed; right: clamp(1rem,3vw,2rem); bottom: clamp(1rem,3vw,2rem);
+  z-index: 50;
+  width: 3.4rem; height: 3.4rem;
+  border-radius: 50%;
+  background: var(--brass);
+  color: var(--brass-ink);
+  display:grid; place-items:center;
+  box-shadow: var(--shadow);
+  animation: pulse-ring 2.6s ease-in-out infinite;
+}
+.float-cta svg{ width: 1.5rem; height:1.5rem; }
+@keyframes pulse-ring{
+  0%,100%{ box-shadow: 0 0 0 0 color-mix(in srgb, var(--brass) 45%, transparent), var(--shadow); }
+  50%{ box-shadow: 0 0 0 10px color-mix(in srgb, var(--brass) 0%, transparent), var(--shadow); }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <a class="brand" href="#top"><img class="brand-logo" src="logo.png" alt="" aria-hidden="true">BOSS <small>Erkek Kuaförü</small></a>
+    <nav class="nav-links">
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#galeri">Galeri</a>
+      <a href="#deneyim">Deneyim</a>
+      <a href="#ekip">Ekip</a>
+      <a href="#iletisim">İletişim</a>
+      <a class="nav-phone" href="tel:+905461168205">0546 116 82 05</a>
+      <a class="btn btn-primary btn-sm" href="https://wa.me/905461168205?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener">Randevu Al</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="hero-headline">
+          <h1 class="hero-word"><span>Boss</span><span>Erkek Kuaförü</span></h1>
+          <p class="hero-lead">Erzincan merkezde, matematiksel kesimden protez saça, altın oran kaş tasarımından klasik tıraşa kadar şehrimizde bu seviyede hizmet veren tek premium erkek kuaförü.</p>
+        </div>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="https://wa.me/905461168205?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener">
+            WhatsApp'tan Randevu Al
+          </a>
+          <a class="btn btn-ghost" href="tel:+905461168205">Hemen Ara — 0546 116 82 05</a>
+        </div>
+        <div class="hero-meta">
+          <span><strong>Konum</strong><br>Erzincan Merkez</span>
+          <span><strong>Çalışma Saatleri</strong><br>08:30 – 20:30</span>
+          <span><strong>Uzmanlık</strong><br>Matematiksel Kesim · Protez Saç</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="stripe-band" aria-hidden="true"></div>
+
+  <section class="statement">
+    <div class="container statement-grid">
+      <p class="statement-quote reveal">Her müşteri, <em>koltuğa</em> oturduğu andan itibaren önceliğimizdir.</p>
+      <div class="statement-body reveal">
+        <p>BOSS Erkek Kuaförü'nde amacımız sadece bir saç kesimi değil, kendinizi iyi hissettiğiniz bir bakım molası sunmak. Her işlem tek tek, aceleye getirmeden ve titizlikle uygulanır.</p>
+        <p>Matematiksel kesim, protez saç ve altın oran kaş tasarımı gibi Erzincan'da başka hiçbir kuaförde bulamayacağınız uzmanlık alanlarıyla, şehrimizde premium bakım standardını biz belirliyoruz.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="hizmetler">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Hizmetlerimiz</span>
+        <h2>Neler Yapıyoruz</h2>
+        <p>Klasikten moderne, her tarza uygun bakım hizmetleri.</p>
+      </div>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <span class="service-num">01</span>
+        <h3>Matematiksel Kesim</h3>
+        <p>Yüz hattı ve kafa yapısına oranlanarak hesaplanan, imza kesim tekniğimiz.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-num">02</span>
+        <h3>Saç Kesimi</h3>
+        <p>Yüz hattınıza ve tarzınıza uygun, makas ve tıraş makinesiyle detaylı kesim.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-num">03</span>
+        <h3>Sakal &amp; Tıraş</h3>
+        <p>Klasik jilet tıraşı, sakal şekillendirme ve bakımı.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-num">04</span>
+        <h3>Protez Saç Merkezi</h3>
+        <p>Saç dökülmesine karşı protez saç uygulama ve danışmanlık hizmeti.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-num">05</span>
+        <h3>Altın Oran Kaş Tasarımı</h3>
+        <p>Yüz simetrinize göre ölçülü, doğal duruşlu kaş şekillendirme.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-num">06</span>
+        <h3>Cilt Bakımı</h3>
+        <p>Tıraş sonrası yatıştırıcı bakım ve yüz temizliği uygulamaları.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-num">07</span>
+        <h3>Özel Bakım Paketleri</h3>
+        <p>Saç, sakal ve cilt bakımını tek seansta birleştiren komple bakım.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="atmosphere reveal" aria-hidden="true"></div>
+
+  <section id="galeri">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Galeri</span>
+        <h2>Mekanımızdan Kareler</h2>
+        <p>Erzincan merkezdeki salonumuzdan gerçek anlar.</p>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item reveal">
+          <img src="galeri-magaza.jpg" alt="BOSS Erkek Kuaförü mağaza girişi ve iç mekanı" loading="lazy">
+          <span class="gallery-caption">Mağazamız</span>
+        </div>
+        <div class="gallery-item reveal">
+          <img src="galeri-kesim.jpg" alt="BOSS Erkek Kuaförü'nde saç kesimi anı" loading="lazy">
+          <span class="gallery-caption">Kesim Anından</span>
+        </div>
+        <div class="gallery-item reveal">
+          <img src="galeri-sakal.jpg" alt="BOSS Erkek Kuaförü'nde sakal tıraşı anı" loading="lazy">
+          <span class="gallery-caption">Sakal Tıraşından</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="deneyim">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Neden Boss</span>
+        <h2>Detaya Verdiğimiz Önem</h2>
+      </div>
+      <div class="experience">
+        <div class="exp-item reveal">
+          <h3>Randevulu Sistem</h3>
+          <p>Beklemeden, size ayrılan zaman diliminde kesintisiz hizmet.</p>
+        </div>
+        <div class="exp-item reveal">
+          <h3>Usta Ellerde</h3>
+          <p>Deneyimli berberlerimizle özenli ve titiz uygulama.</p>
+        </div>
+        <div class="exp-item reveal">
+          <h3>Sıcak Ortam</h3>
+          <p>Erzincan merkezde, kendinizi rahat hissedeceğiniz bir mekan.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ekip">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Ekibimiz</span>
+        <h2>Usta Ellerimiz</h2>
+        <p>Her koltukta deneyimli, işine özen gösteren bir berber.</p>
+      </div>
+      <div class="experience">
+        <div class="exp-item reveal">
+          <h3>Ali Şengül</h3>
+          <p>Matematiksel Kesim tekniğinin uygulayıcısı.</p>
+        </div>
+        <div class="exp-item reveal">
+          <h3>Murat Cankaya</h3>
+          <p>Saç, sakal ve tıraş uygulamalarında usta berber.</p>
+        </div>
+        <div class="exp-item reveal">
+          <h3>Furkan Akar</h3>
+          <p>Saç, sakal ve tıraş uygulamalarında usta berber.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="stripe-band" aria-hidden="true"></div>
+
+  <section class="contact" id="iletisim">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">İletişim</span>
+        <h2>Randevunuzu Alın</h2>
+        <p>Erzincan merkezdeyiz. Telefon veya WhatsApp üzerinden randevu alabilirsiniz.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-card reveal">
+          <div class="info-row">
+            <span class="info-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg>
+            </span>
+            <div>
+              <div class="info-label">Konum</div>
+              <div class="info-value">İnönü, Ordu Cd. Selimoğlu İş Hanı Zemin Kat, Erzincan Merkez</div>
+            </div>
+          </div>
+          <div class="info-row">
+            <span class="info-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L7.9 9.7a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6A2 2 0 0 1 22 16.9Z"/></svg>
+            </span>
+            <div>
+              <div class="info-label">Telefon</div>
+              <div class="info-value tabular"><a href="tel:+905461168205">0546 116 82 05</a></div>
+            </div>
+          </div>
+          <div class="info-row">
+            <span class="info-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
+            </span>
+            <div>
+              <div class="info-label">Çalışma Saatleri</div>
+              <div class="info-value tabular">08:30 – 20:30</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-cta reveal">
+          <h3>Randevu Sırası Sizde</h3>
+          <p>WhatsApp'tan yazın, size en uygun saati birlikte belirleyelim.</p>
+          <a class="btn btn-primary" href="https://wa.me/905461168205?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener">WhatsApp'tan Yaz</a>
+          <a class="btn btn-ghost" href="tel:+905461168205">0546 116 82 05'i Ara</a>
+          <a class="btn btn-ghost" href="https://www.google.com/maps/place/BOSS+ERKEK+KUAF%C3%96R%C3%9C/@39.7476021,39.4908903,17z/data=!3m1!4b1!4m6!3m5!1s0x40700dcca935f189:0xe549893e044ffec4!8m2!3d39.7476021!4d39.4908903" target="_blank" rel="noopener">Haritada Aç</a>
+        </div>
+      </div>
+      <a class="map-card reveal" href="https://www.google.com/maps/place/BOSS+ERKEK+KUAF%C3%96R%C3%9C/@39.7476021,39.4908903,17z/data=!3m1!4b1!4m6!3m5!1s0x40700dcca935f189:0xe549893e044ffec4!8m2!3d39.7476021!4d39.4908903" target="_blank" rel="noopener" aria-label="BOSS Erkek Kuaförü konumunu Google Haritalar'da aç">
+        <span class="map-pin" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg>
+        </span>
+        <strong>İnönü, Ordu Caddesi</strong>
+        <span>Konumu Google Haritalar'da görüntülemek için dokunun</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container footer-grid">
+    <span class="footer-brand"><img class="footer-logo" src="logo.png" alt="" aria-hidden="true">Boss Erkek Kuaförü</span>
+    <span class="footer-note">Erzincan Merkez · 08:30 – 20:30 · 0546 116 82 05</span>
+  </div>
+</footer>
+
+<a class="float-cta" href="https://wa.me/905461168205?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener" aria-label="WhatsApp'tan randevu al">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.35a9.9 9.9 0 0 0 4.62 1.15h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2Zm5.8 14.09c-.24.68-1.4 1.3-1.93 1.36-.5.06-1.06.09-1.7-.11-.39-.12-.9-.29-1.55-.57-2.73-1.18-4.51-3.93-4.65-4.12-.14-.19-1.11-1.48-1.11-2.82 0-1.35.7-2.01.95-2.29.24-.27.53-.34.7-.34h.5c.16 0 .38-.03.58.44.24.57.81 1.97.88 2.11.07.14.11.3.02.49-.09.19-.14.3-.28.46-.14.16-.29.36-.42.48-.14.13-.28.28-.12.55.16.27.72 1.19 1.55 1.93 1.06.95 1.96 1.24 2.23 1.38.27.14.43.12.59-.07.16-.19.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.55.73 1.82.86.27.14.45.2.51.32.07.11.07.66-.17 1.33Z"/></svg>
+</a>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(el=>io.observe(el));
+  } else {
+    revealEls.forEach(el=>el.classList.add('in'));
+  }
+</script>
+
+</body>
+</html>
