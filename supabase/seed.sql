@@ -1,7 +1,7 @@
 insert into barbers (name, slug, title, sort_order) values
   ('Ali Şengül', 'ali-sengul', 'Matematiksel Kesim Uzmanı', 1),
   ('Murat Cankaya', 'murat-cankaya', 'Saç, Sakal ve Tıraş Ustası', 2),
-  ('Furkan Akar', 'furkan-akar', 'Saç, Sakal ve Tıraş Ustası', 3)
+  ('Furkan Akar', 'furkan-akar', 'Protez Saç Uygulamaları Ustası', 3)
 on conflict (slug) do update set name = excluded.name, title = excluded.title, sort_order = excluded.sort_order;
 
 -- price_try = 0 / price_is_final = false are placeholders until real prices are supplied.
