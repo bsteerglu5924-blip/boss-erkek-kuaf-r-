@@ -89,6 +89,8 @@
   --oxblood: #6E2430;
   --line: rgba(33,28,19,0.16);
   --shadow: 0 18px 40px -22px rgba(33,28,19,0.35);
+  --status-open: #3F7D4F;
+  --status-closed: #6E2430;
 
   --font-display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
   --font-body: "Work Sans", "Segoe UI", system-ui, sans-serif;
@@ -118,6 +120,8 @@
     --oxblood: #B04654;
     --line: rgba(243,238,228,0.14);
     --shadow: 0 22px 50px -20px rgba(0,0,0,0.6);
+    --status-open: #6FBF83;
+    --status-closed: #E08A93;
   }
 }
 :root[data-theme="dark"]{
@@ -132,6 +136,8 @@
   --oxblood: #B04654;
   --line: rgba(243,238,228,0.14);
   --shadow: 0 22px 50px -20px rgba(0,0,0,0.6);
+  --status-open: #6FBF83;
+  --status-closed: #E08A93;
 }
 
 /* ============ RESET-ish ============ */
@@ -322,6 +328,28 @@ header{
   max-width: 46ch;
   font-size: var(--fs-lead);
   color: var(--ink-soft);
+}
+
+.status-badge{
+  display:inline-flex; align-items:center; gap:0.55rem;
+  margin-top: 1.4rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface-hi);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--ink);
+}
+.status-dot{
+  width: 0.55rem; height: 0.55rem;
+  border-radius: 50%;
+  background: var(--status-closed);
+  transition: background .2s ease;
+}
+.status-badge.is-open .status-dot{
+  background: var(--status-open);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--status-open) 25%, transparent);
 }
 .hero-cta{
   margin-top: 2.2rem;
@@ -619,6 +647,10 @@ footer{ padding-block: 2.5rem 6rem; }
           <h1 class="hero-word"><span>Boss</span><span>Erkek Kuaförü</span></h1>
           <p class="hero-lead">Erzincan merkezde, matematiksel kesimden protez saça, altın oran kaş tasarımından klasik tıraşa kadar şehrimizde bu seviyede hizmet veren tek premium erkek kuaförü.</p>
         </div>
+        <span class="status-badge" id="statusBadge">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="statusText">Saat bilgisi yükleniyor…</span>
+        </span>
         <div class="hero-cta">
           <a class="btn btn-primary" href="https://wa.me/905451166205?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener">
             WhatsApp'tan Randevu Al
@@ -871,6 +903,21 @@ footer{ padding-block: 2.5rem 6rem; }
   } else {
     revealEls.forEach(el=>el.classList.add('in'));
   }
+
+  (function(){
+    var badge = document.getElementById('statusBadge');
+    var text = document.getElementById('statusText');
+    if(!badge || !text) return;
+    function updateStatus(){
+      var now = new Date();
+      var mins = now.getHours() * 60 + now.getMinutes();
+      var isOpen = mins >= (8 * 60 + 30) && mins < (20 * 60 + 30);
+      badge.classList.toggle('is-open', isOpen);
+      text.textContent = isOpen ? 'Şu An Açık' : 'Şu An Kapalı — 08:30–20:30 Randevu Alabilirsiniz';
+    }
+    updateStatus();
+    setInterval(updateStatus, 60000);
+  })();
 </script>
 
 </body>
