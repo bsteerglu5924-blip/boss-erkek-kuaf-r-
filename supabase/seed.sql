@@ -63,7 +63,7 @@ insert into services (name, slug, description, duration_minutes, price_try, pric
 
   ('Cilt Bakımı', 'cilt-bakimi',
    'Tıraş sonrası yatıştırıcı bakım ve yüz temizliği uygulamaları.',
-   20, null, false, null, false, 13)
+   20, 500, true, null, false, 13)
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
