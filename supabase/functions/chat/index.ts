@@ -34,6 +34,13 @@ const LIMIT_REPLIES: Record<string, string> = {
 };
 
 // ============ CORS ============
+// Sitenin canli adresleri. Vercel'in otomatik *.vercel.app adresleri
+// asagidaki desenlerden geciyor; kendi alan adi burada acikca yaziyor.
+const SITE_ORIGINS = [
+  "https://bosskuafor.com",
+  "https://www.bosskuafor.com",
+];
+
 const DEFAULT_ORIGIN_PATTERNS = [
   /^http:\/\/localhost:\d+$/,
   /^http:\/\/127\.0\.0\.1:\d+$/,
@@ -49,7 +56,8 @@ const EXTRA_ORIGINS = (Deno.env.get("CHAT_ALLOWED_ORIGINS") ?? "")
 
 function corsHeaders(origin: string | null): Record<string, string> {
   const allowed = origin !== null &&
-    (EXTRA_ORIGINS.includes(origin) ||
+    (SITE_ORIGINS.includes(origin) ||
+      EXTRA_ORIGINS.includes(origin) ||
       DEFAULT_ORIGIN_PATTERNS.some((re) => re.test(origin)));
   if (!allowed) return {};
   return {
