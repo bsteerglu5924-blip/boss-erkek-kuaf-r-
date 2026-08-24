@@ -17,7 +17,7 @@
 <meta property="business:contact_data:locality" content="Erzincan Merkez" />
 <meta property="business:contact_data:postal_code" content="24000" />
 <meta property="business:contact_data:country_name" content="Türkiye" />
-<meta property="business:contact_data:phone_number" content="+905461168205" />
+<meta property="business:contact_data:phone_number" content="+905461166205" />
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
@@ -32,7 +32,7 @@
   "@type": "HairSalon",
   "name": "BOSS Erkek Kuaförü",
   "image": "galeri-magaza.jpg",
-  "telephone": "+905461168205",
+  "telephone": "+905461166205",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "İnönü Mahallesi, Ordu Caddesi, Selimoğlu İş Hanı Zemin Kat",
@@ -84,6 +84,7 @@
   --ink: #211C13;
   --ink-soft: #5B563F;
   --brass: #8C6A34;
+  --brass-text: #7A5A2A;
   --brass-ink: #FFFFFF;
   --oxblood: #6E2430;
   --line: rgba(33,28,19,0.16);
@@ -112,6 +113,7 @@
     --ink: #F3EEE4;
     --ink-soft: #B7AE9B;
     --brass: #C79A54;
+    --brass-text: #C79A54;
     --brass-ink: #171310;
     --oxblood: #B04654;
     --line: rgba(243,238,228,0.14);
@@ -125,6 +127,7 @@
   --ink: #F3EEE4;
   --ink-soft: #B7AE9B;
   --brass: #C79A54;
+  --brass-text: #C79A54;
   --brass-ink: #171310;
   --oxblood: #B04654;
   --line: rgba(243,238,228,0.14);
@@ -158,7 +161,7 @@ img,svg{ display:block; max-width:100%; }
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--brass);
+  color: var(--brass-text);
 }
 ::selection{ background: var(--brass); color: var(--brass-ink); }
 :focus-visible{ outline: 2px solid var(--brass); outline-offset: 3px; }
@@ -217,9 +220,55 @@ header{
   color: var(--ink-soft);
   transition: color .2s ease;
 }
-.nav-links a:not(.btn):hover{ color: var(--brass); }
+.nav-links a:not(.btn):hover{ color: var(--brass-text); }
 .nav-phone{ display:none; }
 @media (min-width: 640px){ .nav-phone{ display:inline; } }
+
+.nav-toggle{
+  display:none;
+  align-items:center; justify-content:center;
+  width: 2.75rem; height: 2.75rem;
+  flex: none;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink);
+  cursor: pointer;
+}
+.nav-toggle svg{ width: 1.35rem; height: 1.35rem; }
+
+@media (max-width: 860px){
+  .nav-toggle{ display:inline-flex; }
+  .nav-links{
+    position: absolute;
+    top: 100%; left: 1rem; right: 1rem;
+    margin-top: 0.6rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: var(--surface-hi);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 0.5rem;
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease;
+  }
+  .nav-links.open{
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .nav-links a:not(.btn){
+    padding: 0.9rem 0.6rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-phone{ display:block; }
+  .nav-links a:last-of-type{ border-bottom: none; }
+  .nav-links .btn{ margin-top: 0.6rem; justify-content:center; min-height: 44px; }
+}
 
 /* ============ BUTTONS ============ */
 .btn{
@@ -238,7 +287,7 @@ header{
 .btn-primary{ background: var(--brass); color: var(--brass-ink); }
 .btn-primary:hover{ transform: translateY(-2px); box-shadow: var(--shadow); }
 .btn-ghost{ background: transparent; color: var(--ink); border-color: var(--line); }
-.btn-ghost:hover{ border-color: var(--brass); color: var(--brass); }
+.btn-ghost:hover{ border-color: var(--brass); color: var(--brass-text); }
 .btn-sm{ padding: 0.6rem 1.1rem; font-size: 0.8rem; }
 
 /* ============ HERO ============ */
@@ -369,7 +418,7 @@ section{ padding-block: clamp(3.5rem, 9vh, 6.5rem); }
   font-family: var(--font-display);
   font-size: 0.95rem;
   font-weight: 700;
-  color: var(--brass);
+  color: var(--brass-text);
   letter-spacing: 0.08em;
 }
 .service-card h3{ text-transform: uppercase; }
@@ -546,14 +595,17 @@ footer{ padding-block: 2.5rem 6rem; }
 <header>
   <div class="container nav">
     <a class="brand" href="#top"><img class="brand-logo" src="logo.png" alt="" aria-hidden="true">BOSS <small>Erkek Kuaförü</small></a>
-    <nav class="nav-links">
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Menüyü aç/kapat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <nav class="nav-links" id="nav-links">
       <a href="#hizmetler">Hizmetler</a>
       <a href="#galeri">Galeri</a>
       <a href="#deneyim">Deneyim</a>
       <a href="#ekip">Ekip</a>
       <a href="#iletisim">İletişim</a>
-      <a class="nav-phone" href="tel:+905461168205">0546 116 82 05</a>
-      <a class="btn btn-primary btn-sm" href="https://wa.me/905461168205?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener">Randevu Al</a>
+      <a class="nav-phone" href="tel:+905461166205">0546 116 62 05</a>
+      <a class="btn btn-primary btn-sm" href="https://wa.me/905461166205?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener">Randevu Al</a>
     </nav>
   </div>
 </header>
@@ -568,10 +620,10 @@ footer{ padding-block: 2.5rem 6rem; }
           <p class="hero-lead">Erzincan merkezde, matematiksel kesimden protez saça, altın oran kaş tasarımından klasik tıraşa kadar şehrimizde bu seviyede hizmet veren tek premium erkek kuaförü.</p>
         </div>
         <div class="hero-cta">
-          <a class="btn btn-primary" href="https://wa.me/905461168205?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener">
+          <a class="btn btn-primary" href="https://wa.me/905461166205?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener">
             WhatsApp'tan Randevu Al
           </a>
-          <a class="btn btn-ghost" href="tel:+905461168205">Hemen Ara — 0546 116 82 05</a>
+          <a class="btn btn-ghost" href="tel:+905461166205">Hemen Ara — 0546 116 62 05</a>
         </div>
         <div class="hero-meta">
           <span><strong>Konum</strong><br>Erzincan Merkez</span>
@@ -740,7 +792,7 @@ footer{ padding-block: 2.5rem 6rem; }
             </span>
             <div>
               <div class="info-label">Telefon</div>
-              <div class="info-value tabular"><a href="tel:+905461168205">0546 116 82 05</a></div>
+              <div class="info-value tabular"><a href="tel:+905461166205">0546 116 62 05</a></div>
             </div>
           </div>
           <div class="info-row">
@@ -757,8 +809,8 @@ footer{ padding-block: 2.5rem 6rem; }
         <div class="contact-cta reveal">
           <h3>Randevu Sırası Sizde</h3>
           <p>WhatsApp'tan yazın, size en uygun saati birlikte belirleyelim.</p>
-          <a class="btn btn-primary" href="https://wa.me/905461168205?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener">WhatsApp'tan Yaz</a>
-          <a class="btn btn-ghost" href="tel:+905461168205">0546 116 82 05'i Ara</a>
+          <a class="btn btn-primary" href="https://wa.me/905461166205?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener">WhatsApp'tan Yaz</a>
+          <a class="btn btn-ghost" href="tel:+905461166205">0546 116 62 05'i Ara</a>
           <a class="btn btn-ghost" href="https://www.google.com/maps/place/BOSS+ERKEK+KUAF%C3%96R%C3%9C/@39.7476021,39.4908903,17z/data=!3m1!4b1!4m6!3m5!1s0x40700dcca935f189:0xe549893e044ffec4!8m2!3d39.7476021!4d39.4908903" target="_blank" rel="noopener">Haritada Aç</a>
         </div>
       </div>
@@ -777,15 +829,37 @@ footer{ padding-block: 2.5rem 6rem; }
 <footer>
   <div class="container footer-grid">
     <span class="footer-brand"><img class="footer-logo" src="logo.png" alt="" aria-hidden="true">Boss Erkek Kuaförü</span>
-    <span class="footer-note">Erzincan Merkez · 08:30 – 20:30 · 0546 116 82 05</span>
+    <span class="footer-note">Erzincan Merkez · 08:30 – 20:30 · 0546 116 62 05</span>
   </div>
 </footer>
 
-<a class="float-cta" href="https://wa.me/905461168205?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener" aria-label="WhatsApp'tan randevu al">
+<a class="float-cta" href="https://wa.me/905461166205?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener" aria-label="WhatsApp'tan randevu al">
   <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.35a9.9 9.9 0 0 0 4.62 1.15h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2Zm5.8 14.09c-.24.68-1.4 1.3-1.93 1.36-.5.06-1.06.09-1.7-.11-.39-.12-.9-.29-1.55-.57-2.73-1.18-4.51-3.93-4.65-4.12-.14-.19-1.11-1.48-1.11-2.82 0-1.35.7-2.01.95-2.29.24-.27.53-.34.7-.34h.5c.16 0 .38-.03.58.44.24.57.81 1.97.88 2.11.07.14.11.3.02.49-.09.19-.14.3-.28.46-.14.16-.29.36-.42.48-.14.13-.28.28-.12.55.16.27.72 1.19 1.55 1.93 1.06.95 1.96 1.24 2.23 1.38.27.14.43.12.59-.07.16-.19.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.55.73 1.82.86.27.14.45.2.51.32.07.11.07.66-.17 1.33Z"/></svg>
 </a>
 
 <script>
+  const navToggle = document.querySelector('.nav-toggle');
+  const navLinks = document.getElementById('nav-links');
+  if(navToggle && navLinks){
+    const closeMenu = () => {
+      navLinks.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    };
+    navToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+    document.addEventListener('click', (e) => {
+      if(navLinks.classList.contains('open') && !navLinks.contains(e.target) && !navToggle.contains(e.target)){
+        closeMenu();
+      }
+    });
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape') closeMenu();
+    });
+  }
+
   const revealEls = document.querySelectorAll('.reveal');
   if('IntersectionObserver' in window){
     const io = new IntersectionObserver((entries)=>{
