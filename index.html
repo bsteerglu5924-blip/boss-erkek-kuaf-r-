@@ -74,103 +74,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 <style>
-
-/* ============ TOKENS ============ */
-:root{
-  --bg: #EAE2CE;
-  --surface: #DDD1B2;
-  --surface-hi: #F4EFDF;
-  --ink: #211C13;
-  --ink-soft: #5B563F;
-  --brass: #8C6A34;
-  --brass-text: #7A5A2A;
-  --brass-ink: #FFFFFF;
-  --oxblood: #6E2430;
-  --line: rgba(33,28,19,0.16);
-  --shadow: 0 18px 40px -22px rgba(33,28,19,0.35);
-  --status-open: #3F7D4F;
-  --status-closed: #6E2430;
-
-  --font-display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
-  --font-body: "Work Sans", "Segoe UI", system-ui, sans-serif;
-
-  --fs-h1: clamp(3.2rem, 11vw, 8.5rem);
-  --fs-h2: clamp(2rem, 5vw, 3.4rem);
-  --fs-h3: clamp(1.2rem, 2.4vw, 1.6rem);
-  --fs-lead: clamp(1.05rem, 2vw, 1.3rem);
-  --fs-body: 1.0625rem;
-  --fs-small: 0.875rem;
-  --fs-label: 0.75rem;
-
-  --container: 1180px;
-  --radius: 3px;
-}
-
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg: #15130F;
-    --surface: #201C16;
-    --surface-hi: #2A251C;
-    --ink: #F3EEE4;
-    --ink-soft: #B7AE9B;
-    --brass: #C79A54;
-    --brass-text: #C79A54;
-    --brass-ink: #171310;
-    --oxblood: #B04654;
-    --line: rgba(243,238,228,0.14);
-    --shadow: 0 22px 50px -20px rgba(0,0,0,0.6);
-    --status-open: #6FBF83;
-    --status-closed: #E08A93;
-  }
-}
-:root[data-theme="dark"]{
-  --bg: #15130F;
-  --surface: #201C16;
-  --surface-hi: #2A251C;
-  --ink: #F3EEE4;
-  --ink-soft: #B7AE9B;
-  --brass: #C79A54;
-  --brass-text: #C79A54;
-  --brass-ink: #171310;
-  --oxblood: #B04654;
-  --line: rgba(243,238,228,0.14);
-  --shadow: 0 22px 50px -20px rgba(0,0,0,0.6);
-  --status-open: #6FBF83;
-  --status-closed: #E08A93;
-}
-
-/* ============ RESET-ish ============ */
-*,*::before,*::after{ box-sizing: border-box; }
-html{ scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce){
-  html{ scroll-behavior: auto; }
-  *,*::before,*::after{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
-}
-body{
-  margin:0;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-size: var(--fs-body);
-  line-height: 1.55;
-  -webkit-font-smoothing: antialiased;
-}
-h1,h2,h3{ margin:0; font-family: var(--font-display); text-wrap: balance; letter-spacing: 0.01em; }
-p{ margin:0; }
-a{ color: inherit; text-decoration: none; }
-img,svg{ display:block; max-width:100%; }
-.container{ max-width: var(--container); margin-inline:auto; padding-inline: clamp(1.25rem, 4vw, 3rem); }
-.eyebrow{
-  font-family: var(--font-body);
-  font-size: var(--fs-label);
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--brass-text);
-}
-::selection{ background: var(--brass); color: var(--brass-ink); }
-:focus-visible{ outline: 2px solid var(--brass); outline-offset: 3px; }
 
 /* ============ STRIPE BAND (barber pole motif, used twice) ============ */
 .stripe-band{
@@ -276,26 +181,6 @@ header{
   .nav-links .btn{ margin-top: 0.6rem; justify-content:center; min-height: 44px; }
 }
 
-/* ============ BUTTONS ============ */
-.btn{
-  display:inline-flex; align-items:center; gap:0.5rem;
-  padding: 0.85rem 1.5rem;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: var(--fs-small);
-  letter-spacing: 0.03em;
-  border-radius: var(--radius);
-  border: 1px solid transparent;
-  cursor:pointer;
-  transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
-  white-space: nowrap;
-}
-.btn-primary{ background: var(--brass); color: var(--brass-ink); }
-.btn-primary:hover{ transform: translateY(-2px); box-shadow: var(--shadow); }
-.btn-ghost{ background: transparent; color: var(--ink); border-color: var(--line); }
-.btn-ghost:hover{ border-color: var(--brass); color: var(--brass-text); }
-.btn-sm{ padding: 0.6rem 1.1rem; font-size: 0.8rem; }
-
 /* ============ HERO ============ */
 .hero{
   position: relative;
@@ -330,27 +215,7 @@ header{
   color: var(--ink-soft);
 }
 
-.status-badge{
-  display:inline-flex; align-items:center; gap:0.55rem;
-  margin-top: 1.4rem;
-  padding: 0.5rem 1rem;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--surface-hi);
-  font-size: var(--fs-small);
-  font-weight: 600;
-  color: var(--ink);
-}
-.status-dot{
-  width: 0.55rem; height: 0.55rem;
-  border-radius: 50%;
-  background: var(--status-closed);
-  transition: background .2s ease;
-}
-.status-badge.is-open .status-dot{
-  background: var(--status-open);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--status-open) 25%, transparent);
-}
+.status-badge{ margin-top: 1.4rem; }
 .hero-cta{
   margin-top: 2.2rem;
   display:flex; flex-wrap:wrap; gap: 0.9rem;
@@ -510,6 +375,83 @@ section{ padding-block: clamp(3.5rem, 9vh, 6.5rem); }
 .exp-item h3{ font-size: var(--fs-h3); text-transform: uppercase; margin-bottom: 0.5rem; }
 .exp-item p{ color: var(--ink-soft); font-size: var(--fs-small); }
 
+/* ============ BOOKING WIZARD ============ */
+.booking{ background: var(--surface-hi); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.booking-card{
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+}
+.booking-steps{
+  display:flex; flex-wrap:wrap; gap: 0.5rem 1.2rem;
+  margin-bottom: 1.75rem;
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.booking-steps span{ display:inline-flex; align-items:center; gap:0.4rem; }
+.booking-steps span::before{
+  content: attr(data-step);
+  display:inline-grid; place-items:center;
+  width: 1.35rem; height: 1.35rem;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+}
+.booking-steps span.is-active{ color: var(--brass-text); font-weight: 700; }
+.booking-steps span.is-active::before{ background: var(--brass); border-color: var(--brass); color: var(--brass-ink); }
+.booking-steps span.is-done::before{ background: var(--ink-soft); border-color: var(--ink-soft); color: var(--bg); }
+
+.booking-panel{ display:none; }
+.booking-panel.is-active{ display:block; }
+
+.pick-grid{ display:grid; gap: 0.85rem; grid-template-columns: 1fr; }
+@media (min-width: 620px){ .pick-grid{ grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 900px){ .pick-grid.services{ grid-template-columns: repeat(3, 1fr); } }
+.pick-card{
+  text-align:left;
+  background: var(--surface-hi);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.2rem;
+  cursor:pointer;
+  display:flex; flex-direction:column; gap:0.35rem;
+  transition: border-color .18s ease, background .18s ease, transform .18s ease;
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+.pick-card:hover{ border-color: var(--brass); transform: translateY(-2px); }
+.pick-card.is-selected{ border-color: var(--brass); background: color-mix(in srgb, var(--brass) 12%, var(--surface-hi)); }
+.pick-card strong{ font-size: 1rem; }
+.pick-card small{ color: var(--ink-soft); font-size: var(--fs-small); }
+
+.slot-grid{ display:flex; flex-wrap:wrap; gap: 0.6rem; }
+.slot-btn{
+  padding: 0.6rem 1rem;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  background: var(--surface-hi);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  cursor:pointer;
+  color: var(--ink);
+}
+.slot-btn:hover{ border-color: var(--brass); color: var(--brass-text); }
+.slot-btn.is-selected{ background: var(--brass); border-color: var(--brass); color: var(--brass-ink); }
+
+.booking-summary{ display:grid; gap: 0; margin-bottom: 1.25rem; }
+.booking-nav{ display:flex; justify-content:space-between; gap:1rem; margin-top: 1.75rem; }
+.booking-form-grid{ display:grid; gap: 1rem; grid-template-columns: 1fr; margin-bottom: 1.25rem; }
+@media (min-width: 620px){ .booking-form-grid{ grid-template-columns: 1fr 1fr; } }
+.booking-msg{ margin-bottom: 1.25rem; }
+.booking-msg:empty{ display:none; }
+.booking-empty{ color: var(--ink-soft); font-size: var(--fs-small); }
+
 /* ============ CONTACT ============ */
 .contact{ background: var(--surface); border-top: 1px solid var(--line); }
 .contact-grid{
@@ -519,33 +461,6 @@ section{ padding-block: clamp(3.5rem, 9vh, 6.5rem); }
 @media (min-width: 900px){
   .contact-grid{ grid-template-columns: 1.1fr 0.9fr; }
 }
-.contact-card{
-  background: var(--surface-hi);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: clamp(1.75rem, 4vw, 2.75rem);
-  box-shadow: var(--shadow);
-}
-.info-row{
-  display:flex; gap: 1rem; align-items:flex-start;
-  padding-block: 1rem;
-  border-bottom: 1px solid var(--line);
-}
-.info-row:first-child{ padding-top:0; }
-.info-row:last-child{ border-bottom:none; padding-bottom:0; }
-.info-icon{
-  flex: none; width: 2.1rem; height: 2.1rem;
-  border-radius: 50%;
-  display:grid; place-items:center;
-  background: var(--bg);
-  color: var(--brass);
-  border: 1px solid var(--line);
-}
-.info-icon svg{ width: 1.05rem; height: 1.05rem; }
-.info-label{ font-size: var(--fs-label); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); }
-.info-value{ font-weight: 600; font-size: 1.05rem; margin-top: 0.15rem; }
-.info-value.tabular{ font-variant-numeric: tabular-nums; }
-
 .contact-cta{
   display:flex; flex-direction:column; gap:1rem;
   justify-content:center;
@@ -631,9 +546,10 @@ footer{ padding-block: 2.5rem 6rem; }
       <a href="#galeri">Galeri</a>
       <a href="#deneyim">Deneyim</a>
       <a href="#ekip">Ekip</a>
+      <a href="#randevu">Randevu</a>
       <a href="#iletisim">İletişim</a>
       <a class="nav-phone" href="tel:+905451166205">0545 116 62 05</a>
-      <a class="btn btn-primary btn-sm" href="https://wa.me/905451166205?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener">Randevu Al</a>
+      <a class="btn btn-primary btn-sm" href="#randevu">Randevu Al</a>
     </nav>
   </div>
 </header>
@@ -652,8 +568,8 @@ footer{ padding-block: 2.5rem 6rem; }
           <span id="statusText">Saat bilgisi yükleniyor…</span>
         </span>
         <div class="hero-cta">
-          <a class="btn btn-primary" href="https://wa.me/905451166205?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener">
-            WhatsApp'tan Randevu Al
+          <a class="btn btn-primary" href="#randevu">
+            Randevu Al
           </a>
           <a class="btn btn-ghost" href="tel:+905451166205">Hemen Ara — 0545 116 62 05</a>
         </div>
@@ -804,6 +720,68 @@ footer{ padding-block: 2.5rem 6rem; }
 
   <div class="stripe-band" aria-hidden="true"></div>
 
+  <section class="booking" id="randevu">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Randevu</span>
+        <h2>Randevu Al</h2>
+        <p>Hizmetinizi ve berberinizi seçin, size uygun saati birlikte belirleyelim.</p>
+      </div>
+
+      <div class="booking-card reveal">
+        <div class="booking-steps" id="bookingSteps">
+          <span data-step="1">Hizmet</span>
+          <span data-step="2">Berber</span>
+          <span data-step="3">Tarih</span>
+          <span data-step="4">Saat</span>
+          <span data-step="5">Bilgileriniz</span>
+          <span data-step="6">Onay</span>
+        </div>
+
+        <div class="booking-msg" id="bookingMsg"></div>
+
+        <div class="booking-panel" data-panel="1">
+          <div class="pick-grid services" id="serviceList"><p class="booking-empty">Hizmetler yükleniyor…</p></div>
+          <div class="booking-nav"><span></span><button type="button" class="btn btn-primary" id="toStep2" disabled>Devam Et</button></div>
+        </div>
+
+        <div class="booking-panel" data-panel="2">
+          <div class="pick-grid" id="barberList"><p class="booking-empty">Berberler yükleniyor…</p></div>
+          <div class="booking-nav"><button type="button" class="btn btn-ghost" data-back="1">Geri</button><button type="button" class="btn btn-primary" id="toStep3" disabled>Devam Et</button></div>
+        </div>
+
+        <div class="booking-panel" data-panel="3">
+          <div class="field" style="max-width:280px">
+            <label for="bookingDate">Tarih Seçin</label>
+            <input type="date" id="bookingDate">
+          </div>
+          <div class="booking-nav"><button type="button" class="btn btn-ghost" data-back="2">Geri</button><button type="button" class="btn btn-primary" id="toStep4" disabled>Devam Et</button></div>
+        </div>
+
+        <div class="booking-panel" data-panel="4">
+          <div class="slot-grid" id="slotList"><p class="booking-empty">Önce bir tarih seçin.</p></div>
+          <div class="booking-nav"><button type="button" class="btn btn-ghost" data-back="3">Geri</button><button type="button" class="btn btn-primary" id="toStep5" disabled>Devam Et</button></div>
+        </div>
+
+        <div class="booking-panel" data-panel="5">
+          <div class="booking-form-grid">
+            <div class="field"><label for="custName">Ad Soyad</label><input type="text" id="custName" autocomplete="name" required></div>
+            <div class="field"><label for="custPhone">Telefon</label><input type="tel" id="custPhone" autocomplete="tel" placeholder="05xx xxx xx xx" required></div>
+          </div>
+          <div class="field" style="margin-bottom:1.25rem"><label for="custNotes">Not (opsiyonel)</label><textarea id="custNotes" rows="2"></textarea></div>
+          <div class="booking-nav"><button type="button" class="btn btn-ghost" data-back="4">Geri</button><button type="button" class="btn btn-primary" id="toStep6">Devam Et</button></div>
+        </div>
+
+        <div class="booking-panel" data-panel="6">
+          <div class="contact-card booking-summary" id="bookingSummary"></div>
+          <div class="booking-nav"><button type="button" class="btn btn-ghost" data-back="5">Geri</button><button type="button" class="btn btn-primary" id="confirmBooking">Randevuyu Onayla</button></div>
+        </div>
+      </div>
+
+      <p class="booking-empty" style="margin-top:1.25rem; text-align:center;">Online randevu size uygun değilse <a href="https://wa.me/905451166205?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener" style="color:var(--brass-text); font-weight:600;">WhatsApp'tan yazabilirsiniz</a>.</p>
+    </div>
+  </section>
+
   <section class="contact" id="iletisim">
     <div class="container">
       <div class="section-head reveal">
@@ -844,8 +822,9 @@ footer{ padding-block: 2.5rem 6rem; }
 
         <div class="contact-cta reveal">
           <h3>Randevu Sırası Sizde</h3>
-          <p>WhatsApp'tan yazın, size en uygun saati birlikte belirleyelim.</p>
-          <a class="btn btn-primary" href="https://wa.me/905451166205?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener">WhatsApp'tan Yaz</a>
+          <p>Online sistemden hemen randevu alın, ya da WhatsApp'tan yazın.</p>
+          <a class="btn btn-primary" href="#randevu">Randevu Al</a>
+          <a class="btn btn-ghost" href="https://wa.me/905451166205?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener">WhatsApp'tan Yaz</a>
           <a class="btn btn-ghost" href="tel:+905451166205">0545 116 62 05'i Ara</a>
           <a class="btn btn-ghost" href="https://www.google.com/maps/place/BOSS+ERKEK+KUAF%C3%96R%C3%9C/@39.7476021,39.4908903,17z/data=!3m1!4b1!4m6!3m5!1s0x40700dcca935f189:0xe549893e044ffec4!8m2!3d39.7476021!4d39.4908903" target="_blank" rel="noopener">Haritada Aç</a>
         </div>
@@ -922,6 +901,223 @@ footer{ padding-block: 2.5rem 6rem; }
     updateStatus();
     setInterval(updateStatus, 60000);
   })();
+</script>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+  const supabase = createClient(
+    'https://nvwyaxtwamjsghnxlwol.supabase.co',
+    'sb_publishable_rQoEvjFL3jOueZrPUIS9eA_1KpIS0aJ'
+  );
+
+  const els = {
+    steps: document.getElementById('bookingSteps'),
+    msg: document.getElementById('bookingMsg'),
+    serviceList: document.getElementById('serviceList'),
+    barberList: document.getElementById('barberList'),
+    dateInput: document.getElementById('bookingDate'),
+    slotList: document.getElementById('slotList'),
+    summary: document.getElementById('bookingSummary'),
+    custName: document.getElementById('custName'),
+    custPhone: document.getElementById('custPhone'),
+    custNotes: document.getElementById('custNotes'),
+    toStep2: document.getElementById('toStep2'),
+    toStep3: document.getElementById('toStep3'),
+    toStep4: document.getElementById('toStep4'),
+    toStep5: document.getElementById('toStep5'),
+    toStep6: document.getElementById('toStep6'),
+    confirmBtn: document.getElementById('confirmBooking'),
+  };
+
+  if(els.steps){
+    const state = { services: [], barbers: [], service: null, barber: null, date: null, slot: null };
+    const tl = new Intl.DateTimeFormat('tr-TR', { timeZone: 'Europe/Istanbul', hour: '2-digit', minute: '2-digit' });
+    const dl = new Intl.DateTimeFormat('tr-TR', { timeZone: 'Europe/Istanbul', day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' });
+    const money = new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 });
+
+    function todayIstanbul(){
+      const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
+      const map = Object.fromEntries(parts.map(p => [p.type, p.value]));
+      return `${map.year}-${map.month}-${map.day}`;
+    }
+
+    function showMsg(text, kind){
+      if(!text){ els.msg.innerHTML = ''; return; }
+      els.msg.innerHTML = `<span class="status-badge ${kind === 'error' ? 'is-bad' : 'is-good'}"><span class="status-dot" aria-hidden="true"></span>${text}</span>`;
+    }
+
+    function goToStep(n){
+      document.querySelectorAll('.booking-panel').forEach(p => p.classList.toggle('is-active', Number(p.dataset.panel) === n));
+      document.querySelectorAll('#bookingSteps span').forEach(s => {
+        const step = Number(s.dataset.step);
+        s.classList.toggle('is-active', step === n);
+        s.classList.toggle('is-done', step < n);
+      });
+      showMsg('');
+    }
+
+    document.querySelectorAll('[data-back]').forEach(btn => {
+      btn.addEventListener('click', () => goToStep(Number(btn.dataset.back)));
+    });
+
+    async function loadServices(){
+      const { data, error } = await supabase
+        .from('services')
+        .select('id,name,description,duration_minutes,price_try,price_is_final')
+        .eq('active', true)
+        .order('sort_order');
+      if(error || !data || !data.length){
+        els.serviceList.innerHTML = '<p class="booking-empty">Hizmetler şu an yüklenemedi, lütfen sayfayı yenileyin ya da WhatsApp\'tan yazın.</p>';
+        return;
+      }
+      state.services = data;
+      els.serviceList.innerHTML = '';
+      data.forEach(s => {
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'pick-card';
+        const priceLabel = s.price_is_final ? money.format(s.price_try) : 'Fiyat için bilgi alın';
+        card.innerHTML = `<strong>${s.name}</strong><small>${s.duration_minutes} dk · ${priceLabel}</small>`;
+        card.addEventListener('click', () => {
+          state.service = s;
+          els.serviceList.querySelectorAll('.pick-card').forEach(c => c.classList.remove('is-selected'));
+          card.classList.add('is-selected');
+          els.toStep2.disabled = false;
+        });
+        els.serviceList.appendChild(card);
+      });
+    }
+
+    async function loadBarbers(){
+      const { data, error } = await supabase
+        .from('barbers')
+        .select('id,name,title')
+        .eq('active', true)
+        .order('sort_order');
+      if(error || !data || !data.length){
+        els.barberList.innerHTML = '<p class="booking-empty">Berberler şu an yüklenemedi, lütfen sayfayı yenileyin ya da WhatsApp\'tan yazın.</p>';
+        return;
+      }
+      state.barbers = data;
+      els.barberList.innerHTML = '';
+      data.forEach(b => {
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'pick-card';
+        card.innerHTML = `<strong>${b.name}</strong><small>${b.title || ''}</small>`;
+        card.addEventListener('click', () => {
+          state.barber = b;
+          els.barberList.querySelectorAll('.pick-card').forEach(c => c.classList.remove('is-selected'));
+          card.classList.add('is-selected');
+          els.toStep3.disabled = false;
+        });
+        els.barberList.appendChild(card);
+      });
+    }
+
+    async function loadSlots(){
+      state.slot = null;
+      els.toStep5.disabled = true;
+      els.slotList.innerHTML = '<p class="booking-empty">Uygun saatler yükleniyor…</p>';
+      const { data, error } = await supabase.rpc('get_available_slots', {
+        p_barber_id: state.barber.id,
+        p_service_id: state.service.id,
+        p_date: state.date,
+      });
+      if(error){
+        els.slotList.innerHTML = '<p class="booking-empty">Saatler yüklenemedi, lütfen tekrar deneyin.</p>';
+        return;
+      }
+      if(!data || !data.length){
+        els.slotList.innerHTML = '<p class="booking-empty">Bu tarihte uygun saat kalmamış. Başka bir tarih deneyin ya da WhatsApp\'tan yazın.</p>';
+        return;
+      }
+      els.slotList.innerHTML = '';
+      data.forEach(slot => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'slot-btn';
+        btn.textContent = tl.format(new Date(slot.slot_start));
+        btn.addEventListener('click', () => {
+          state.slot = slot;
+          els.slotList.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('is-selected'));
+          btn.classList.add('is-selected');
+          els.toStep5.disabled = false;
+        });
+        els.slotList.appendChild(btn);
+      });
+    }
+
+    function renderSummary(){
+      const startDate = new Date(state.slot.slot_start);
+      els.summary.innerHTML = `
+        <div class="info-row"><div><div class="info-label">Hizmet</div><div class="info-value">${state.service.name}</div></div></div>
+        <div class="info-row"><div><div class="info-label">Berber</div><div class="info-value">${state.barber.name}</div></div></div>
+        <div class="info-row"><div><div class="info-label">Tarih</div><div class="info-value">${dl.format(startDate)}</div></div></div>
+        <div class="info-row"><div><div class="info-label">Saat</div><div class="info-value tabular">${tl.format(startDate)}</div></div></div>
+        <div class="info-row"><div><div class="info-label">Ad Soyad</div><div class="info-value">${els.custName.value.trim()}</div></div></div>
+        <div class="info-row"><div><div class="info-label">Telefon</div><div class="info-value tabular">${els.custPhone.value.trim()}</div></div></div>
+      `;
+    }
+
+    const ERROR_MESSAGES = {
+      SLOT_UNAVAILABLE: 'Bu saat az önce doldu, lütfen başka bir saat seçin.',
+      SLOT_IN_PAST: 'Bu saat artık geçmişte kaldı, lütfen başka bir saat seçin.',
+      BARBER_UNAVAILABLE: 'Seçilen berber şu an müsait değil.',
+      SERVICE_UNAVAILABLE: 'Seçilen hizmet şu an müsait değil.',
+      MISSING_CUSTOMER_INFO: 'Ad soyad ve telefon zorunludur.',
+    };
+
+    els.toStep2.addEventListener('click', () => goToStep(2));
+    els.toStep3.addEventListener('click', () => goToStep(3));
+    els.toStep4.addEventListener('click', () => { goToStep(4); loadSlots(); });
+    els.toStep5.addEventListener('click', () => goToStep(5));
+    els.toStep6.addEventListener('click', () => {
+      if(!els.custName.value.trim() || !els.custPhone.value.trim()){
+        showMsg('Lütfen ad soyad ve telefon bilgilerinizi girin.', 'error');
+        return;
+      }
+      renderSummary();
+      goToStep(6);
+    });
+
+    els.dateInput.addEventListener('change', () => {
+      state.date = els.dateInput.value;
+      els.toStep4.disabled = !state.date;
+    });
+
+    els.confirmBtn.addEventListener('click', async () => {
+      els.confirmBtn.disabled = true;
+      const { data, error } = await supabase.rpc('book_appointment', {
+        p_barber_id: state.barber.id,
+        p_service_id: state.service.id,
+        p_starts_at: state.slot.slot_start,
+        p_customer_name: els.custName.value.trim(),
+        p_customer_phone: els.custPhone.value.trim(),
+        p_notes: els.custNotes.value.trim() || null,
+      });
+      if(error){
+        const friendly = ERROR_MESSAGES[error.message] || 'Randevu oluşturulamadı, lütfen tekrar deneyin ya da WhatsApp\'tan yazın.';
+        showMsg(friendly, 'error');
+        els.confirmBtn.disabled = false;
+        if(error.message === 'SLOT_UNAVAILABLE'){
+          goToStep(4);
+          loadSlots();
+        }
+        return;
+      }
+      els.summary.innerHTML = `<div class="info-row"><div><div class="info-label">Durum</div><div class="info-value">Randevunuz alındı. Onay için sizi arayabiliriz.</div></div></div>` + els.summary.innerHTML;
+      document.querySelector('[data-panel="6"] .booking-nav').innerHTML = `<button type="button" class="btn btn-ghost" id="newBooking">Yeni Randevu Oluştur</button><span></span>`;
+      showMsg('Randevunuz başarıyla oluşturuldu!', 'success');
+      document.getElementById('newBooking').addEventListener('click', () => window.location.reload());
+    });
+
+    els.dateInput.min = todayIstanbul();
+    loadServices();
+    loadBarbers();
+    goToStep(1);
+  }
 </script>
 
 </body>

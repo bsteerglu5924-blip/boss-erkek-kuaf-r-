@@ -1,0 +1,198 @@
+/* ============ SHARED: TOKENS, RESET, CORE COMPONENTS ============
+   Used by index.html and admin.html. Keep this file page-agnostic —
+   page-specific layout (hero, gallery, booking wizard, dashboard) stays
+   in each page's own <style> block. */
+
+:root{
+  --bg: #EAE2CE;
+  --surface: #DDD1B2;
+  --surface-hi: #F4EFDF;
+  --ink: #211C13;
+  --ink-soft: #5B563F;
+  --brass: #8C6A34;
+  --brass-text: #7A5A2A;
+  --brass-ink: #FFFFFF;
+  --oxblood: #6E2430;
+  --line: rgba(33,28,19,0.16);
+  --shadow: 0 18px 40px -22px rgba(33,28,19,0.35);
+  --status-open: #3F7D4F;
+  --status-closed: #6E2430;
+
+  --font-display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --font-body: "Work Sans", "Segoe UI", system-ui, sans-serif;
+
+  --fs-h1: clamp(3.2rem, 11vw, 8.5rem);
+  --fs-h2: clamp(2rem, 5vw, 3.4rem);
+  --fs-h3: clamp(1.2rem, 2.4vw, 1.6rem);
+  --fs-lead: clamp(1.05rem, 2vw, 1.3rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.875rem;
+  --fs-label: 0.75rem;
+
+  --container: 1180px;
+  --radius: 3px;
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg: #15130F;
+    --surface: #201C16;
+    --surface-hi: #2A251C;
+    --ink: #F3EEE4;
+    --ink-soft: #B7AE9B;
+    --brass: #C79A54;
+    --brass-text: #C79A54;
+    --brass-ink: #171310;
+    --oxblood: #B04654;
+    --line: rgba(243,238,228,0.14);
+    --shadow: 0 22px 50px -20px rgba(0,0,0,0.6);
+    --status-open: #6FBF83;
+    --status-closed: #E08A93;
+  }
+}
+:root[data-theme="dark"]{
+  --bg: #15130F;
+  --surface: #201C16;
+  --surface-hi: #2A251C;
+  --ink: #F3EEE4;
+  --ink-soft: #B7AE9B;
+  --brass: #C79A54;
+  --brass-text: #C79A54;
+  --brass-ink: #171310;
+  --oxblood: #B04654;
+  --line: rgba(243,238,228,0.14);
+  --shadow: 0 22px 50px -20px rgba(0,0,0,0.6);
+  --status-open: #6FBF83;
+  --status-closed: #E08A93;
+}
+
+/* ============ RESET-ish ============ */
+*,*::before,*::after{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  *,*::before,*::after{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+body{
+  margin:0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+h1,h2,h3{ margin:0; font-family: var(--font-display); text-wrap: balance; letter-spacing: 0.01em; }
+p{ margin:0; }
+a{ color: inherit; text-decoration: none; }
+img,svg{ display:block; max-width:100%; }
+.container{ max-width: var(--container); margin-inline:auto; padding-inline: clamp(1.25rem, 4vw, 3rem); }
+.eyebrow{
+  font-family: var(--font-body);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brass-text);
+}
+::selection{ background: var(--brass); color: var(--brass-ink); }
+:focus-visible{ outline: 2px solid var(--brass); outline-offset: 3px; }
+
+/* ============ BUTTONS ============ */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:0.5rem;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-small);
+  letter-spacing: 0.03em;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  cursor:pointer;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease;
+  white-space: nowrap;
+}
+.btn-primary{ background: var(--brass); color: var(--brass-ink); }
+.btn-primary:hover{ transform: translateY(-2px); box-shadow: var(--shadow); }
+.btn-ghost{ background: transparent; color: var(--ink); border-color: var(--line); }
+.btn-ghost:hover{ border-color: var(--brass); color: var(--brass-text); }
+.btn-sm{ padding: 0.6rem 1.1rem; font-size: 0.8rem; }
+.btn:disabled{ opacity: 0.45; cursor: not-allowed; transform:none; box-shadow:none; }
+.btn-danger{ background: transparent; color: var(--oxblood); border-color: var(--oxblood); }
+.btn-danger:hover{ background: var(--oxblood); color: #fff; }
+
+/* ============ CARD / INFO ROWS (contact card, dashboards) ============ */
+.contact-card{
+  background: var(--surface-hi);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(1.75rem, 4vw, 2.75rem);
+  box-shadow: var(--shadow);
+}
+.info-row{
+  display:flex; gap: 1rem; align-items:flex-start;
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.info-row:first-child{ padding-top:0; }
+.info-row:last-child{ border-bottom:none; padding-bottom:0; }
+.info-icon{
+  flex: none; width: 2.1rem; height: 2.1rem;
+  border-radius: 50%;
+  display:grid; place-items:center;
+  background: var(--bg);
+  color: var(--brass);
+  border: 1px solid var(--line);
+}
+.info-icon svg{ width: 1.05rem; height: 1.05rem; }
+.info-label{ font-size: var(--fs-label); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); }
+.info-value{ font-weight: 600; font-size: 1.05rem; margin-top: 0.15rem; }
+.info-value.tabular{ font-variant-numeric: tabular-nums; }
+
+/* ============ STATUS BADGE / PILL ============ */
+.status-badge{
+  display:inline-flex; align-items:center; gap:0.55rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface-hi);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--ink);
+}
+.status-dot{
+  width: 0.55rem; height: 0.55rem;
+  border-radius: 50%;
+  background: var(--status-closed);
+  transition: background .2s ease;
+}
+.status-badge.is-open .status-dot,
+.status-badge.is-good .status-dot{
+  background: var(--status-open);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--status-open) 25%, transparent);
+}
+.status-badge.is-bad{ border-color: color-mix(in srgb, var(--status-closed) 40%, var(--line)); }
+.status-badge.is-bad .status-dot{
+  background: var(--status-closed);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--status-closed) 25%, transparent);
+}
+
+/* ============ FORM FIELDS (booking wizard, admin) ============ */
+.field{ display:flex; flex-direction:column; gap:0.4rem; }
+.field label{ font-size: var(--fs-label); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); font-weight:600; }
+.field input,
+.field select,
+.field textarea{
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  color: var(--ink);
+  background: var(--surface-hi);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.75rem 0.9rem;
+  min-height: 44px;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus{ outline: 2px solid var(--brass); outline-offset: 1px; }
+.field textarea{ resize: vertical; min-height: 80px; }

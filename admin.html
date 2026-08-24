@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Yönetim Paneli — BOSS Erkek Kuaförü</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="icon" type="image/png" href="logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  body{ min-height: 100vh; }
+  header{
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-hi);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-block: 0.9rem;
+  }
+  .brand{
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: 0.03em;
+    display:flex; align-items:center; gap:0.6rem;
+  }
+  .brand-logo{ height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
+  .brand small{
+    font-family: var(--font-body);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+  }
+  main{ padding-block: clamp(2rem, 5vw, 3.5rem); }
+  #loginView{ max-width: 420px; margin-inline: auto; }
+  #loginView h1{ font-size: var(--fs-h3); text-transform: uppercase; margin-bottom: 1.5rem; text-align:center; }
+  #loginView form{ display:flex; flex-direction:column; gap: 1rem; }
+  #loginView .btn{ margin-top: 0.5rem; justify-content:center; }
+  .hidden{ display:none !important; }
+
+  .panel{
+    background: var(--surface-hi);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: clamp(1.5rem, 4vw, 2.25rem);
+    margin-bottom: 2.5rem;
+  }
+  .panel h2{ font-size: var(--fs-h3); text-transform: uppercase; margin-bottom: 1.25rem; }
+  .filters{ display:flex; flex-wrap:wrap; gap: 1rem; align-items:flex-end; margin-bottom: 1.5rem; }
+  .filters .field{ min-width: 180px; }
+
+  .appt-row{
+    display:grid; gap: 0.9rem;
+    grid-template-columns: 1fr;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .appt-row:last-child{ border-bottom:none; }
+  @media (min-width: 760px){
+    .appt-row{ grid-template-columns: 1fr 1fr 1fr auto; align-items:center; }
+  }
+  .appt-when{ font-weight: 700; font-variant-numeric: tabular-nums; }
+  .appt-when small{ display:block; font-weight:500; color: var(--ink-soft); font-size: var(--fs-small); }
+  .appt-who strong{ display:block; }
+  .appt-who span{ color: var(--ink-soft); font-size: var(--fs-small); }
+  .appt-what small{ display:block; color: var(--ink-soft); font-size: var(--fs-small); }
+  .appt-status select{
+    font-family: var(--font-body); font-size: var(--fs-small); font-weight:600;
+    padding: 0.55rem 0.7rem; border-radius: var(--radius); border: 1px solid var(--line);
+    background: var(--bg); color: var(--ink); min-height: 44px;
+  }
+
+  .blocked-form{ display:grid; gap: 1rem; grid-template-columns: 1fr; margin-bottom: 1.5rem; }
+  @media (min-width: 760px){ .blocked-form{ grid-template-columns: repeat(4, 1fr) auto; align-items:end; } }
+  .blocked-row{
+    display:flex; justify-content:space-between; align-items:center; gap: 1rem;
+    padding: 0.85rem 0; border-bottom: 1px solid var(--line); font-size: var(--fs-small);
+  }
+  .blocked-row:last-child{ border-bottom:none; }
+  .blocked-row strong{ font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <a class="brand" href="index.html"><img class="brand-logo" src="logo.png" alt="" aria-hidden="true">BOSS <small>Yönetim Paneli</small></a>
+    <button type="button" class="btn btn-ghost btn-sm hidden" id="logoutBtn">Çıkış Yap</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <section id="loginView">
+    <h1>Yönetici Girişi</h1>
+    <div class="contact-card">
+      <form id="loginForm">
+        <div class="field">
+          <label for="loginEmail">E-posta</label>
+          <input type="email" id="loginEmail" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="loginPassword">Parola</label>
+          <input type="password" id="loginPassword" autocomplete="current-password" required>
+        </div>
+        <div class="booking-msg" id="loginMsg"></div>
+        <button type="submit" class="btn btn-primary">Giriş Yap</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="dashboardView" class="hidden">
+
+    <div class="panel">
+      <h2>Randevular</h2>
+      <div class="filters">
+        <div class="field">
+          <label for="filterDate">Tarih</label>
+          <input type="date" id="filterDate">
+        </div>
+        <div class="field">
+          <label for="filterStatus">Durum</label>
+          <select id="filterStatus">
+            <option value="all">Tümü (iptal hariç)</option>
+            <option value="pending">Bekliyor</option>
+            <option value="confirmed">Onaylandı</option>
+            <option value="completed">Tamamlandı</option>
+            <option value="cancelled">İptal Edildi</option>
+            <option value="no_show">Gelmedi</option>
+          </select>
+        </div>
+        <button type="button" class="btn btn-ghost btn-sm" id="refreshAppts">Yenile</button>
+      </div>
+      <div id="apptList"><p class="booking-empty">Yükleniyor…</p></div>
+    </div>
+
+    <div class="panel">
+      <h2>Müsaitlik / İzin Ekle</h2>
+      <form class="blocked-form" id="blockedForm">
+        <div class="field">
+          <label for="blockedBarber">Berber</label>
+          <select id="blockedBarber" required></select>
+        </div>
+        <div class="field">
+          <label for="blockedStart">Başlangıç</label>
+          <input type="datetime-local" id="blockedStart" required>
+        </div>
+        <div class="field">
+          <label for="blockedEnd">Bitiş</label>
+          <input type="datetime-local" id="blockedEnd" required>
+        </div>
+        <div class="field">
+          <label for="blockedReason">Sebep</label>
+          <input type="text" id="blockedReason" placeholder="İzin, öğle molası…">
+        </div>
+        <button type="submit" class="btn btn-primary">Ekle</button>
+      </form>
+      <div class="booking-msg" id="blockedMsg"></div>
+      <div id="blockedList"><p class="booking-empty">Yükleniyor…</p></div>
+    </div>
+
+  </section>
+
+</main>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+  const supabase = createClient(
+    'https://nvwyaxtwamjsghnxlwol.supabase.co',
+    'sb_publishable_rQoEvjFL3jOueZrPUIS9eA_1KpIS0aJ'
+  );
+
+  const loginView = document.getElementById('loginView');
+  const dashboardView = document.getElementById('dashboardView');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const loginForm = document.getElementById('loginForm');
+  const loginMsg = document.getElementById('loginMsg');
+
+  const dl = new Intl.DateTimeFormat('tr-TR', { timeZone: 'Europe/Istanbul', day: '2-digit', month: '2-digit' });
+  const tl = new Intl.DateTimeFormat('tr-TR', { timeZone: 'Europe/Istanbul', hour: '2-digit', minute: '2-digit' });
+
+  const STATUS_LABELS = {
+    pending: 'Bekliyor', confirmed: 'Onaylandı', completed: 'Tamamlandı',
+    cancelled: 'İptal Edildi', no_show: 'Gelmedi',
+  };
+
+  function todayIstanbul(){
+    const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
+    const map = Object.fromEntries(parts.map(p => [p.type, p.value]));
+    return `${map.year}-${map.month}-${map.day}`;
+  }
+
+  function showView(loggedIn){
+    loginView.classList.toggle('hidden', loggedIn);
+    dashboardView.classList.toggle('hidden', !loggedIn);
+    logoutBtn.classList.toggle('hidden', !loggedIn);
+    if(loggedIn){
+      loadBarbersIntoSelect();
+      loadAppointments();
+      loadBlockedTimes();
+    }
+  }
+
+  supabase.auth.getSession().then(({ data }) => showView(!!data.session));
+  supabase.auth.onAuthStateChange((_event, session) => showView(!!session));
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loginMsg.innerHTML = '';
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if(error){
+      loginMsg.innerHTML = `<span class="status-badge is-bad"><span class="status-dot" aria-hidden="true"></span>E-posta veya parola hatalı.</span>`;
+    }
+  });
+
+  logoutBtn.addEventListener('click', () => supabase.auth.signOut());
+
+  // ============ APPOINTMENTS ============
+  const filterDate = document.getElementById('filterDate');
+  const filterStatus = document.getElementById('filterStatus');
+  const apptList = document.getElementById('apptList');
+  filterDate.value = todayIstanbul();
+
+  async function loadAppointments(){
+    apptList.innerHTML = '<p class="booking-empty">Yükleniyor…</p>';
+    const dayStart = new Date(`${filterDate.value}T00:00:00+03:00`).toISOString();
+    const dayEnd = new Date(`${filterDate.value}T23:59:59+03:00`).toISOString();
+
+    let query = supabase
+      .from('appointments')
+      .select('id,starts_at,ends_at,status,customer_name,customer_phone,notes,barbers(name),services(name)')
+      .gte('starts_at', dayStart)
+      .lte('starts_at', dayEnd)
+      .order('starts_at');
+
+    if(filterStatus.value === 'all'){
+      query = query.neq('status', 'cancelled');
+    } else {
+      query = query.eq('status', filterStatus.value);
+    }
+
+    const { data, error } = await query;
+    if(error){
+      apptList.innerHTML = '<p class="booking-empty">Randevular yüklenemedi.</p>';
+      return;
+    }
+    if(!data.length){
+      apptList.innerHTML = '<p class="booking-empty">Bu filtreyle randevu bulunamadı.</p>';
+      return;
+    }
+    apptList.innerHTML = '';
+    data.forEach(appt => {
+      const start = new Date(appt.starts_at);
+      const row = document.createElement('div');
+      row.className = 'appt-row';
+      row.innerHTML = `
+        <div class="appt-when">${tl.format(start)}<small>${dl.format(start)}</small></div>
+        <div class="appt-who"><strong>${appt.customer_name}</strong><span>${appt.customer_phone}</span></div>
+        <div class="appt-what">${appt.services?.name || '—'}<small>${appt.barbers?.name || '—'}${appt.notes ? ' · ' + appt.notes : ''}</small></div>
+        <div class="appt-status"></div>
+      `;
+      const select = document.createElement('select');
+      Object.entries(STATUS_LABELS).forEach(([value, label]) => {
+        const opt = document.createElement('option');
+        opt.value = value; opt.textContent = label;
+        if(value === appt.status) opt.selected = true;
+        select.appendChild(opt);
+      });
+      select.addEventListener('change', async () => {
+        select.disabled = true;
+        const { error: updErr } = await supabase.from('appointments').update({ status: select.value }).eq('id', appt.id);
+        select.disabled = false;
+        if(updErr){ alert('Durum güncellenemedi: ' + updErr.message); select.value = appt.status; }
+        else { appt.status = select.value; }
+      });
+      row.querySelector('.appt-status').appendChild(select);
+      apptList.appendChild(row);
+    });
+  }
+
+  document.getElementById('refreshAppts').addEventListener('click', loadAppointments);
+  filterDate.addEventListener('change', loadAppointments);
+  filterStatus.addEventListener('change', loadAppointments);
+
+  // ============ BLOCKED TIMES ============
+  const blockedBarber = document.getElementById('blockedBarber');
+  const blockedForm = document.getElementById('blockedForm');
+  const blockedMsg = document.getElementById('blockedMsg');
+  const blockedList = document.getElementById('blockedList');
+
+  async function loadBarbersIntoSelect(){
+    if(blockedBarber.options.length) return;
+    const { data } = await supabase.from('barbers').select('id,name').eq('active', true).order('sort_order');
+    (data || []).forEach(b => {
+      const opt = document.createElement('option');
+      opt.value = b.id; opt.textContent = b.name;
+      blockedBarber.appendChild(opt);
+    });
+  }
+
+  async function loadBlockedTimes(){
+    blockedList.innerHTML = '<p class="booking-empty">Yükleniyor…</p>';
+    const { data, error } = await supabase
+      .from('blocked_times')
+      .select('id,starts_at,ends_at,reason,barbers(name)')
+      .gte('starts_at', new Date().toISOString())
+      .order('starts_at');
+    if(error){
+      blockedList.innerHTML = '<p class="booking-empty">Yüklenemedi.</p>';
+      return;
+    }
+    if(!data.length){
+      blockedList.innerHTML = '<p class="booking-empty">Planlanmış izin/blok yok.</p>';
+      return;
+    }
+    blockedList.innerHTML = '';
+    data.forEach(b => {
+      const row = document.createElement('div');
+      row.className = 'blocked-row';
+      const start = new Date(b.starts_at);
+      const end = new Date(b.ends_at);
+      row.innerHTML = `<span><strong>${b.barbers?.name || '—'}</strong> — ${dl.format(start)} ${tl.format(start)}–${tl.format(end)}${b.reason ? ' · ' + b.reason : ''}</span>`;
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'btn btn-ghost btn-sm';
+      removeBtn.textContent = 'Kaldır';
+      removeBtn.addEventListener('click', async () => {
+        removeBtn.disabled = true;
+        const { error: delErr } = await supabase.from('blocked_times').delete().eq('id', b.id);
+        if(delErr){ alert('Kaldırılamadı: ' + delErr.message); removeBtn.disabled = false; }
+        else { loadBlockedTimes(); }
+      });
+      row.appendChild(removeBtn);
+      blockedList.appendChild(row);
+    });
+  }
+
+  blockedForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    blockedMsg.innerHTML = '';
+    const startVal = document.getElementById('blockedStart').value;
+    const endVal = document.getElementById('blockedEnd').value;
+    if(new Date(endVal) <= new Date(startVal)){
+      blockedMsg.innerHTML = `<span class="status-badge is-bad"><span class="status-dot" aria-hidden="true"></span>Bitiş, başlangıçtan sonra olmalı.</span>`;
+      return;
+    }
+    const { error } = await supabase.from('blocked_times').insert({
+      barber_id: blockedBarber.value,
+      starts_at: new Date(startVal).toISOString(),
+      ends_at: new Date(endVal).toISOString(),
+      reason: document.getElementById('blockedReason').value.trim() || null,
+    });
+    if(error){
+      blockedMsg.innerHTML = `<span class="status-badge is-bad"><span class="status-dot" aria-hidden="true"></span>Eklenemedi: ${error.message}</span>`;
+      return;
+    }
+    blockedForm.reset();
+    blockedMsg.innerHTML = `<span class="status-badge is-good"><span class="status-dot" aria-hidden="true"></span>Eklendi.</span>`;
+    loadBlockedTimes();
+  });
+</script>
+
+</body>
+</html>
