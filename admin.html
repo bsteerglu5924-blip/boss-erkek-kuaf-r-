@@ -284,7 +284,7 @@
 
     let query = supabase
       .from('appointments')
-      .select('id,starts_at,ends_at,status,customer_name,customer_phone,notes,barbers(name),services(name)')
+      .select('id,starts_at,ends_at,status,customer_name,customer_phone,customer_email,notes,barbers(name),services(name)')
       .gte('starts_at', dayStart)
       .lte('starts_at', dayEnd)
       .order('starts_at');
@@ -311,7 +311,7 @@
       row.className = 'appt-row';
       row.innerHTML = `
         <div class="appt-when">${tl.format(start)}<small>${dl.format(start)}</small></div>
-        <div class="appt-who"><strong>${appt.customer_name}</strong><span>${appt.customer_phone}</span></div>
+        <div class="appt-who"><strong>${appt.customer_name}</strong><span>${appt.customer_phone}</span>${appt.customer_email ? `<span>${appt.customer_email}</span>` : ''}</div>
         <div class="appt-what">${appt.services?.name || '—'}<small>${appt.barbers?.name || '—'}${appt.notes ? ' · ' + appt.notes : ''}</small></div>
         <div class="appt-status"></div>
       `;

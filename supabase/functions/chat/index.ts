@@ -122,6 +122,7 @@ const BOOKING_ERRORS: Record<string, string> = {
   BARBER_UNAVAILABLE: "Seçilen berber şu an müsait değil.",
   SERVICE_UNAVAILABLE: "Seçilen hizmet şu an müsait değil.",
   MISSING_CUSTOMER_INFO: "Ad soyad ve telefon zorunludur.",
+  INVALID_EMAIL: "E-posta adresi geçersiz görünüyor.",
 };
 
 // ============ Sistem promptu ============
@@ -150,6 +151,7 @@ const SYSTEM_PROMPT = `Sen BOSS Erkek Kuaförü'nün online randevu asistanısı
 3. Boş saat sorulduğunda MUTLAKA get_available_slots çağır. Saat uydurma.
 4. Randevu oluşturmadan önce hizmet, berber, tarih, saat, ad soyad ve telefonu özetle ve müşteriden açık onay iste ("Onaylıyor musunuz?"). Müşteri açıkça onaylamadan create_appointment ÇAĞIRMA.
 5. Ad soyad ve telefon numarası olmadan randevu oluşturma.
+5b. Onaydan önce isterse e-posta adresi de sorabilirsin ("randevudan 2 saat önce hatırlatma göndermemizi ister misiniz?") — zorunlu değil, müşteri vermek istemezse ısrar etme, customer_email'i boş bırak.
 6. Müşteri berber tercihi belirtmezse berberleri listele ve seçmesini iste; kendin seçme.
 7. Mevcut bir randevuyu iptal etme veya değiştirme yetkin yok. Böyle bir talepte 0545 116 62 05'i aramasını ya da WhatsApp'tan yazmasını söyle.
 8. Salonla ilgisi olmayan konularda yardımcı olamayacağını kibarca söyle ve konuyu randevuya getir.
@@ -208,6 +210,7 @@ const TOOLS = [
         },
         customer_name: { type: "string", description: "Müşterinin ad soyadı" },
         customer_phone: { type: "string", description: "Müşterinin telefon numarası" },
+        customer_email: { type: "string", description: "Opsiyonel e-posta, hatırlatma maili için. Zorunlu değil, müşteri vermek istemezse boş bırak." },
         notes: { type: "string", description: "Opsiyonel not" },
       },
       required: ["barber_name", "service_name", "starts_at", "customer_name", "customer_phone"],
@@ -314,6 +317,11 @@ async function runTool(
       return "HATA: Telefon numarası geçersiz görünüyor. Müşteriden 05xx xxx xx xx biçiminde tekrar iste.";
     }
 
+    const rawEmail = input.customer_email ? String(input.customer_email).trim() : "";
+    if (rawEmail && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(rawEmail)) {
+      return "HATA: E-posta adresi geçersiz görünüyor. Düzeltmesini iste ya da boş bırak.";
+    }
+
     const { data, error } = await db.rpc("book_appointment", {
       p_barber_id: barber.id,
       p_service_id: service.id,
@@ -321,6 +329,7 @@ async function runTool(
       p_customer_name: customerName,
       p_customer_phone: rawPhone,
       p_notes: input.notes ? String(input.notes).trim() : null,
+      p_customer_email: rawEmail || null,
     });
 
     if (error) {
