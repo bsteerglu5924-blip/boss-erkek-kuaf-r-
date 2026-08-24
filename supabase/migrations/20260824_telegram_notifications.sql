@@ -1,9 +1,20 @@
 -- ============ TELEGRAM NOTIFICATIONS ============
 create extension if not exists pg_net with schema extensions;
 
--- Secrets stored in Supabase Vault (only postgres/service_role can read)
-select vault.create_secret('8923746373:AAEjQt8dwAIuyjbYJYPfb66JK_JlhTJhi-A', 'telegram_bot_token', 'Randevu bildirimleri icin Telegram bot token');
-select vault.create_secret('8921326167', 'telegram_chat_id', 'Randevu bildirimleri icin Telegram chat id');
+-- Secretlar Supabase Vault'ta tutulur (yalnizca postgres/service_role okuyabilir).
+--
+-- GERCEK DEGERLER BU DOSYAYA YAZILMAZ - repo public. Asagidaki placeholder'lar
+-- yerine gercek token/chat id, Supabase SQL Editor'den elle girilir:
+--
+--   select vault.update_secret(
+--     (select id from vault.secrets where name = 'telegram_bot_token'),
+--     'BOTFATHER_DAN_ALINAN_TOKEN'
+--   );
+--
+-- (Onceki surumde gercek token bu dosyaya gomulmus ve commit edilmisti;
+--  o token BotFather /revoke ile iptal edildi.)
+select vault.create_secret('REPLACE_ME_SET_IN_SQL_EDITOR', 'telegram_bot_token', 'Randevu bildirimleri icin Telegram bot token');
+select vault.create_secret('REPLACE_ME_SET_IN_SQL_EDITOR', 'telegram_chat_id', 'Randevu bildirimleri icin Telegram chat id');
 
 create or replace function public.notify_telegram_appointment()
 returns trigger
