@@ -774,6 +774,78 @@ footer{ padding-block: 2.5rem 6rem; }
   text-align: center;
   flex: none;
 }
+
+/* ============ NAV AUTH ============ */
+.hidden{ display:none !important; }
+.nav-user{
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+/* ============ AUTH MODAL ============ */
+.auth-overlay{
+  position: fixed; inset: 0;
+  z-index: 80;
+  display:flex; align-items:center; justify-content:center;
+  padding: 1.25rem;
+  background: color-mix(in srgb, var(--ink) 55%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease;
+}
+.auth-overlay.is-open{ opacity:1; pointer-events:auto; }
+.auth-modal{
+  width: min(420px, 100%);
+  max-height: calc(100dvh - 2.5rem);
+  overflow-y: auto;
+  background: var(--surface-hi);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: clamp(1.5rem, 4vw, 2rem);
+  position: relative;
+  transform: translateY(10px) scale(.98);
+  transition: transform .18s ease;
+}
+.auth-overlay.is-open .auth-modal{ transform:none; }
+.auth-modal-close{
+  position: absolute; top: 1rem; right: 1rem;
+  width: 2.25rem; height: 2.25rem;
+  display:grid; place-items:center;
+  background: transparent; border: 1px solid var(--line); border-radius: var(--radius);
+  color: var(--ink); cursor:pointer;
+}
+.auth-modal-close:hover{ border-color: var(--brass); color: var(--brass-text); }
+.auth-modal-close svg{ width: 1.05rem; height: 1.05rem; }
+.auth-modal h2{
+  font-size: var(--fs-h3); text-transform: uppercase;
+  margin-bottom: 1.25rem; padding-right: 2rem;
+}
+.auth-tabs{ display:flex; gap:0.5rem; margin-bottom: 1.25rem; }
+.auth-tab{
+  flex:1;
+  padding: 0.65rem 0.5rem;
+  font-family: var(--font-body); font-weight:600; font-size: var(--fs-small);
+  background: transparent; border: 1px solid var(--line); border-radius: var(--radius);
+  color: var(--ink-soft); cursor:pointer;
+  transition: border-color .18s ease, color .18s ease, background .18s ease;
+}
+.auth-tab.is-active{ border-color: var(--brass); color: var(--brass-text); background: var(--bg); }
+.auth-form{ display:none; flex-direction:column; gap: 0.9rem; }
+.auth-form.is-active{ display:flex; }
+.auth-form .field-check{
+  display:flex; align-items:flex-start; gap:0.6rem;
+  font-size: var(--fs-small); color: var(--ink-soft);
+}
+.auth-form .field-check input{ margin-top: 0.2rem; flex:none; }
+.auth-form .btn{ margin-top: 0.35rem; justify-content:center; }
+.auth-link{
+  background:none; border:none; padding:0; margin-top:-0.35rem;
+  font-size: var(--fs-small); font-weight:600; color: var(--brass-text);
+  cursor:pointer; text-decoration: underline; text-align:left; align-self:flex-start;
+}
 </style>
 </head>
 <body>
@@ -792,6 +864,9 @@ footer{ padding-block: 2.5rem 6rem; }
       <a href="#randevu">Randevu</a>
       <a href="#iletisim">İletişim</a>
       <a class="nav-phone" href="tel:+905451166205">0545 116 62 05</a>
+      <span class="nav-user hidden" id="navUser"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="authBtn">Giriş Yap</button>
+      <button type="button" class="btn btn-ghost btn-sm hidden" id="navLogoutBtn">Çıkış</button>
       <a class="btn btn-primary btn-sm" href="#randevu">Randevu Al</a>
     </nav>
   </div>
@@ -1061,6 +1136,7 @@ footer{ padding-block: 2.5rem 6rem; }
         </div>
 
         <div class="booking-panel" data-panel="5">
+          <p class="booking-empty hidden" id="profilePrefillNote" style="margin-bottom:1rem;"></p>
           <div class="booking-form-grid">
             <div class="field"><label for="custName">Ad Soyad</label><input type="text" id="custName" autocomplete="name" required></div>
             <div class="field"><label for="custPhone">Telefon</label><input type="tel" id="custPhone" autocomplete="tel" placeholder="05xx xxx xx xx" required></div>
@@ -1194,6 +1270,68 @@ footer{ padding-block: 2.5rem 6rem; }
   </button>
 </div>
 
+<div class="auth-overlay" id="authOverlay" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+  <div class="auth-modal">
+    <button type="button" class="auth-modal-close" id="authModalClose" aria-label="Kapat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <h2 id="authModalTitle">Üye Girişi</h2>
+
+    <div class="auth-tabs" id="authTabs">
+      <button type="button" class="auth-tab is-active" data-tab="login">Giriş Yap</button>
+      <button type="button" class="auth-tab" data-tab="signup">Kayıt Ol</button>
+    </div>
+
+    <div class="booking-msg" id="authMsg"></div>
+
+    <form class="auth-form is-active" id="loginForm" data-form="login">
+      <div class="field">
+        <label for="authLoginEmail">E-posta</label>
+        <input type="email" id="authLoginEmail" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="authLoginPassword">Parola</label>
+        <input type="password" id="authLoginPassword" autocomplete="current-password" required>
+      </div>
+      <button type="button" class="auth-link" id="authForgotBtn">Şifremi unuttum</button>
+      <button type="submit" class="btn btn-primary">Giriş Yap</button>
+    </form>
+
+    <form class="auth-form" id="signupForm" data-form="signup">
+      <div class="field">
+        <label for="authSignupName">Ad Soyad</label>
+        <input type="text" id="authSignupName" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label for="authSignupPhone">Telefon</label>
+        <input type="tel" id="authSignupPhone" autocomplete="tel" placeholder="05xx xxx xx xx" required>
+      </div>
+      <div class="field">
+        <label for="authSignupEmail">E-posta</label>
+        <input type="email" id="authSignupEmail" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label for="authSignupPassword">Parola</label>
+        <input type="password" id="authSignupPassword" autocomplete="new-password" minlength="6" required>
+      </div>
+      <label class="field-check">
+        <input type="checkbox" id="authSignupConsent" required>
+        Ad, telefon ve e-posta bilgilerimin randevu almak amacıyla saklanmasını kabul ediyorum.
+      </label>
+      <button type="submit" class="btn btn-primary">Kayıt Ol</button>
+    </form>
+
+    <form class="auth-form" id="resetForm" data-form="reset">
+      <p style="font-size:var(--fs-small); color:var(--ink-soft); margin-bottom:0.4rem;">Yeni parolanızı belirleyin.</p>
+      <div class="field">
+        <label for="authNewPassword">Yeni Parola</label>
+        <input type="password" id="authNewPassword" autocomplete="new-password" minlength="6" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Parolayı Güncelle</button>
+    </form>
+  </div>
+</div>
+
 <script>
   const navToggle = document.querySelector('.nav-toggle');
   const navLinks = document.getElementById('nav-links');
@@ -1272,6 +1410,171 @@ footer{ padding-block: 2.5rem 6rem; }
     toStep6: document.getElementById('toStep6'),
     confirmBtn: document.getElementById('confirmBooking'),
   };
+
+  // ============ AUTH (uyelik girisi / kaydi) ============
+  const authEls = {
+    overlay: document.getElementById('authOverlay'),
+    modalClose: document.getElementById('authModalClose'),
+    tabs: document.getElementById('authTabs'),
+    msg: document.getElementById('authMsg'),
+    loginForm: document.getElementById('loginForm'),
+    signupForm: document.getElementById('signupForm'),
+    resetForm: document.getElementById('resetForm'),
+    forgotBtn: document.getElementById('authForgotBtn'),
+    navUser: document.getElementById('navUser'),
+    authBtn: document.getElementById('authBtn'),
+    navLogoutBtn: document.getElementById('navLogoutBtn'),
+    prefillNote: document.getElementById('profilePrefillNote'),
+  };
+
+  let authLastFocused = null;
+
+  function showAuthMsg(text, kind){
+    if(!text){ authEls.msg.innerHTML = ''; return; }
+    authEls.msg.innerHTML = `<span class="status-badge ${kind === 'error' ? 'is-bad' : 'is-good'}"><span class="status-dot" aria-hidden="true"></span>${text}</span>`;
+  }
+
+  function switchAuthTab(name){
+    authEls.tabs.querySelectorAll('.auth-tab').forEach(t => t.classList.toggle('is-active', t.dataset.tab === name));
+    [authEls.loginForm, authEls.signupForm].forEach(f => f.classList.toggle('is-active', f.dataset.form === name));
+    showAuthMsg('');
+  }
+
+  function openAuthModal(mode){
+    authLastFocused = document.activeElement;
+    authEls.tabs.classList.remove('hidden');
+    authEls.resetForm.classList.remove('is-active');
+    switchAuthTab(mode === 'signup' ? 'signup' : 'login');
+    authEls.overlay.classList.add('is-open');
+    const firstInput = authEls.overlay.querySelector('.auth-form.is-active input');
+    if(firstInput) firstInput.focus();
+  }
+
+  function openResetModal(){
+    authLastFocused = document.activeElement;
+    authEls.tabs.classList.add('hidden');
+    [authEls.loginForm, authEls.signupForm].forEach(f => f.classList.remove('is-active'));
+    authEls.resetForm.classList.add('is-active');
+    showAuthMsg('');
+    authEls.overlay.classList.add('is-open');
+    document.getElementById('authNewPassword').focus();
+  }
+
+  function closeAuthModal(){
+    authEls.overlay.classList.remove('is-open');
+    showAuthMsg('');
+    if(authLastFocused) authLastFocused.focus();
+  }
+
+  authEls.authBtn.addEventListener('click', () => openAuthModal('login'));
+  authEls.modalClose.addEventListener('click', closeAuthModal);
+  authEls.overlay.addEventListener('click', (e) => { if(e.target === authEls.overlay) closeAuthModal(); });
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && authEls.overlay.classList.contains('is-open')) closeAuthModal();
+  });
+  authEls.tabs.addEventListener('click', (e) => {
+    const btn = e.target.closest('.auth-tab');
+    if(btn) switchAuthTab(btn.dataset.tab);
+  });
+
+  const AUTH_ERROR_MESSAGES = {
+    'Invalid login credentials': 'E-posta veya parola hatalı.',
+    'User already registered': 'Bu e-posta ile zaten bir hesap var, giriş yapmayı deneyin.',
+  };
+  function friendlyAuthError(error){
+    return AUTH_ERROR_MESSAGES[error.message] || 'Bir şeyler ters gitti, lütfen tekrar deneyin.';
+  }
+
+  authEls.loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = authEls.loginForm.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    const email = document.getElementById('authLoginEmail').value.trim();
+    const password = document.getElementById('authLoginPassword').value;
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    submitBtn.disabled = false;
+    if(error){ showAuthMsg(friendlyAuthError(error), 'error'); return; }
+    closeAuthModal();
+  });
+
+  authEls.signupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = authEls.signupForm.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    const full_name = document.getElementById('authSignupName').value.trim();
+    const phone = document.getElementById('authSignupPhone').value.trim();
+    const email = document.getElementById('authSignupEmail').value.trim();
+    const password = document.getElementById('authSignupPassword').value;
+    const { error } = await supabase.auth.signUp({
+      email, password,
+      options: { data: { full_name, phone } },
+    });
+    submitBtn.disabled = false;
+    if(error){ showAuthMsg(friendlyAuthError(error), 'error'); return; }
+    closeAuthModal();
+  });
+
+  authEls.forgotBtn.addEventListener('click', async () => {
+    const email = document.getElementById('authLoginEmail').value.trim();
+    if(!email){ showAuthMsg('Önce e-posta adresinizi yazın.', 'error'); return; }
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + window.location.pathname,
+    });
+    if(error){ showAuthMsg(friendlyAuthError(error), 'error'); return; }
+    showAuthMsg('Şifre sıfırlama bağlantısı e-postanıza gönderildi.', 'success');
+  });
+
+  authEls.resetForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = authEls.resetForm.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    const password = document.getElementById('authNewPassword').value;
+    const { error } = await supabase.auth.updateUser({ password });
+    submitBtn.disabled = false;
+    if(error){ showAuthMsg(friendlyAuthError(error), 'error'); return; }
+    showAuthMsg('Parolanız güncellendi.', 'success');
+    setTimeout(closeAuthModal, 1200);
+  });
+
+  authEls.navLogoutBtn.addEventListener('click', () => supabase.auth.signOut());
+
+  async function applyProfileToBookingForm(user){
+    if(!els.custName || !user) return;
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('full_name, phone')
+      .eq('id', user.id)
+      .maybeSingle();
+    let filled = false;
+    if(els.custName && !els.custName.value.trim() && profile?.full_name){ els.custName.value = profile.full_name; filled = true; }
+    if(els.custPhone && !els.custPhone.value.trim() && profile?.phone){ els.custPhone.value = profile.phone; filled = true; }
+    if(els.custEmail && !els.custEmail.value.trim() && user.email){ els.custEmail.value = user.email; filled = true; }
+    if(filled && authEls.prefillNote){
+      const firstName = (profile?.full_name || user.email || '').split(' ')[0];
+      authEls.prefillNote.textContent = `${firstName} olarak giriş yaptınız — bilgileriniz dolduruldu, dilerseniz değiştirebilirsiniz.`;
+      authEls.prefillNote.classList.remove('hidden');
+    }
+  }
+
+  function updateAuthUI(user){
+    authEls.navUser.classList.toggle('hidden', !user);
+    authEls.authBtn.classList.toggle('hidden', !!user);
+    authEls.navLogoutBtn.classList.toggle('hidden', !user);
+    if(user){
+      const firstName = (user.user_metadata?.full_name || user.email || '').split(' ')[0];
+      authEls.navUser.textContent = `Merhaba, ${firstName}`;
+      applyProfileToBookingForm(user);
+    } else {
+      authEls.navUser.textContent = '';
+      if(authEls.prefillNote) authEls.prefillNote.classList.add('hidden');
+    }
+  }
+
+  supabase.auth.getSession().then(({ data }) => updateAuthUI(data.session?.user));
+  supabase.auth.onAuthStateChange((event, session) => {
+    updateAuthUI(session?.user);
+    if(event === 'PASSWORD_RECOVERY') openResetModal();
+  });
 
   if(els.steps){
     const state = { services: [], barbers: [], service: null, barber: null, date: null, slot: null };

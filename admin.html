@@ -243,7 +243,18 @@
     return `${map.year}-${map.month}-${map.day}`;
   }
 
-  function showView(loggedIn){
+  async function showView(loggedIn){
+    if(loggedIn){
+      const { data: isAdmin, error } = await supabase.rpc('is_admin');
+      if(error || !isAdmin){
+        loginMsg.innerHTML = `<span class="status-badge is-bad"><span class="status-dot" aria-hidden="true"></span>Bu hesabın yönetici yetkisi yok.</span>`;
+        await supabase.auth.signOut();
+        loginView.classList.remove('hidden');
+        dashboardView.classList.add('hidden');
+        logoutBtn.classList.add('hidden');
+        return;
+      }
+    }
     loginView.classList.toggle('hidden', loggedIn);
     dashboardView.classList.toggle('hidden', !loggedIn);
     logoutBtn.classList.toggle('hidden', !loggedIn);
