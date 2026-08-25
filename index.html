@@ -198,13 +198,83 @@ header{
 /* ============ HERO ============ */
 .hero{
   position: relative;
-  padding-block: clamp(3.5rem, 10vh, 7rem) clamp(3rem, 8vh, 5rem);
+  isolation: isolate;
   overflow: hidden;
+  min-height: clamp(560px, 92vh, 880px);
+  display: flex;
+  align-items: center;
+  padding-block: clamp(3.5rem, 10vh, 7rem) clamp(3rem, 8vh, 5rem);
+  color: var(--ink);
+  --ink: #FBF7EE;
+  --ink-soft: rgba(251,247,238,0.82);
+  --line: rgba(251,247,238,0.32);
+  --surface-hi: rgba(20,16,11,0.55);
 }
 .hero-grid{
+  position: relative;
+  z-index: 1;
   display:grid;
   grid-template-columns: 1fr;
   gap: clamp(2rem, 6vw, 4rem);
+}
+
+/* ---- cinematic outside→inside camera-move background ---- */
+.hero-cinema{
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  background: #0c0a07;
+}
+.hero-cinema-layer{
+  position: absolute;
+  inset: -8%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  will-change: transform, opacity;
+}
+.hero-cinema-exterior{
+  background-image: url('galeri-magaza-dis.jpg');
+  background-position: center 32%;
+  animation: heroCinemaExterior 13s cubic-bezier(.45,0,.4,1) infinite;
+}
+.hero-cinema-interior{
+  background-image: url('galeri-magaza-ic.jpg');
+  background-position: center 46%;
+  animation: heroCinemaInterior 13s cubic-bezier(.45,0,.4,1) infinite;
+}
+@keyframes heroCinemaExterior{
+  0%{   opacity: 1; transform: scale(1) translateY(0); }
+  34%{  opacity: 1; transform: scale(1.13) translateY(-1%); }
+  46%{  opacity: 0; transform: scale(1.2) translateY(-1.5%); }
+  86%{  opacity: 0; transform: scale(1.2) translateY(-1.5%); }
+  100%{ opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes heroCinemaInterior{
+  0%{   opacity: 0; transform: scale(1.16) translateY(1%); }
+  34%{  opacity: 0; transform: scale(1.16) translateY(1%); }
+  46%{  opacity: 1; transform: scale(1.08) translateY(0.4%); }
+  86%{  opacity: 1; transform: scale(1) translateY(0); }
+  100%{ opacity: 0; transform: scale(1.16) translateY(1%); }
+}
+.hero-cinema-scrim{
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(9,7,5,0.75) 0%, rgba(9,7,5,0.35) 32%, rgba(9,7,5,0.4) 70%, rgba(9,7,5,0.85) 100%),
+    linear-gradient(90deg, rgba(9,7,5,0.55) 0%, rgba(9,7,5,0.05) 45%, rgba(9,7,5,0.05) 60%, rgba(9,7,5,0.55) 100%);
+}
+.hero-cinema-vignette{
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 18vw 2vw rgba(0,0,0,0.55);
+  mix-blend-mode: multiply;
+}
+@media (prefers-reduced-motion: reduce){
+  .hero-cinema-exterior,
+  .hero-cinema-interior{ animation: none; }
+  .hero-cinema-exterior{ opacity: 0; }
+  .hero-cinema-interior{ opacity: 1; transform: scale(1); }
 }
 .hero-word{
   font-size: var(--fs-h1);
@@ -243,23 +313,11 @@ header{
 }
 .hero-meta strong{ color: var(--ink); font-weight: 600; }
 
-/* ============ HERO HEADLINE PHOTO WASH ============ */
+/* ============ HERO HEADLINE ============ */
 .hero-headline{
   position: relative;
-  isolation: isolate;
 }
-.hero-headline::before{
-  content:"";
-  position:absolute;
-  inset: -14% -10%;
-  background: url('arka-plan-doku.jpg') center 45% / cover no-repeat;
-  filter: blur(6px) grayscale(45%) brightness(1.05);
-  opacity: 0.55;
-  -webkit-mask-image: linear-gradient(90deg, transparent, black 22%, black 78%, transparent);
-          mask-image: linear-gradient(90deg, transparent, black 22%, black 78%, transparent);
-  z-index: -1;
-  pointer-events: none;
-}
+.hero-headline .hero-lead{ text-shadow: 0 2px 16px rgba(0,0,0,0.4); }
 
 /* ============ SECTION SCAFFOLD ============ */
 section{ padding-block: clamp(3.5rem, 9vh, 6.5rem); }
@@ -875,6 +933,12 @@ footer{ padding-block: 2.5rem 6rem; }
 <main id="top">
 
   <section class="hero">
+    <div class="hero-cinema" aria-hidden="true">
+      <div class="hero-cinema-layer hero-cinema-exterior"></div>
+      <div class="hero-cinema-layer hero-cinema-interior"></div>
+      <div class="hero-cinema-scrim"></div>
+      <div class="hero-cinema-vignette"></div>
+    </div>
     <div class="container hero-grid">
       <div>
         <div class="hero-headline">
