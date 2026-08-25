@@ -63,7 +63,7 @@
   }
   .appt-row:last-child{ border-bottom:none; }
   @media (min-width: 760px){
-    .appt-row{ grid-template-columns: 1fr 1fr 1fr auto; align-items:center; }
+    .appt-row{ grid-template-columns: 1fr 1fr 1fr auto auto; align-items:center; }
   }
   .appt-when{ font-weight: 700; font-variant-numeric: tabular-nums; }
   .appt-when small{ display:block; font-weight:500; color: var(--ink-soft); font-size: var(--fs-small); }
@@ -75,6 +75,44 @@
     padding: 0.55rem 0.7rem; border-radius: var(--radius); border: 1px solid var(--line);
     background: var(--bg); color: var(--ink); min-height: 44px;
   }
+  .appt-price label{ display:block; font-size: var(--fs-label); text-transform:uppercase; letter-spacing:0.05em; color: var(--ink-soft); margin-bottom: 0.25rem; }
+  .appt-price input{
+    font-family: var(--font-body); font-size: var(--fs-small); font-weight:600;
+    width: 110px; padding: 0.55rem 0.6rem; border-radius: var(--radius); border: 1px solid var(--line);
+    background: var(--bg); color: var(--ink); min-height: 44px;
+  }
+
+  /* ============ CIRO ============ */
+  .revenue-summary{
+    display:grid; gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    margin-bottom: 1.5rem;
+  }
+  .revenue-stat{
+    background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 1.1rem 1.2rem;
+  }
+  .revenue-stat .label{ font-size: var(--fs-label); text-transform:uppercase; letter-spacing:0.08em; color: var(--ink-soft); }
+  .revenue-stat .value{ font-family: var(--font-display); font-size: 1.9rem; font-weight:800; margin-top:0.2rem; font-variant-numeric: tabular-nums; }
+  .revenue-barber-row{
+    display:flex; justify-content:space-between; align-items:center; gap: 1rem;
+    padding: 0.7rem 0; border-bottom: 1px solid var(--line); font-size: var(--fs-small);
+  }
+  .revenue-barber-row:last-child{ border-bottom:none; }
+  .revenue-barber-row strong{ font-variant-numeric: tabular-nums; }
+
+  /* ============ REVIEWS (yorum moderasyonu) ============ */
+  .stars{ position:relative; display:inline-block; font-size:0.95rem; line-height:1; color: var(--line); white-space:nowrap; }
+  .stars::before{ content:'★★★★★'; }
+  .stars-fill{ position:absolute; inset:0; overflow:hidden; color: var(--brass); white-space:nowrap; }
+  .stars-fill::before{ content:'★★★★★'; }
+  .review-row{ padding: 1rem 0; border-bottom: 1px solid var(--line); display:flex; flex-direction:column; gap:0.6rem; }
+  .review-row:last-child{ border-bottom:none; }
+  .review-row-head{ display:flex; flex-wrap:wrap; align-items:center; gap:0.6rem; justify-content:space-between; }
+  .review-row-who{ font-weight:700; display:flex; align-items:center; gap:0.6rem; }
+  .review-row-comment{ font-size: var(--fs-small); }
+  .review-row-when{ font-size: var(--fs-small); color: var(--ink-soft); }
+  .review-row-actions{ display:flex; flex-wrap:wrap; gap:0.5rem; }
 
   .blocked-form{ display:grid; gap: 1rem; grid-template-columns: 1fr; margin-bottom: 1.5rem; }
   @media (min-width: 760px){ .blocked-form{ grid-template-columns: repeat(4, 1fr) auto; align-items:end; } }
@@ -156,6 +194,32 @@
   <section id="dashboardView" class="hidden">
 
     <div class="panel">
+      <h2>Ciro</h2>
+      <div class="filters">
+        <div class="field">
+          <label for="revenueRange">Aralık</label>
+          <select id="revenueRange">
+            <option value="today">Bugün</option>
+            <option value="week">Bu Hafta</option>
+            <option value="month" selected>Bu Ay</option>
+            <option value="custom">Özel Aralık</option>
+          </select>
+        </div>
+        <div class="field hidden" id="revenueFromField">
+          <label for="revenueFrom">Başlangıç</label>
+          <input type="date" id="revenueFrom">
+        </div>
+        <div class="field hidden" id="revenueToField">
+          <label for="revenueTo">Bitiş</label>
+          <input type="date" id="revenueTo">
+        </div>
+        <button type="button" class="btn btn-ghost btn-sm" id="refreshRevenue">Yenile</button>
+      </div>
+      <div class="revenue-summary" id="revenueSummary"><p class="booking-empty">Yükleniyor…</p></div>
+      <div id="revenueByBarber"></div>
+    </div>
+
+    <div class="panel">
       <h2>Randevular</h2>
       <div class="filters">
         <div class="field">
@@ -211,6 +275,23 @@
       <div id="chatList"><p class="booking-empty">Yükleniyor…</p></div>
     </div>
 
+    <div class="panel">
+      <h2>Yorumlar</h2>
+      <div class="filters">
+        <div class="field">
+          <label for="reviewFilterStatus">Durum</label>
+          <select id="reviewFilterStatus">
+            <option value="pending" selected>Onay Bekleyen</option>
+            <option value="approved">Onaylanan</option>
+            <option value="rejected">Reddedilen</option>
+            <option value="all">Tümü</option>
+          </select>
+        </div>
+        <button type="button" class="btn btn-ghost btn-sm" id="refreshReviews">Yenile</button>
+      </div>
+      <div id="reviewList"><p class="booking-empty">Yükleniyor…</p></div>
+    </div>
+
   </section>
 
 </main>
@@ -263,6 +344,8 @@
       loadAppointments();
       loadBlockedTimes();
       loadChats();
+      loadRevenue();
+      loadReviews();
     }
   }
 
@@ -295,7 +378,7 @@
 
     let query = supabase
       .from('appointments')
-      .select('id,starts_at,ends_at,status,customer_name,customer_phone,customer_email,notes,barbers(name),services(name)')
+      .select('id,starts_at,ends_at,status,customer_name,customer_phone,customer_email,notes,charged_price_try,barbers(name),services(name)')
       .gte('starts_at', dayStart)
       .lte('starts_at', dayEnd)
       .order('starts_at');
@@ -324,8 +407,26 @@
         <div class="appt-when">${tl.format(start)}<small>${dl.format(start)}</small></div>
         <div class="appt-who"><strong>${appt.customer_name}</strong><span>${appt.customer_phone}</span>${appt.customer_email ? `<span>${appt.customer_email}</span>` : ''}</div>
         <div class="appt-what">${appt.services?.name || '—'}<small>${appt.barbers?.name || '—'}${appt.notes ? ' · ' + appt.notes : ''}</small></div>
+        <div class="appt-price"><label for="price-${appt.id}">Tutar (₺)</label></div>
         <div class="appt-status"></div>
       `;
+      const priceInput = document.createElement('input');
+      priceInput.type = 'number';
+      priceInput.id = `price-${appt.id}`;
+      priceInput.min = '0';
+      priceInput.step = '0.01';
+      priceInput.placeholder = '—';
+      priceInput.value = appt.charged_price_try ?? '';
+      priceInput.addEventListener('change', async () => {
+        const val = priceInput.value === '' ? null : Number(priceInput.value);
+        priceInput.disabled = true;
+        const { error: priceErr } = await supabase.from('appointments').update({ charged_price_try: val }).eq('id', appt.id);
+        priceInput.disabled = false;
+        if(priceErr){ alert('Tutar güncellenemedi: ' + priceErr.message); priceInput.value = appt.charged_price_try ?? ''; }
+        else { appt.charged_price_try = val; loadRevenue(); }
+      });
+      row.querySelector('.appt-price').appendChild(priceInput);
+
       const select = document.createElement('select');
       Object.entries(STATUS_LABELS).forEach(([value, label]) => {
         const opt = document.createElement('option');
@@ -338,7 +439,7 @@
         const { error: updErr } = await supabase.from('appointments').update({ status: select.value }).eq('id', appt.id);
         select.disabled = false;
         if(updErr){ alert('Durum güncellenemedi: ' + updErr.message); select.value = appt.status; }
-        else { appt.status = select.value; }
+        else { appt.status = select.value; loadRevenue(); }
       });
       row.querySelector('.appt-status').appendChild(select);
       apptList.appendChild(row);
@@ -348,6 +449,86 @@
   document.getElementById('refreshAppts').addEventListener('click', loadAppointments);
   filterDate.addEventListener('change', loadAppointments);
   filterStatus.addEventListener('change', loadAppointments);
+
+  // ============ CIRO ============
+  const money = new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 });
+  const revenueRange = document.getElementById('revenueRange');
+  const revenueFrom = document.getElementById('revenueFrom');
+  const revenueTo = document.getElementById('revenueTo');
+  const revenueFromField = document.getElementById('revenueFromField');
+  const revenueToField = document.getElementById('revenueToField');
+  const revenueSummary = document.getElementById('revenueSummary');
+  const revenueByBarber = document.getElementById('revenueByBarber');
+
+  function revenueDateBounds(){
+    const today = todayIstanbul();
+    if(revenueRange.value === 'custom'){
+      return { from: revenueFrom.value || today, to: revenueTo.value || today };
+    }
+    if(revenueRange.value === 'today'){
+      return { from: today, to: today };
+    }
+    if(revenueRange.value === 'week'){
+      const d = new Date(`${today}T00:00:00`);
+      const offset = (d.getDay() + 6) % 7; // Pazartesi = 0
+      const monday = new Date(d);
+      monday.setDate(d.getDate() - offset);
+      return { from: monday.toISOString().slice(0, 10), to: today };
+    }
+    return { from: today.slice(0, 7) + '-01', to: today }; // month
+  }
+
+  async function loadRevenue(){
+    revenueSummary.innerHTML = '<p class="booking-empty">Yükleniyor…</p>';
+    revenueByBarber.innerHTML = '';
+    const { from, to } = revenueDateBounds();
+    const rangeStart = new Date(`${from}T00:00:00+03:00`).toISOString();
+    const rangeEnd = new Date(`${to}T23:59:59+03:00`).toISOString();
+
+    const { data, error } = await supabase
+      .from('appointments')
+      .select('charged_price_try,barbers(name)')
+      .eq('status', 'completed')
+      .gte('starts_at', rangeStart)
+      .lte('starts_at', rangeEnd);
+
+    if(error){
+      revenueSummary.innerHTML = '<p class="booking-empty">Ciro yüklenemedi.</p>';
+      return;
+    }
+
+    const total = data.reduce((sum, a) => sum + (Number(a.charged_price_try) || 0), 0);
+    const count = data.length;
+    const missing = data.filter(a => a.charged_price_try == null).length;
+    const avg = count ? total / count : 0;
+
+    revenueSummary.innerHTML = `
+      <div class="revenue-stat"><span class="label">Toplam Ciro</span><div class="value">${money.format(total)}</div></div>
+      <div class="revenue-stat"><span class="label">Tamamlanan Randevu</span><div class="value">${count}</div></div>
+      <div class="revenue-stat"><span class="label">Ortalama Fiş</span><div class="value">${money.format(avg)}</div></div>
+      ${missing ? `<div class="revenue-stat"><span class="label">Tutarı Eksik</span><div class="value">${missing}</div></div>` : ''}
+    `;
+
+    const byBarber = {};
+    data.forEach(a => {
+      const name = a.barbers?.name || 'Bilinmiyor';
+      byBarber[name] = (byBarber[name] || 0) + (Number(a.charged_price_try) || 0);
+    });
+    const rows = Object.entries(byBarber).sort((a, b) => b[1] - a[1]);
+    revenueByBarber.innerHTML = rows.map(([name, sum]) => `
+      <div class="revenue-barber-row"><span>${name}</span><strong>${money.format(sum)}</strong></div>
+    `).join('');
+  }
+
+  revenueRange.addEventListener('change', () => {
+    const isCustom = revenueRange.value === 'custom';
+    revenueFromField.classList.toggle('hidden', !isCustom);
+    revenueToField.classList.toggle('hidden', !isCustom);
+    loadRevenue();
+  });
+  revenueFrom.addEventListener('change', loadRevenue);
+  revenueTo.addEventListener('change', loadRevenue);
+  document.getElementById('refreshRevenue').addEventListener('click', loadRevenue);
 
   // ============ BLOCKED TIMES ============
   const blockedBarber = document.getElementById('blockedBarber');
@@ -514,6 +695,86 @@
   }
 
   document.getElementById('refreshChats').addEventListener('click', loadChats);
+
+  // ============ REVIEWS (yorum moderasyonu) ============
+  const REVIEW_STATUS_LABELS = { pending: 'Onay Bekliyor', approved: 'Onaylandı', rejected: 'Reddedildi' };
+  const reviewFilterStatus = document.getElementById('reviewFilterStatus');
+  const reviewList = document.getElementById('reviewList');
+
+  async function loadReviews(){
+    reviewList.innerHTML = '<p class="booking-empty">Yükleniyor…</p>';
+    let query = supabase
+      .from('reviews')
+      .select('id,customer_name,rating,comment,status,created_at')
+      .order('created_at', { ascending: false });
+    if(reviewFilterStatus.value !== 'all'){
+      query = query.eq('status', reviewFilterStatus.value);
+    }
+    const { data, error } = await query;
+    if(error){
+      reviewList.innerHTML = '<p class="booking-empty">Yorumlar yüklenemedi.</p>';
+      return;
+    }
+    if(!data.length){
+      reviewList.innerHTML = '<p class="booking-empty">Bu filtreyle yorum yok.</p>';
+      return;
+    }
+    reviewList.innerHTML = '';
+    data.forEach(r => {
+      const row = document.createElement('div');
+      row.className = 'review-row';
+      const when = new Date(r.created_at);
+      const badgeClass = r.status === 'approved' ? 'is-good' : (r.status === 'rejected' ? 'is-bad' : '');
+      row.innerHTML = `
+        <div class="review-row-head">
+          <span class="review-row-who">${r.customer_name}<span class="stars" aria-label="${r.rating} / 5 yıldız"><span class="stars-fill" style="width:${r.rating * 20}%"></span></span></span>
+          <span class="status-badge ${badgeClass}"><span class="status-dot" aria-hidden="true"></span>${REVIEW_STATUS_LABELS[r.status]}</span>
+        </div>
+        <p class="review-row-comment">${r.comment.replace(/</g, '&lt;')}</p>
+        <div class="review-row-when">${dl.format(when)} ${tl.format(when)}</div>
+        <div class="review-row-actions"></div>
+      `;
+      const actions = row.querySelector('.review-row-actions');
+
+      if(r.status !== 'approved'){
+        const approveBtn = document.createElement('button');
+        approveBtn.type = 'button'; approveBtn.className = 'btn btn-primary btn-sm'; approveBtn.textContent = 'Onayla';
+        approveBtn.addEventListener('click', async () => {
+          approveBtn.disabled = true;
+          const { error: updErr } = await supabase.from('reviews').update({ status: 'approved' }).eq('id', r.id);
+          if(updErr){ alert('Onaylanamadı: ' + updErr.message); approveBtn.disabled = false; }
+          else { loadReviews(); }
+        });
+        actions.appendChild(approveBtn);
+      }
+      if(r.status !== 'rejected'){
+        const rejectBtn = document.createElement('button');
+        rejectBtn.type = 'button'; rejectBtn.className = 'btn btn-ghost btn-sm'; rejectBtn.textContent = 'Reddet';
+        rejectBtn.addEventListener('click', async () => {
+          rejectBtn.disabled = true;
+          const { error: updErr } = await supabase.from('reviews').update({ status: 'rejected' }).eq('id', r.id);
+          if(updErr){ alert('Reddedilemedi: ' + updErr.message); rejectBtn.disabled = false; }
+          else { loadReviews(); }
+        });
+        actions.appendChild(rejectBtn);
+      }
+      const deleteBtn = document.createElement('button');
+      deleteBtn.type = 'button'; deleteBtn.className = 'btn btn-danger btn-sm'; deleteBtn.textContent = 'Sil';
+      deleteBtn.addEventListener('click', async () => {
+        if(!confirm('Bu yorumu kalıcı olarak silmek istiyor musunuz?')) return;
+        deleteBtn.disabled = true;
+        const { error: delErr } = await supabase.from('reviews').delete().eq('id', r.id);
+        if(delErr){ alert('Silinemedi: ' + delErr.message); deleteBtn.disabled = false; }
+        else { loadReviews(); }
+      });
+      actions.appendChild(deleteBtn);
+
+      reviewList.appendChild(row);
+    });
+  }
+
+  reviewFilterStatus.addEventListener('change', loadReviews);
+  document.getElementById('refreshReviews').addEventListener('click', loadReviews);
 </script>
 
 </body>

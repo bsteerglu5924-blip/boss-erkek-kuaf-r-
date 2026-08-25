@@ -486,6 +486,54 @@ section{ padding-block: clamp(3.5rem, 9vh, 6.5rem); }
 .exp-item h3{ font-size: var(--fs-h3); text-transform: uppercase; margin-bottom: 0.5rem; }
 .exp-item p{ color: var(--ink-soft); font-size: var(--fs-small); }
 
+/* ============ REVIEWS (yorumlar) ============ */
+.stars{ position:relative; display:inline-block; font-size:1.1rem; line-height:1; color: var(--line); white-space:nowrap; }
+.stars::before{ content:'★★★★★'; }
+.stars-fill{ position:absolute; inset:0; overflow:hidden; color: var(--brass); white-space:nowrap; }
+.stars-fill::before{ content:'★★★★★'; }
+.reviews-overview{
+  display:flex; align-items:center; gap:0.7rem; flex-wrap:wrap;
+  margin-bottom: 2rem;
+  font-size: var(--fs-lead);
+}
+.reviews-overview strong{ font-family: var(--font-display); font-size: 1.4rem; }
+.reviews-overview span.count{ color: var(--ink-soft); font-size: var(--fs-small); }
+.reviews-grid{
+  display:grid; gap: 1.5rem;
+  grid-template-columns: 1fr;
+  margin-bottom: 2.5rem;
+}
+@media (min-width: 700px){
+  .reviews-grid{ grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1040px){
+  .reviews-grid{ grid-template-columns: repeat(3, 1fr); }
+}
+.review-card{
+  background: var(--surface-hi);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  display:flex; flex-direction:column; gap: 0.9rem;
+}
+.review-card p{ color: var(--ink); font-size: var(--fs-small); flex:1; }
+.review-card strong{ font-size: var(--fs-small); color: var(--ink-soft); font-weight:600; }
+.review-form-wrap{ max-width: 560px; }
+.link-btn{
+  background:none; border:none; padding:0; margin:0;
+  font: inherit; color: var(--brass-text); text-decoration: underline;
+  cursor:pointer;
+}
+.star-input{ border:0; padding:0; margin:0; display:flex; flex-direction:row-reverse; justify-content:flex-end; gap:0.15rem; }
+.star-input legend{ font-size: var(--fs-label); letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-soft); font-weight:600; margin-bottom:0.5rem; width:100%; padding:0; }
+.star-input input{ position:absolute; opacity:0; width:1px; height:1px; }
+.star-input label{ cursor:pointer; font-size:2rem; line-height:1; color: var(--line); transition: color .15s ease; }
+.star-input label::before{ content:'★'; }
+.star-input input:checked ~ label,
+.star-input label:hover,
+.star-input label:hover ~ label{ color: var(--brass); }
+.star-input input:focus-visible + label{ outline: 2px solid var(--brass); outline-offset:2px; }
+
 /* ============ BOOKING WIZARD ============ */
 .booking{ background: var(--surface-hi); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .booking-card{
@@ -922,6 +970,7 @@ footer{ padding-block: 2.5rem 6rem; }
       <a href="#galeri">Galeri</a>
       <a href="#deneyim">Deneyim</a>
       <a href="#ekip">Ekip</a>
+      <a href="#yorumlar">Yorumlar</a>
       <a href="#randevu">Randevu</a>
       <a href="#iletisim">İletişim</a>
       <a class="nav-phone" href="tel:+905451166205">0545 116 62 05</a>
@@ -1152,6 +1201,45 @@ footer{ padding-block: 2.5rem 6rem; }
         <div class="exp-item reveal">
           <h3>Ahmet Tarık Örnek</h3>
           <p>Usta berber.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="yorumlar">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Yorumlar</span>
+        <h2>Müşterilerimiz Ne Diyor</h2>
+        <p>Gerçek müşterilerimizin deneyimleri. Yorum bırakmak için üye girişi yapmanız yeterli.</p>
+      </div>
+
+      <div class="reviews-overview" id="reviewsOverview"></div>
+
+      <div class="reviews-grid reveal" id="reviewsList">
+        <p class="booking-empty">Yükleniyor…</p>
+      </div>
+
+      <div class="review-form-wrap reveal">
+        <div class="contact-card" id="reviewFormCard">
+          <p class="booking-empty" id="reviewLoginPrompt">Yorum bırakmak için <button type="button" class="link-btn" id="reviewLoginBtn">giriş yapın</button>.</p>
+          <form id="reviewForm" class="hidden">
+            <h3 style="margin-bottom:1rem;">Deneyiminizi Paylaşın</h3>
+            <fieldset class="star-input" id="reviewRatingInput">
+              <legend>Puanınız</legend>
+              <input type="radio" id="revStar5" name="reviewRating" value="5" required><label for="revStar5">5 yıldız</label>
+              <input type="radio" id="revStar4" name="reviewRating" value="4"><label for="revStar4">4 yıldız</label>
+              <input type="radio" id="revStar3" name="reviewRating" value="3"><label for="revStar3">3 yıldız</label>
+              <input type="radio" id="revStar2" name="reviewRating" value="2"><label for="revStar2">2 yıldız</label>
+              <input type="radio" id="revStar1" name="reviewRating" value="1"><label for="revStar1">1 yıldız</label>
+            </fieldset>
+            <div class="field" style="margin-top:1rem;">
+              <label for="reviewComment">Yorumunuz</label>
+              <textarea id="reviewComment" required maxlength="600" placeholder="Deneyiminizi anlatın…"></textarea>
+            </div>
+            <div class="booking-msg" id="reviewMsg"></div>
+            <button type="submit" class="btn btn-primary" style="margin-top:1rem;" id="reviewSubmitBtn">Yorumu Gönder</button>
+          </form>
         </div>
       </div>
     </div>
@@ -1635,6 +1723,7 @@ footer{ padding-block: 2.5rem 6rem; }
       authEls.navUser.textContent = '';
       if(authEls.prefillNote) authEls.prefillNote.classList.add('hidden');
     }
+    refreshReviewForm(user);
   }
 
   supabase.auth.getSession().then(({ data }) => updateAuthUI(data.session?.user));
@@ -1642,6 +1731,122 @@ footer{ padding-block: 2.5rem 6rem; }
     updateAuthUI(session?.user);
     if(event === 'PASSWORD_RECOVERY') openResetModal();
   });
+
+  // ============ REVIEWS (yorumlar) ============
+  const reviewEls = {
+    overview: document.getElementById('reviewsOverview'),
+    list: document.getElementById('reviewsList'),
+    loginPrompt: document.getElementById('reviewLoginPrompt'),
+    loginBtn: document.getElementById('reviewLoginBtn'),
+    form: document.getElementById('reviewForm'),
+    comment: document.getElementById('reviewComment'),
+    msg: document.getElementById('reviewMsg'),
+    submitBtn: document.getElementById('reviewSubmitBtn'),
+  };
+
+  function showReviewMsg(text, kind){
+    if(!text){ reviewEls.msg.innerHTML = ''; return; }
+    reviewEls.msg.innerHTML = `<span class="status-badge ${kind === 'error' ? 'is-bad' : 'is-good'}"><span class="status-dot" aria-hidden="true"></span>${text}</span>`;
+  }
+
+  if(reviewEls.loginBtn){
+    reviewEls.loginBtn.addEventListener('click', () => openAuthModal('login'));
+  }
+
+  async function loadApprovedReviews(){
+    const { data, error } = await supabase
+      .from('reviews')
+      .select('customer_name,rating,comment,created_at')
+      .eq('status', 'approved')
+      .order('created_at', { ascending: false })
+      .limit(24);
+    if(error || !data || !data.length){
+      reviewEls.overview.innerHTML = '';
+      reviewEls.list.innerHTML = '<p class="booking-empty">Henüz onaylanmış yorum yok, ilk yorumu siz bırakın.</p>';
+      return;
+    }
+    const avg = data.reduce((sum, r) => sum + r.rating, 0) / data.length;
+    reviewEls.overview.innerHTML = `
+      <span class="stars" aria-label="${avg.toFixed(1)} / 5 yıldız"><span class="stars-fill" style="width:${avg / 5 * 100}%"></span></span>
+      <strong>${avg.toFixed(1).replace('.', ',')}</strong>
+      <span class="count">/ 5 · ${data.length} yorum</span>
+    `;
+    reviewEls.list.innerHTML = data.map(r => `
+      <div class="review-card">
+        <span class="stars" aria-label="${r.rating} / 5 yıldız"><span class="stars-fill" style="width:${r.rating * 20}%"></span></span>
+        <p>${r.comment.replace(/</g, '&lt;')}</p>
+        <strong>${r.customer_name}</strong>
+      </div>
+    `).join('');
+  }
+
+  let myReview = null;
+
+  async function refreshReviewForm(user){
+    if(!reviewEls.form) return;
+    if(!user){
+      myReview = null;
+      reviewEls.loginPrompt.classList.remove('hidden');
+      reviewEls.form.classList.add('hidden');
+      return;
+    }
+    reviewEls.loginPrompt.classList.add('hidden');
+    reviewEls.form.classList.remove('hidden');
+
+    const { data } = await supabase
+      .from('reviews')
+      .select('rating,comment,status')
+      .eq('profile_id', user.id)
+      .maybeSingle();
+    myReview = data || null;
+
+    if(myReview){
+      const starInput = document.getElementById(`revStar${myReview.rating}`);
+      if(starInput) starInput.checked = true;
+      reviewEls.comment.value = myReview.comment;
+      reviewEls.submitBtn.textContent = 'Yorumu Güncelle';
+      if(myReview.status === 'pending'){
+        showReviewMsg('Yorumunuz onay bekliyor.', 'success');
+      } else if(myReview.status === 'rejected'){
+        showReviewMsg('Yorumunuz yayınlanmadı, dilerseniz düzenleyip tekrar gönderebilirsiniz.', 'error');
+      } else {
+        showReviewMsg('');
+      }
+    } else {
+      reviewEls.form.reset();
+      reviewEls.submitBtn.textContent = 'Yorumu Gönder';
+      showReviewMsg('');
+    }
+  }
+
+  if(reviewEls.form){
+    reviewEls.form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const { data: { user } } = await supabase.auth.getUser();
+      if(!user) return;
+      const ratingInput = reviewEls.form.querySelector('input[name="reviewRating"]:checked');
+      if(!ratingInput){ showReviewMsg('Lütfen bir puan seçin.', 'error'); return; }
+      const comment = reviewEls.comment.value.trim();
+      if(!comment){ showReviewMsg('Lütfen yorumunuzu yazın.', 'error'); return; }
+
+      reviewEls.submitBtn.disabled = true;
+      let error;
+      if(myReview){
+        ({ error } = await supabase.from('reviews').update({ rating: Number(ratingInput.value), comment }).eq('profile_id', user.id));
+      } else {
+        const { data: profile } = await supabase.from('profiles').select('full_name').eq('id', user.id).maybeSingle();
+        const customer_name = profile?.full_name?.trim() || (user.email ? user.email.split('@')[0] : 'Müşteri');
+        ({ error } = await supabase.from('reviews').insert({ profile_id: user.id, customer_name, rating: Number(ratingInput.value), comment }));
+      }
+      reviewEls.submitBtn.disabled = false;
+      if(error){ showReviewMsg('Bir şeyler ters gitti, lütfen tekrar deneyin.', 'error'); return; }
+      showReviewMsg('Teşekkürler! Yorumunuz onaylandıktan sonra yayınlanacak.', 'success');
+      reviewEls.submitBtn.textContent = 'Yorumu Güncelle';
+      await refreshReviewForm(user);
+    });
+  }
+
+  loadApprovedReviews();
 
   if(els.steps){
     const state = { services: [], barbers: [], service: null, barber: null, date: null, slot: null };
