@@ -971,6 +971,7 @@ footer{ padding-block: 2.5rem 6rem; }
       <a href="#galeri">Galeri</a>
       <a href="#deneyim">Deneyim</a>
       <a href="#ekip">Ekip</a>
+      <a href="#bana-ne-yakisir">Ne Yakışır</a>
       <a href="#yorumlar">Yorumlar</a>
       <a href="#randevu">Randevu</a>
       <a href="#iletisim">İletişim</a>
@@ -1208,6 +1209,54 @@ footer{ padding-block: 2.5rem 6rem; }
         <div class="exp-item reveal">
           <h3>Toprak Kanık</h3>
           <p>Premium traş ustası. Tıraş fiyatı: 1.000 TL.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="stripe-band" aria-hidden="true"></div>
+
+  <section id="bana-ne-yakisir">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Yapay Zeka</span>
+        <h2>Bana Ne Yakışır?</h2>
+        <p>3 fotoğraf yükleyin, yüz yapınıza göre size en çok yakışacak stili yapay zeka belirlesin. Diğer 2 öneriyi sürpriz tutuyoruz — randevunuza geldiğinizde ustanızdan öğrenin.</p>
+      </div>
+
+      <div class="contact-card reveal" id="styleFormCard">
+        <form id="styleUploadForm">
+          <div class="booking-form-grid">
+            <div class="field">
+              <label for="styleFront">Ön Yüz Fotoğrafı</label>
+              <input type="file" id="styleFront" accept="image/*" required>
+            </div>
+            <div class="field">
+              <label for="styleSide">Yan Profil Fotoğrafı</label>
+              <input type="file" id="styleSide" accept="image/*" required>
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:1.25rem; max-width:280px">
+            <label for="styleBack">Ense Fotoğrafı</label>
+            <input type="file" id="styleBack" accept="image/*" required>
+          </div>
+          <label style="display:flex; gap:0.6rem; align-items:flex-start; margin-bottom:1.25rem; font-size:var(--fs-small); color:var(--ink-soft);">
+            <input type="checkbox" id="styleConsent" required style="margin-top:0.2rem">
+            <span>Fotoğraflarımın yüz/stil analizi amacıyla yapay zeka servisine gönderilmesini ve sonuç randevuma bağlanana kadar saklanmasını kabul ediyorum.</span>
+          </label>
+          <div class="booking-msg" id="styleMsg"></div>
+          <button type="submit" class="btn btn-primary" id="styleSubmitBtn">Analiz Et</button>
+        </form>
+
+        <div class="hidden" id="styleRevealWrap" style="margin-top:1.5rem">
+          <div class="section-head" style="text-align:left; margin-bottom:1rem">
+            <span class="eyebrow">Sana Yakışanlardan Biri</span>
+            <h3 id="styleRevealName" style="font-family:var(--font-display); font-size:1.4rem; text-transform:uppercase;"></h3>
+          </div>
+          <img id="styleRevealImage" src="" alt="" style="width:100%; max-width:360px; border-radius:var(--radius); display:block; margin-bottom:1rem" loading="lazy">
+          <p id="styleRevealReason" style="color:var(--ink-soft); margin-bottom:0.75rem"></p>
+          <p style="font-size:var(--fs-small); color:var(--ink-soft); margin-bottom:1.25rem">🔒 Sana yakışan diğer 2 stili gizli tuttuk — randevunuza geldiğinizde ustanız sizinle paylaşacak.</p>
+          <button type="button" class="btn btn-primary" id="styleBookBtn">Randevu Al</button>
         </div>
       </div>
     </div>
@@ -1553,6 +1602,11 @@ footer{ padding-block: 2.5rem 6rem; }
     'sb_publishable_rQoEvjFL3jOueZrPUIS9eA_1KpIS0aJ'
   );
 
+  // "Bana Ne Yakışır" analizinden secilen sonucun id'si — booking sihirbazi
+  // state'i if(els.steps){...} icinde blok-kapsamli oldugu icin, ikisi
+  // arasinda kopru gorevi gorsun diye modul kapsaminda tutuluyor.
+  let selectedStyleAnalysisId = null;
+
   const els = {
     steps: document.getElementById('bookingSteps'),
     msg: document.getElementById('bookingMsg'),
@@ -1855,6 +1909,114 @@ footer{ padding-block: 2.5rem 6rem; }
 
   loadApprovedReviews();
 
+  // ============ "BANA NE YAKIŞIR" (AI stil analizi) ============
+  const styleEls = {
+    form: document.getElementById('styleUploadForm'),
+    front: document.getElementById('styleFront'),
+    side: document.getElementById('styleSide'),
+    back: document.getElementById('styleBack'),
+    consent: document.getElementById('styleConsent'),
+    msg: document.getElementById('styleMsg'),
+    submitBtn: document.getElementById('styleSubmitBtn'),
+    revealWrap: document.getElementById('styleRevealWrap'),
+    revealName: document.getElementById('styleRevealName'),
+    revealImage: document.getElementById('styleRevealImage'),
+    revealReason: document.getElementById('styleRevealReason'),
+    bookBtn: document.getElementById('styleBookBtn'),
+  };
+
+  if(styleEls.form){
+    function showStyleMsg(text, kind){
+      if(!text){ styleEls.msg.innerHTML = ''; return; }
+      styleEls.msg.innerHTML = `<span class="status-badge ${kind === 'error' ? 'is-bad' : 'is-good'}"><span class="status-dot" aria-hidden="true"></span>${text}</span>`;
+    }
+
+    async function uploadStylePhoto(analysisId, file, label){
+      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+      const path = `${analysisId}/${label}.${ext}`;
+      const { error } = await supabase.storage.from('style-photos').upload(path, file, { upsert: true });
+      if(error) throw error;
+      return path;
+    }
+
+    styleEls.form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const frontFile = styleEls.front.files[0];
+      const sideFile = styleEls.side.files[0];
+      const backFile = styleEls.back.files[0];
+      if(!frontFile || !sideFile || !backFile){
+        showStyleMsg('Lütfen 3 fotoğrafı da seçin.', 'error');
+        return;
+      }
+      if(!styleEls.consent.checked){
+        showStyleMsg('Devam etmek için onay kutusunu işaretleyin.', 'error');
+        return;
+      }
+
+      styleEls.submitBtn.disabled = true;
+      showStyleMsg('Fotoğraflar yükleniyor…', null);
+
+      try {
+        const { data: analysisId, error: createError } = await supabase.rpc('create_style_analysis', { p_consent: true });
+        if(createError) throw createError;
+
+        const [frontPath, sidePath, backPath] = await Promise.all([
+          uploadStylePhoto(analysisId, frontFile, 'front'),
+          uploadStylePhoto(analysisId, sideFile, 'side'),
+          uploadStylePhoto(analysisId, backFile, 'back'),
+        ]);
+
+        const { error: attachError } = await supabase.rpc('attach_style_analysis_photos', {
+          p_analysis_id: analysisId,
+          p_photo_front_path: frontPath,
+          p_photo_side_path: sidePath,
+          p_photo_back_path: backPath,
+        });
+        if(attachError) throw attachError;
+
+        showStyleMsg('Yüz yapınız analiz ediliyor, bu birkaç saniye sürebilir…', null);
+
+        const res = await fetch('https://nvwyaxtwamjsghnxlwol.supabase.co/functions/v1/style-analysis', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'apikey': 'sb_publishable_rQoEvjFL3jOueZrPUIS9eA_1KpIS0aJ' },
+          body: JSON.stringify({ analysis_id: analysisId }),
+        });
+        const result = await res.json().catch(() => null);
+
+        if(!result || result.status !== 'completed'){
+          showStyleMsg(result?.message || 'Analiz sırasında bir sorun oluştu, lütfen tekrar deneyin ya da WhatsApp\'tan yazın.', 'error');
+          styleEls.submitBtn.disabled = false;
+          return;
+        }
+
+        const { data: reveal, error: revealError } = await supabase.rpc('get_style_analysis_reveal', { p_analysis_id: analysisId });
+        const row = Array.isArray(reveal) ? reveal[0] : reveal;
+        if(revealError || !row || row.status !== 'completed'){
+          showStyleMsg('Sonuç alınamadı, lütfen tekrar deneyin ya da WhatsApp\'tan yazın.', 'error');
+          styleEls.submitBtn.disabled = false;
+          return;
+        }
+
+        selectedStyleAnalysisId = analysisId;
+        styleEls.revealName.textContent = row.style_name || '';
+        styleEls.revealImage.src = row.image_url || '';
+        styleEls.revealImage.alt = row.style_name || '';
+        styleEls.revealReason.textContent = row.reason || row.description || '';
+        styleEls.form.classList.add('hidden');
+        styleEls.revealWrap.classList.remove('hidden');
+        showStyleMsg('');
+      } catch (err) {
+        console.error('style analysis failed', err);
+        showStyleMsg('Bir şeyler ters gitti, lütfen tekrar deneyin ya da WhatsApp\'tan yazın.', 'error');
+        styleEls.submitBtn.disabled = false;
+      }
+    });
+
+    styleEls.bookBtn?.addEventListener('click', () => {
+      document.getElementById('randevu')?.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+
   if(els.steps){
     const state = { services: [], barbers: [], service: null, barber: null, date: null, slot: null };
     const tl = new Intl.DateTimeFormat('tr-TR', { timeZone: 'Europe/Istanbul', hour: '2-digit', minute: '2-digit' });
@@ -2041,6 +2203,7 @@ footer{ padding-block: 2.5rem 6rem; }
         p_customer_phone: els.custPhone.value.trim(),
         p_notes: els.custNotes.value.trim() || null,
         p_customer_email: els.custEmail.value.trim() || null,
+        p_style_analysis_id: selectedStyleAnalysisId,
       });
       if(error){
         const friendly = ERROR_MESSAGES[error.message] || 'Randevu oluşturulamadı, lütfen tekrar deneyin ya da WhatsApp\'tan yazın.';
