@@ -62,7 +62,8 @@
     { "@type": "Person", "name": "Murat Cankaya", "jobTitle": "Saç, Sakal ve Tıraş Ustası" },
     { "@type": "Person", "name": "Furkan Akar", "jobTitle": "Protez Saç Uygulamaları Ustası" },
     { "@type": "Person", "name": "Beytullah Özbek", "jobTitle": "Usta Berber" },
-    { "@type": "Person", "name": "Ahmet Tarık Örnek", "jobTitle": "Usta Berber" }
+    { "@type": "Person", "name": "Ahmet Tarık Örnek", "jobTitle": "Usta Berber" },
+    { "@type": "Person", "name": "Toprak Kanık", "jobTitle": "Premium Traş Ustası" }
   ],
   "hasOfferCatalog": {
     "@type": "OfferCatalog",
@@ -1119,6 +1120,8 @@ footer{ padding-block: 2.5rem 6rem; }
         <span class="service-price">500 TL<small>20 dakika</small></span>
       </div>
     </div>
+    <!-- NOT: Premium Tıraş bilinçli olarak burada listelenmiyor — sadece
+         Toprak Kanık randevu akışında (berber seçince) görünür. -->
   </section>
 
   <div class="atmosphere reveal" aria-hidden="true"></div>
@@ -1202,6 +1205,10 @@ footer{ padding-block: 2.5rem 6rem; }
           <h3>Ahmet Tarık Örnek</h3>
           <p>Usta berber.</p>
         </div>
+        <div class="exp-item reveal">
+          <h3>Toprak Kanık</h3>
+          <p>Premium traş ustası. Tıraş fiyatı: 1.000 TL.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -1252,13 +1259,13 @@ footer{ padding-block: 2.5rem 6rem; }
       <div class="section-head reveal">
         <span class="eyebrow">Randevu</span>
         <h2>Randevu Al</h2>
-        <p>Hizmetinizi ve berberinizi seçin, size uygun saati birlikte belirleyelim.</p>
+        <p>Berberinizi ve hizmetinizi seçin, size uygun saati birlikte belirleyelim.</p>
       </div>
 
       <div class="booking-card reveal">
         <div class="booking-steps" id="bookingSteps">
-          <span data-step="1">Hizmet</span>
-          <span data-step="2">Berber</span>
+          <span data-step="1">Berber</span>
+          <span data-step="2">Hizmet</span>
           <span data-step="3">Tarih</span>
           <span data-step="4">Saat</span>
           <span data-step="5">Bilgileriniz</span>
@@ -1268,12 +1275,12 @@ footer{ padding-block: 2.5rem 6rem; }
         <div class="booking-msg" id="bookingMsg"></div>
 
         <div class="booking-panel" data-panel="1">
-          <div class="pick-grid services" id="serviceList"><p class="booking-empty">Hizmetler yükleniyor…</p></div>
+          <div class="pick-grid" id="barberList"><p class="booking-empty">Berberler yükleniyor…</p></div>
           <div class="booking-nav"><span></span><button type="button" class="btn btn-primary" id="toStep2" disabled>Devam Et</button></div>
         </div>
 
         <div class="booking-panel" data-panel="2">
-          <div class="pick-grid" id="barberList"><p class="booking-empty">Berberler yükleniyor…</p></div>
+          <div class="pick-grid services" id="serviceList"><p class="booking-empty">Hizmetler yükleniyor…</p></div>
           <div class="booking-nav"><button type="button" class="btn btn-ghost" data-back="1">Geri</button><button type="button" class="btn btn-primary" id="toStep3" disabled>Devam Et</button></div>
         </div>
 
@@ -1879,19 +1886,25 @@ footer{ padding-block: 2.5rem 6rem; }
       btn.addEventListener('click', () => goToStep(Number(btn.dataset.back)));
     });
 
-    async function loadServices(){
+    async function loadServicesForBarber(barberId){
+      state.service = null;
+      els.toStep3.disabled = true;
+      els.serviceList.innerHTML = '<p class="booking-empty">Hizmetler yükleniyor…</p>';
+      // Her berber sadece kendisine tanımlı hizmetleri verir (bkz. barber_services tablosu).
       const { data, error } = await supabase
-        .from('services')
-        .select('id,name,description,duration_minutes,price_try,price_is_final,price_note,is_featured')
-        .eq('active', true)
-        .order('sort_order');
+        .from('barber_services')
+        .select('services!inner(id,name,description,duration_minutes,price_try,price_is_final,price_note,is_featured,sort_order)')
+        .eq('barber_id', barberId)
+        .eq('services.active', true)
+        .order('sort_order', { referencedTable: 'services' });
       if(error || !data || !data.length){
-        els.serviceList.innerHTML = '<p class="booking-empty">Hizmetler şu an yüklenemedi, lütfen sayfayı yenileyin ya da WhatsApp\'tan yazın.</p>';
+        els.serviceList.innerHTML = '<p class="booking-empty">Bu berber için hizmet bulunamadı, lütfen başka bir berber seçin ya da WhatsApp\'tan yazın.</p>';
         return;
       }
-      state.services = data;
+      const services = data.map(row => row.services);
+      state.services = services;
       els.serviceList.innerHTML = '';
-      data.forEach(s => {
+      services.forEach(s => {
         const card = document.createElement('button');
         card.type = 'button';
         card.className = 'pick-card' + (s.is_featured ? ' is-featured' : '');
@@ -1906,7 +1919,7 @@ footer{ padding-block: 2.5rem 6rem; }
           state.service = s;
           els.serviceList.querySelectorAll('.pick-card').forEach(c => c.classList.remove('is-selected'));
           card.classList.add('is-selected');
-          els.toStep2.disabled = false;
+          els.toStep3.disabled = false;
         });
         els.serviceList.appendChild(card);
       });
@@ -1933,7 +1946,7 @@ footer{ padding-block: 2.5rem 6rem; }
           state.barber = b;
           els.barberList.querySelectorAll('.pick-card').forEach(c => c.classList.remove('is-selected'));
           card.classList.add('is-selected');
-          els.toStep3.disabled = false;
+          els.toStep2.disabled = false;
         });
         els.barberList.appendChild(card);
       });
@@ -1996,7 +2009,7 @@ footer{ padding-block: 2.5rem 6rem; }
 
     const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
-    els.toStep2.addEventListener('click', () => goToStep(2));
+    els.toStep2.addEventListener('click', () => { goToStep(2); loadServicesForBarber(state.barber.id); });
     els.toStep3.addEventListener('click', () => goToStep(3));
     els.toStep4.addEventListener('click', () => { goToStep(4); loadSlots(); });
     els.toStep5.addEventListener('click', () => goToStep(5));
@@ -2047,7 +2060,6 @@ footer{ padding-block: 2.5rem 6rem; }
     });
 
     els.dateInput.min = todayIstanbul();
-    loadServices();
     loadBarbers();
     goToStep(1);
   }

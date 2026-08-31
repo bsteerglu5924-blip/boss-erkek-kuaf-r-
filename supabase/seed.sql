@@ -7,7 +7,8 @@ insert into barbers (name, slug, title, sort_order) values
   ('Murat Cankaya', 'murat-cankaya', 'Saç, Sakal ve Tıraş Ustası', 2),
   ('Furkan Akar', 'furkan-akar', 'Protez Saç Uygulamaları Ustası', 3),
   ('Beytullah Özbek', 'beytullah-ozbek', 'Usta Berber', 4),
-  ('Ahmet Tarık Örnek', 'ahmet-tarik-ornek', 'Usta Berber', 5)
+  ('Ahmet Tarık Örnek', 'ahmet-tarik-ornek', 'Usta Berber', 5),
+  ('Toprak Kanık', 'toprak-kanik', 'Premium Traş Ustası', 6)
 on conflict (slug) do update set name = excluded.name, title = excluded.title, sort_order = excluded.sort_order;
 
 -- price_is_final = false olan hizmetlerde site "fiyat icin arayin" der; bot da
@@ -63,7 +64,13 @@ insert into services (name, slug, description, duration_minutes, price_try, pric
 
   ('Cilt Bakımı', 'cilt-bakimi',
    'Tıraş sonrası yatıştırıcı bakım ve yüz temizliği uygulamaları.',
-   20, 500, true, null, false, 13)
+   20, 500, true, null, false, 13),
+
+  -- Premium Tıraş genel listede gösterilmez (bkz. index.html "Hizmetlerimiz"
+  -- notu) — sadece Toprak Kanık secilince barber_services araciligiyla gorunur.
+  ('Premium Traş', 'premium-tiras',
+   'Toprak Kanık''ın uyguladığı, sıcak havlu ve özel bakım ürünleriyle desteklenen üst düzey jilet tıraşı deneyimi.',
+   60, 1000, true, null, false, 14)
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -73,3 +80,19 @@ on conflict (slug) do update set
   price_note = excluded.price_note,
   is_featured = excluded.is_featured,
   sort_order = excluded.sort_order;
+
+-- ============ BARBER_SERVICES ============
+-- Her normal berber, Premium Tiras disindaki tum hizmetleri verir.
+-- Toprak Kanik SADECE Premium Tiras verir (bilincli tasarim).
+insert into barber_services (barber_id, service_id)
+select b.id, s.id
+from barbers b
+cross join services s
+where b.slug <> 'toprak-kanik' and s.slug <> 'premium-tiras'
+on conflict do nothing;
+
+insert into barber_services (barber_id, service_id)
+select b.id, s.id
+from barbers b, services s
+where b.slug = 'toprak-kanik' and s.slug = 'premium-tiras'
+on conflict do nothing;
