@@ -228,17 +228,55 @@ Deno.serve(async (req: Request) => {
     const toolUse = response.content.find(
       (b): b is Anthropic.ToolUseBlock => b.type === "tool_use" && b.name === "submit_recommendations",
     );
-    if (!toolUse) throw new Error("model araç çağırmadı");
+    if (!toolUse) {
+      console.error("style-analysis: arac cagrilmadi, response.content:", JSON.stringify(response.content));
+      throw new Error("model araç çağırmadı");
+    }
 
-    const picks = (toolUse.input as { picks?: Array<{ style_id: string; reason: string }> }).picks ?? [];
-    if (picks.length !== 3) throw new Error("3 seçim gelmedi");
+    console.log("style-analysis toolUse.input typeof:", typeof toolUse.input, "raw:", JSON.stringify(toolUse.input));
+    // Model, "picks" alanini bazen kendi icinde tekrar JSON-string olarak
+    // sarmalayarak donduruyor (orn. {picks: "{\"picks\":[...]}"}). Gercek
+    // diziyi bulana kadar (string ise parse edip, {picks:...} ise icine
+    // inerek) recursive olarak coz.
+    function extractPicksArray(value: unknown, depth = 0): unknown[] {
+      if (depth > 5) return [];
+      if (Array.isArray(value)) return value;
+      if (typeof value === "string") {
+        try {
+          return extractPicksArray(JSON.parse(value), depth + 1);
+        } catch {
+          return [];
+        }
+      }
+      if (value && typeof value === "object" && "picks" in (value as Record<string, unknown>)) {
+        return extractPicksArray((value as Record<string, unknown>).picks, depth + 1);
+      }
+      return [];
+    }
+    const rawPicks = extractPicksArray(toolUse.input) as Array<{ style_id?: unknown; reason?: unknown }>;
+    console.log("style-analysis raw picks", JSON.stringify(rawPicks));
 
+    // Modelin dondurdugu sayi/format garanti degil (JSON schema minItems/maxItems
+    // uretimi kesin siniri zorlamaz) — gecersiz/tekrarlanan girdileri sessizce
+    // eleyip ilk 3 gecerli, katalogda var olan secimi kullaniyoruz.
     const seen = new Set<string>();
-    const recommendations = picks.map((pick, index) => {
-      const row = catalog.find((c) => c.id === pick.style_id);
-      if (!row) throw new Error(`bilinmeyen style_id: ${pick.style_id}`);
-      if (seen.has(row.id)) throw new Error("tekrarlanan style_id");
-      seen.add(row.id);
+    const validPicks: Array<{ style_id: string; reason: string }> = [];
+    for (const p of rawPicks) {
+      const styleId = typeof p?.style_id === "string" ? p.style_id : null;
+      const reason = typeof p?.reason === "string" ? p.reason : "";
+      if (!styleId || seen.has(styleId)) continue;
+      if (!catalog.some((c) => c.id === styleId)) continue;
+      seen.add(styleId);
+      validPicks.push({ style_id: styleId, reason });
+      if (validPicks.length === 3) break;
+    }
+
+    if (validPicks.length !== 3) {
+      throw new Error(`geçerli 3 seçim oluşturulamadı (gelen: ${rawPicks.length}, geçerli: ${validPicks.length})`);
+    }
+
+    const recommendations = validPicks.map((pick, index) => {
+      const row = catalog.find((c) => c.id === pick.style_id)!;
       return {
         rank: index + 1,
         style_id: row.id,

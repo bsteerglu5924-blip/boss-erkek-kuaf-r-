@@ -96,3 +96,15 @@ select b.id, s.id
 from barbers b, services s
 where b.slug = 'toprak-kanik' and s.slug = 'premium-tiras'
 on conflict do nothing;
+
+-- ============ STYLE_CATALOG ============
+-- "Bana Ne Yakışır" AI stil analizinin secebilecegi katalog. image_url
+-- mutlaka herkese acik https URL olmali (Telegram sendPhoto URL'den ceker).
+insert into style_catalog (name, description, image_url, look_type, tags, sort_order, active) values
+  ('Pompadour', 'Üstü hacimli ve taralı, yanları kısa; klasik ama modern bir duruş.', 'https://www.bosskuafor.com/stil-pompadour.jpg', 'hair', array['pompadour','taramalı','hacimli','oval yüz','kare yüz'], 1, true),
+  ('Klasik Taramalı Kesim', 'Düz geriye taranmış, pürüzsüz ve zarif bir klasik kesim.', 'https://www.bosskuafor.com/stil-klasik-taramali.jpg', 'hair', array['klasik','taramalı','zarif','iş hayatı','uzun yüz'], 2, true),
+  ('Desenli Fade', 'Üstü uzun, yanları desenli sıfıra yakın kesilmiş, dikkat çekici bir görünüm.', 'https://www.bosskuafor.com/stil-desenli-fade.jpg', 'hair', array['fade','desenli','genç','dikkat çekici','yuvarlak yüz'], 3, true),
+  ('Doğal Dalgalı Kesim', 'Orta boy, doğal dalgalı ve dokulu; bakımsız değil ama zahmetsiz görünen bir stil.', 'https://www.bosskuafor.com/stil-dogal-dalgali.jpg', 'hair', array['dalgalı','doğal','orta boy','rahat','kalp yüz'], 4, true),
+  ('Taramalı Saç + Gür Sakal', 'Geriye taranmış saç ve dolgun, bakımlı sakalın birlikte oluşturduğu olgun görünüm.', 'https://www.bosskuafor.com/stil-taramali-sakal.jpg', 'hair_and_beard', array['sakal','taramalı','olgun','kombinasyon','uzun yüz'], 5, true),
+  ('Kısa Fade + Şekilli Sakal', 'Temiz kısa fade kesim ve düzgün hatlarla şekillendirilmiş sakal kombinasyonu.', 'https://www.bosskuafor.com/stil-fade-sakal.jpg', 'hair_and_beard', array['fade','sakal','temiz','kombinasyon','kare yüz'], 6, true)
+on conflict do nothing;
