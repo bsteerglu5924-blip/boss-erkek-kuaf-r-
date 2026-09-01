@@ -1931,10 +1931,42 @@ footer{ padding-block: 2.5rem 6rem; }
       styleEls.msg.innerHTML = `<span class="status-badge ${kind === 'error' ? 'is-bad' : 'is-good'}"><span class="status-dot" aria-hidden="true"></span>${text}</span>`;
     }
 
+    // Telefon kameraları (özellikle HEIC/HEIF, ya da bazı uygulama-ici
+    // tarayıcılarda MIME tipi eksik gelen dosyalar) storage'ın kabul ettiği
+    // mime listesine (image/jpeg|png|webp) her zaman uymuyor. Yüklemeden
+    // önce her fotoğrafı standart bir JPEG'e çevirip boyutunu sınırlıyoruz.
+    function fileToJpegBlob(file, maxDim, quality){
+      return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+          let { width, height } = img;
+          if(width > maxDim || height > maxDim){
+            const scale = maxDim / Math.max(width, height);
+            width = Math.round(width * scale);
+            height = Math.round(height * scale);
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          URL.revokeObjectURL(url);
+          canvas.toBlob((blob) => {
+            if(blob) resolve(blob); else reject(new Error('CONVERT_FAILED'));
+          }, 'image/jpeg', quality);
+        };
+        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('UNSUPPORTED_IMAGE')); };
+        img.src = url;
+      });
+    }
+
     async function uploadStylePhoto(analysisId, file, label){
-      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
-      const path = `${analysisId}/${label}.${ext}`;
-      const { error } = await supabase.storage.from('style-photos').upload(path, file, { upsert: true });
+      const blob = await fileToJpegBlob(file, 1600, 0.85);
+      const path = `${analysisId}/${label}.jpg`;
+      const { error } = await supabase.storage.from('style-photos').upload(path, blob, {
+        upsert: true,
+        contentType: 'image/jpeg',
+      });
       if(error) throw error;
       return path;
     }
@@ -2007,7 +2039,10 @@ footer{ padding-block: 2.5rem 6rem; }
         showStyleMsg('');
       } catch (err) {
         console.error('style analysis failed', err);
-        showStyleMsg('Bir şeyler ters gitti, lütfen tekrar deneyin ya da WhatsApp\'tan yazın.', 'error');
+        const msg = (err?.message === 'UNSUPPORTED_IMAGE' || err?.message === 'CONVERT_FAILED')
+          ? 'Bir fotoğraf işlenemedi, lütfen farklı bir fotoğraf seçip tekrar deneyin.'
+          : 'Bir şeyler ters gitti, lütfen tekrar deneyin ya da WhatsApp\'tan yazın.';
+        showStyleMsg(msg, 'error');
         styleEls.submitBtn.disabled = false;
       }
     });
