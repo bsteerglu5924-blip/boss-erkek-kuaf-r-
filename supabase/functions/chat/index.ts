@@ -136,17 +136,18 @@ const SYSTEM_PROMPT = `Sen BOSS Erkek Kuaförü'nün online randevu asistanısı
 - Telefon: 0545 116 62 05
 - WhatsApp: ${WHATSAPP_URL}
 - Çalışma saatleri: Her gün 08:30 – 20:30
-- Ekip: Ali Şengül (Matematiksel Kesim ve Altın Oran Kaş Tasarımı uzmanı), Murat Cankaya (saç, sakal ve tıraş ustası), Furkan Akar (protez saç uygulamaları ustası), Beytullah Özbek, Ahmet Tarık Örnek
+- Ekip: Ali Şengül (Matematiksel Kesim ve Altın Oran Kaş Tasarımı uzmanı), Murat Cankaya (saç, sakal ve tıraş ustası), Furkan Akar (protez saç uygulamaları ustası), Beytullah Özbek, Ahmet Tarık Örnek, Toprak Kanık (SADECE Premium Traş hizmetini verir, başka hiçbir hizmeti vermez)
 - Öne çıkan uzmanlıklar: matematiksel kesim, protez saç, altın oran kaş tasarımı
 
 ## Araçların
-- list_services: güncel hizmet listesi, süreleri ve fiyatlar
+- list_services: genel hizmet listesi, süreleri ve fiyatlar (birden fazla berberin verdiği hizmetler)
+- list_barber_services: belirli bir berberin verebildiği hizmetler (bazı berberler sadece belirli hizmetleri verir)
 - list_barbers: çalışan berberler
 - get_available_slots: belirli bir berber, hizmet ve tarih için boş saatler
 - create_appointment: randevuyu oluşturur
 
 ## Kurallar
-1. Hizmet, süre veya fiyat sorulduğunda MUTLAKA list_services çağır. Ezberden hizmet adı, süre ya da fiyat söyleme.
+1. Hizmet, süre veya fiyat sorulduğunda MUTLAKA list_services çağır. Ezberden hizmet adı, süre ya da fiyat söyleme. Ama bir BERBERE özel soru varsa (örn. "Toprak Kanık ne kadara ne yapıyor", ya da müşteri randevu akışında belirli bir berber seçtiyse) list_services YERİNE list_barber_services çağır — genel listedeki hizmetlerin hepsi her berberde bulunmayabilir, bazı berberler (örn. Toprak Kanık) sadece belirli hizmetleri verir.
 2. Fiyatı kesinleşmemiş hizmetlerde ASLA fiyat uydurma veya tahmin etme. "Fiyat bilgisi için 0545 116 62 05'i arayabilirsiniz" de. Aralık olarak verilen fiyatları (örn. protez saç) aralık olarak aktar, tek sayıya indirgeme.
 3. Boş saat sorulduğunda MUTLAKA get_available_slots çağır. Saat uydurma.
 4. Randevu oluşturmadan önce hizmet, berber, tarih, saat, ad soyad ve telefonu özetle ve müşteriden açık onay iste ("Onaylıyor musunuz?"). Müşteri açıkça onaylamadan create_appointment ÇAĞIRMA.
@@ -170,14 +171,30 @@ const TOOLS = [
   {
     name: "list_services",
     description:
-      "Salonun aktif hizmetlerini, sürelerini ve fiyatlarını döndürür. " +
-      "Hizmet, süre veya fiyat sorulduğunda her zaman çağır.",
+      "Salonun GENEL hizmetlerini, sürelerini ve fiyatlarını döndürür (birden fazla " +
+      "berberin verdiği hizmetler). Belirli bir berbere özel sorularda bunun yerine " +
+      "list_barber_services kullan. Genel hizmet/süre/fiyat sorulduğunda her zaman çağır.",
     input_schema: { type: "object" as const, properties: {}, required: [] },
   },
   {
     name: "list_barbers",
     description: "Salonda çalışan aktif berberleri ve uzmanlıklarını döndürür.",
     input_schema: { type: "object" as const, properties: {}, required: [] },
+  },
+  {
+    name: "list_barber_services",
+    description:
+      "Belirli bir berberin verebildiği hizmetleri, sürelerini ve fiyatlarını döndürür. " +
+      "Bazı berberler (örn. Toprak Kanık) sadece belirli hizmetleri verir; bunlar genel " +
+      "list_services listesinde görünmeyebilir. Müşteri bir berbere özel hizmet/fiyat " +
+      "sorduğunda veya randevu akışında berber seçildiğinde MUTLAKA bunu çağır.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        barber_name: { type: "string", description: "Berberin adı, örn. 'Toprak Kanık'" },
+      },
+      required: ["barber_name"],
+    },
   },
   {
     name: "get_available_slots",
@@ -237,27 +254,46 @@ async function runTool(
   name: string,
   input: Record<string, unknown>,
 ): Promise<string> {
+  const formatService = (s: Record<string, unknown>) => ({
+    ad: s.name,
+    aciklama: s.description,
+    sure_dakika: s.duration_minutes,
+    // price_note doluysa (orn. protez sac araligi) fiyat tek sayi degildir.
+    fiyat: s.price_note
+      ? s.price_note
+      : (s.price_is_final
+        ? `${s.price_try} TL`
+        : "Fiyat kesinleşmedi — telefonla bilgi alınmalı, tahmin etme"),
+    en_cok_tercih_edilen: s.is_featured === true,
+  });
+
   if (name === "list_services") {
+    // Bazi hizmetler (orn. Premium Tiras) SADECE belirli bir berbere ozeldir
+    // ve genel listede gorunmez — sadece o berber icin list_barber_services
+    // ile ortaya cikar. Genel liste = birden fazla berberin verdigi hizmetler.
     const { data, error } = await db
       .from("services")
-      .select("name,description,duration_minutes,price_try,price_is_final,price_note,is_featured")
+      .select("name,description,duration_minutes,price_try,price_is_final,price_note,is_featured,barber_services(barber_id)")
       .eq("active", true)
       .order("sort_order");
     if (error) return "Hizmetler okunamadı.";
-    return JSON.stringify(
-      (data ?? []).map((s: Record<string, unknown>) => ({
-        ad: s.name,
-        aciklama: s.description,
-        sure_dakika: s.duration_minutes,
-        // price_note doluysa (orn. protez sac araligi) fiyat tek sayi degildir.
-        fiyat: s.price_note
-          ? s.price_note
-          : (s.price_is_final
-            ? `${s.price_try} TL`
-            : "Fiyat kesinleşmedi — telefonla bilgi alınmalı, tahmin etme"),
-        en_cok_tercih_edilen: s.is_featured === true,
-      })),
+    const general = (data ?? []).filter(
+      (s: Record<string, unknown>) => ((s.barber_services as unknown[] | null)?.length ?? 0) > 1,
     );
+    return JSON.stringify(general.map(formatService));
+  }
+
+  if (name === "list_barber_services") {
+    const barber = await resolveBarber(db, String(input.barber_name ?? ""));
+    if (!barber) return "HATA: Bu isimde bir berber bulunamadı. Önce list_barbers çağır.";
+    const { data, error } = await db
+      .from("barber_services")
+      .select("services!inner(name,description,duration_minutes,price_try,price_is_final,price_note,is_featured)")
+      .eq("barber_id", barber.id)
+      .eq("services.active", true);
+    if (error) return "Hizmetler okunamadı.";
+    const rows = (data ?? []).map((r: Record<string, unknown>) => r.services as Record<string, unknown>);
+    return JSON.stringify({ berber: barber.name, hizmetler: rows.map(formatService) });
   }
 
   if (name === "list_barbers") {
