@@ -1966,7 +1966,12 @@ footer{ padding-block: 2.5rem 6rem; }
           canvas.getContext('2d').drawImage(img, 0, 0, width, height);
           URL.revokeObjectURL(url);
           canvas.toBlob((blob) => {
-            if(blob) resolve(blob); else reject(new Error('CONVERT_FAILED'));
+            if(!blob){ reject(new Error('CONVERT_FAILED')); return; }
+            // Bazı tarayıcılar/webview'ler toBlob'a verilen mime tipini
+            // görmezden gelip Blob.type'ı bos ya da yanlis birakiyor; bu da
+            // FormData yuklemesinde yanlis Content-Type'a (ve storage'in
+            // reddine) yol aciyor. Tipi burada elle zorluyoruz.
+            resolve(blob.type === 'image/jpeg' ? blob : new Blob([blob], { type: 'image/jpeg' }));
           }, 'image/jpeg', quality);
         };
         img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('UNSUPPORTED_IMAGE')); };
