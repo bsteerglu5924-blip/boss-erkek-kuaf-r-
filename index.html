@@ -1982,8 +1982,12 @@ footer{ padding-block: 2.5rem 6rem; }
     async function uploadStylePhoto(analysisId, file, label){
       const blob = await fileToJpegBlob(file, 1600, 0.85);
       const path = `${analysisId}/${label}.jpg`;
+      // upsert kullanılmıyor: her analiz taze bir UUID yolu alıyor, çakışma
+      // olmaz — upsert:true, Postgres RLS'te INSERT politikasının yanı sıra
+      // bir UPDATE politikası da gerektirdiği için (biz sadece INSERT
+      // tanımladık) her yüklemeyi "row-level security policy" hatasıyla
+      // reddediyordu.
       const { error } = await supabase.storage.from('style-photos').upload(path, blob, {
-        upsert: true,
         contentType: 'image/jpeg',
       });
       if(error) throw error;
