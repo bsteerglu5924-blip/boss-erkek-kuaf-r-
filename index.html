@@ -634,6 +634,13 @@ section{ padding-block: clamp(3.5rem, 9vh, 6.5rem); }
 @media (min-width: 900px){
   .contact-grid{ grid-template-columns: 1.1fr 0.9fr; }
 }
+.style-hero-img{
+  width:100%;
+  height: 100%;
+  min-height: 280px;
+  object-fit: cover;
+  border-radius: var(--radius);
+}
 .contact-cta{
   display:flex; flex-direction:column; gap:1rem;
   justify-content:center;
@@ -968,10 +975,10 @@ footer{ padding-block: 2.5rem 6rem; }
     </button>
     <nav class="nav-links" id="nav-links">
       <a href="#hizmetler">Hizmetler</a>
+      <a href="#bana-ne-yakisir">Ne Yakışır</a>
       <a href="#galeri">Galeri</a>
       <a href="#deneyim">Deneyim</a>
       <a href="#ekip">Ekip</a>
-      <a href="#bana-ne-yakisir">Ne Yakışır</a>
       <a href="#yorumlar">Yorumlar</a>
       <a href="#randevu">Randevu</a>
       <a href="#iletisim">İletişim</a>
@@ -1125,6 +1132,58 @@ footer{ padding-block: 2.5rem 6rem; }
          Toprak Kanık randevu akışında (berber seçince) görünür. -->
   </section>
 
+  <div class="stripe-band" aria-hidden="true"></div>
+
+  <section id="bana-ne-yakisir">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Yapay Zeka</span>
+        <h2>Bana Ne Yakışır?</h2>
+        <p>3 fotoğraf yükleyin, yüz yapınıza göre size en çok yakışacak stili yapay zeka belirlesin. Diğer 2 öneriyi sürpriz tutuyoruz — randevunuza geldiğinizde ustanızdan öğrenin.</p>
+      </div>
+
+      <div class="contact-grid">
+        <img class="style-hero-img reveal" src="stil-hero-selfie.jpg" alt="Telefonuyla stil analizi için fotoğraf çeken bir müşteri" loading="lazy">
+
+        <div class="contact-card reveal" id="styleFormCard">
+          <form id="styleUploadForm">
+            <div class="booking-form-grid">
+              <div class="field">
+                <label for="styleFront">Ön Yüz Fotoğrafı</label>
+                <input type="file" id="styleFront" accept="image/*" required>
+              </div>
+              <div class="field">
+                <label for="styleSide">Yan Profil Fotoğrafı</label>
+                <input type="file" id="styleSide" accept="image/*" required>
+              </div>
+            </div>
+            <div class="field" style="margin-bottom:1.25rem; max-width:280px">
+              <label for="styleBack">Ense Fotoğrafı</label>
+              <input type="file" id="styleBack" accept="image/*" required>
+            </div>
+            <label style="display:flex; gap:0.6rem; align-items:flex-start; margin-bottom:1.25rem; font-size:var(--fs-small); color:var(--ink-soft);">
+              <input type="checkbox" id="styleConsent" required style="margin-top:0.2rem">
+              <span>Fotoğraflarımın yüz/stil analizi amacıyla yapay zeka servisine gönderilmesini ve sonuç randevuma bağlanana kadar saklanmasını kabul ediyorum.</span>
+            </label>
+            <div class="booking-msg" id="styleMsg"></div>
+            <button type="submit" class="btn btn-primary" id="styleSubmitBtn">Analiz Et</button>
+          </form>
+
+          <div class="hidden" id="styleRevealWrap" style="margin-top:1.5rem">
+            <div class="section-head" style="text-align:left; margin-bottom:1rem">
+              <span class="eyebrow">Sana Yakışanlardan Biri</span>
+              <h3 id="styleRevealName" style="font-family:var(--font-display); font-size:1.4rem; text-transform:uppercase;"></h3>
+            </div>
+            <img id="styleRevealImage" src="" alt="" style="width:100%; max-width:360px; border-radius:var(--radius); display:block; margin-bottom:1rem" loading="lazy">
+            <p id="styleRevealReason" style="color:var(--ink-soft); margin-bottom:0.75rem"></p>
+            <p style="font-size:var(--fs-small); color:var(--ink-soft); margin-bottom:1.25rem">🔒 Sana yakışan diğer 2 stili gizli tuttuk — randevunuza geldiğinizde ustanız sizinle paylaşacak.</p>
+            <button type="button" class="btn btn-primary" id="styleBookBtn">Randevu Al</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <div class="atmosphere reveal" aria-hidden="true"></div>
 
   <section id="galeri">
@@ -1209,54 +1268,6 @@ footer{ padding-block: 2.5rem 6rem; }
         <div class="exp-item reveal">
           <h3>Toprak Kanık</h3>
           <p>Premium traş ustası. Tıraş fiyatı: 1.000 TL.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="stripe-band" aria-hidden="true"></div>
-
-  <section id="bana-ne-yakisir">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="eyebrow">Yapay Zeka</span>
-        <h2>Bana Ne Yakışır?</h2>
-        <p>3 fotoğraf yükleyin, yüz yapınıza göre size en çok yakışacak stili yapay zeka belirlesin. Diğer 2 öneriyi sürpriz tutuyoruz — randevunuza geldiğinizde ustanızdan öğrenin.</p>
-      </div>
-
-      <div class="contact-card reveal" id="styleFormCard">
-        <form id="styleUploadForm">
-          <div class="booking-form-grid">
-            <div class="field">
-              <label for="styleFront">Ön Yüz Fotoğrafı</label>
-              <input type="file" id="styleFront" accept="image/*" required>
-            </div>
-            <div class="field">
-              <label for="styleSide">Yan Profil Fotoğrafı</label>
-              <input type="file" id="styleSide" accept="image/*" required>
-            </div>
-          </div>
-          <div class="field" style="margin-bottom:1.25rem; max-width:280px">
-            <label for="styleBack">Ense Fotoğrafı</label>
-            <input type="file" id="styleBack" accept="image/*" required>
-          </div>
-          <label style="display:flex; gap:0.6rem; align-items:flex-start; margin-bottom:1.25rem; font-size:var(--fs-small); color:var(--ink-soft);">
-            <input type="checkbox" id="styleConsent" required style="margin-top:0.2rem">
-            <span>Fotoğraflarımın yüz/stil analizi amacıyla yapay zeka servisine gönderilmesini ve sonuç randevuma bağlanana kadar saklanmasını kabul ediyorum.</span>
-          </label>
-          <div class="booking-msg" id="styleMsg"></div>
-          <button type="submit" class="btn btn-primary" id="styleSubmitBtn">Analiz Et</button>
-        </form>
-
-        <div class="hidden" id="styleRevealWrap" style="margin-top:1.5rem">
-          <div class="section-head" style="text-align:left; margin-bottom:1rem">
-            <span class="eyebrow">Sana Yakışanlardan Biri</span>
-            <h3 id="styleRevealName" style="font-family:var(--font-display); font-size:1.4rem; text-transform:uppercase;"></h3>
-          </div>
-          <img id="styleRevealImage" src="" alt="" style="width:100%; max-width:360px; border-radius:var(--radius); display:block; margin-bottom:1rem" loading="lazy">
-          <p id="styleRevealReason" style="color:var(--ink-soft); margin-bottom:0.75rem"></p>
-          <p style="font-size:var(--fs-small); color:var(--ink-soft); margin-bottom:1.25rem">🔒 Sana yakışan diğer 2 stili gizli tuttuk — randevunuza geldiğinizde ustanız sizinle paylaşacak.</p>
-          <button type="button" class="btn btn-primary" id="styleBookBtn">Randevu Al</button>
         </div>
       </div>
     </div>
