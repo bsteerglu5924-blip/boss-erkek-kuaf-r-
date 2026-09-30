@@ -11,6 +11,7 @@ Yayın: bir insan status'u "published" yapar ve youtube_id'yi girer.
 """
 import datetime, json, pathlib, random, sys
 import anthropic
+from render import render as render_video
 
 ROOT = pathlib.Path(__file__).parent
 EPISODES = ROOT.parent / "site" / "episodes.json"
@@ -43,9 +44,10 @@ def safety_check(script):
                   'Sadece JSON dön: {"safe": true|false, "reasons": []}', json.dumps(script, ensure_ascii=False))
     return json.loads(verdict)
 
-def render(script, out_dir):
-    """Görsel + seslendirme + video birleştirme. Servis seçilince doldurulacak."""
-    raise NotImplementedError("Görsel/ses/video servisleri henüz seçilmedi")
+def render_all(script, out):
+    """Her dil için video üretir. Sağlayıcılar render.py içinde; gerçek servisler burada verilecek."""
+    for lang in ("tr", "en"):
+        render_video(script, out, lang=lang)
 
 def main():
     data = json.loads(EPISODES.read_text(encoding="utf-8"))
@@ -58,10 +60,7 @@ def main():
     out = ROOT / "out" / today
     out.mkdir(parents=True, exist_ok=True)
     (out / "script.json").write_text(json.dumps(script, ensure_ascii=False, indent=2), encoding="utf-8")
-    try:
-        render(script, out)
-    except NotImplementedError as e:
-        print("Uyarı:", e)
+    render_all(script, out)
     data["episodes"].append({"id": f"{today}-{topic}", "date": today, "age": age, "topic": topic,
         "status": "draft", "youtube_id": "", "title": script["title"], "summary": script["summary"],
         "learning": script["learning"]})

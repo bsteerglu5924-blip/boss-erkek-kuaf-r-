@@ -14,7 +14,7 @@
     ANTHROPIC_API_KEY=... python3 pipeline/generate_episode.py
 
 ## Yapılacaklar
-1. Görsel/ses/video servislerini seç ve `render()` içine bağla.
+1. Gerçek servisleri seç: `pipeline/render.py` içindeki `ImageProvider` (karakter görseli) ve `VoiceProvider` (seslendirme) sınıflarına bağla. Şimdilik yer tutucular var; video birleştirme (hareket + ses + altyazı) hazır ve test edildi. Gereken: ffmpeg + pillow.
 2. YouTube kanalı + API yetkisi; yüklemede "çocuklara özel" ve "yapay zekayla üretildi" işaretle.
 3. Günlük zamanlama (GitHub Actions / cron).
 4. Vercel yayını ve alan adı.
