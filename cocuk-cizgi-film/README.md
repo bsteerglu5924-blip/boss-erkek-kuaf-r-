@@ -14,7 +14,7 @@
     ANTHROPIC_API_KEY=... python3 pipeline/generate_episode.py
 
 ## Yapılacaklar
-1. Gerçek servisleri seç: `pipeline/render.py` içindeki `ImageProvider` (karakter görseli) ve `VoiceProvider` (seslendirme) sınıflarına bağla. Şimdilik yer tutucular var; video birleştirme (hareket + ses + altyazı) hazır ve test edildi. Gereken: ffmpeg + pillow.
+1. Servisler: `pipeline/providers.py` (tek Google `GEMINI_API_KEY` ile görsel + ses) hazır ama henüz gerçek anahtarla denenmedi. Anahtar gelince `ANTHROPIC_API_KEY` + `GEMINI_API_KEY` ile çalıştır; karakter referans görselleri `pipeline/characters_ref/` içine konur.
 2. YouTube kanalı + API yetkisi; yüklemede "çocuklara özel" ve "yapay zekayla üretildi" işaretle.
 3. Günlük zamanlama (GitHub Actions / cron).
 4. Vercel yayını ve alan adı.

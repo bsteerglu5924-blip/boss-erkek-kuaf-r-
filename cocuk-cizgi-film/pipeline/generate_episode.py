@@ -12,6 +12,7 @@ Yayın: bir insan status'u "published" yapar ve youtube_id'yi girer.
 import datetime, json, pathlib, random, sys
 import anthropic
 from render import render as render_video
+from providers import get_providers
 
 ROOT = pathlib.Path(__file__).parent
 EPISODES = ROOT.parent / "site" / "episodes.json"
@@ -46,8 +47,9 @@ def safety_check(script):
 
 def render_all(script, out):
     """Her dil için video üretir. Sağlayıcılar render.py içinde; gerçek servisler burada verilecek."""
+    images, voice = get_providers()
     for lang in ("tr", "en"):
-        render_video(script, out, lang=lang)
+        render_video(script, out, images=images, voice=voice, lang=lang)
 
 def main():
     data = json.loads(EPISODES.read_text(encoding="utf-8"))
