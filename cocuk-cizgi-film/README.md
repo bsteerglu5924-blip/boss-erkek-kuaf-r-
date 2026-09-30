@@ -15,6 +15,6 @@
 
 ## Yapılacaklar
 1. Servisler: `pipeline/providers.py` (tek Google `GEMINI_API_KEY` ile görsel + ses) hazır ama henüz gerçek anahtarla denenmedi. Anahtar gelince `ANTHROPIC_API_KEY` + `GEMINI_API_KEY` ile çalıştır; karakter referans görselleri `pipeline/characters_ref/` içine konur.
-2. YouTube kanalı + API yetkisi; yüklemede "çocuklara özel" ve "yapay zekayla üretildi" işaretle.
+2. YouTube: `pipeline/upload_youtube.py` hazır (özel yükler, "çocuklara özel" + "yapay zeka" işaretli). Gerekli: YouTube kanalı ve Google Cloud OAuth (YT_CLIENT_ID, YT_CLIENT_SECRET, YT_REFRESH_TOKEN). Henüz denenmedi.
 3. Günlük zamanlama (GitHub Actions / cron).
 4. Vercel yayını ve alan adı.
