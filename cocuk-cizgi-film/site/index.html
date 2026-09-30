@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minik Dünya – Çocuklar İçin Eğitici Çizgi Film</title>
+  <meta name="description" content="3-6 yaş için her gün yeni, güvenli ve eğitici çizgi film. Reklamsız, hesapsız, ebeveyn dostu.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="./">🌈 <span data-i18n="brand">Minik Dünya</span></a>
+    <nav>
+      <a href="ebeveynler.html" data-i18n="parents">Ebeveynler İçin</a>
+      <button id="lang" type="button" aria-label="Dil / Language">EN</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1 data-i18n="tagline">Her gün yeni bir macera, güvenle izleyin!</h1>
+      <p data-i18n="sub">Reklamsız, hesapsız, yorumsuz. 3-6 yaş için eğitici çizgi filmler.</p>
+    </section>
+
+    <section id="today" aria-live="polite"></section>
+
+    <section>
+      <div class="filters" role="group" aria-label="Yaş">
+        <button data-age="all" class="on" data-i18n="all">Hepsi</button>
+        <button data-age="3-4">3-4</button>
+        <button data-age="5-6">5-6</button>
+      </div>
+      <div id="list" class="grid"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p data-i18n="footer">Tüm bölümler yapay zekayla hazırlanır ve yayından önce insan tarafından kontrol edilir.</p>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

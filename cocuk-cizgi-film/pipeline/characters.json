@@ -1,0 +1,9 @@
+{
+  "world": "Minik Dünya: renkli, güvenli bir orman ve bahçe. Her bölümde aynı karakterler döner.",
+  "characters": [
+    { "name": "Minik Bulut", "trait": "meraklı, nazik", "role": "anlatıcı ve rehber" },
+    { "name": "Pofuduk", "trait": "neşeli tavşan", "role": "sayıları ve oyunları sever" },
+    { "name": "Dikenli", "trait": "utangaç ama iyi kalpli kirpi", "role": "nezaket ve paylaşmayı öğrenir" },
+    { "name": "Gaga", "trait": "şarkıcı kuş", "role": "harfler ve tekerlemeler" }
+  ]
+}

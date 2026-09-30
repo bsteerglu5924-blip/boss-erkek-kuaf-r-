@@ -1,0 +1,46 @@
+{
+  "episodes": [
+    {
+      "id": "2026-09-30-renkler",
+      "date": "2026-09-30",
+      "age": "3-4",
+      "topic": "colors",
+      "status": "published",
+      "youtube_id": "",
+      "title": { "tr": "Minik Bulut ve Renkler", "en": "Little Cloud and the Colors" },
+      "summary": {
+        "tr": "Minik Bulut gökkuşağının renklerini arkadaşlarıyla birlikte öğreniyor.",
+        "en": "Little Cloud learns the colors of the rainbow with friends."
+      },
+      "learning": { "tr": "Kırmızı, sarı, mavi renklerini tanıma", "en": "Recognizing red, yellow and blue" }
+    },
+    {
+      "id": "2026-09-29-sayilar",
+      "date": "2026-09-29",
+      "age": "3-4",
+      "topic": "numbers",
+      "status": "published",
+      "youtube_id": "",
+      "title": { "tr": "Tavşan Pofuduk 1'den 5'e", "en": "Fluffy Bunny Counts to 5" },
+      "summary": {
+        "tr": "Pofuduk bahçedeki havuçları sayarak 1'den 5'e kadar sayıyor.",
+        "en": "Fluffy counts carrots in the garden from 1 to 5."
+      },
+      "learning": { "tr": "1-5 arası sayılar", "en": "Numbers 1 to 5" }
+    },
+    {
+      "id": "2026-09-28-nezaket",
+      "date": "2026-09-28",
+      "age": "5-6",
+      "topic": "manners",
+      "status": "published",
+      "youtube_id": "",
+      "title": { "tr": "Lütfen ve Teşekkür Ederim", "en": "Please and Thank You" },
+      "summary": {
+        "tr": "Kirpi Dikenli oyuncağını paylaşırken güzel sözlerin gücünü keşfediyor.",
+        "en": "Hedgehog Spiky discovers the power of kind words while sharing a toy."
+      },
+      "learning": { "tr": "Nezaket sözcükleri ve paylaşmak", "en": "Polite words and sharing" }
+    }
+  ]
+}
