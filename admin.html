@@ -160,6 +160,17 @@
   }
   .chat-bubble.user{ align-self:flex-end; background: var(--brass); color: var(--brass-ink); border-bottom-right-radius:4px; }
   .chat-bubble.assistant{ align-self:flex-start; background: var(--surface-hi); border:1px solid var(--line); border-bottom-left-radius:4px; }
+
+  .tryon-grid{ display:grid; gap:1rem; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  .tryon-item{ border:1px solid var(--line); border-radius: var(--radius); padding: .9rem; background: var(--surface-hi); display:grid; gap:.6rem; }
+  .tryon-pair{ display:grid; grid-template-columns: 1fr 1fr; gap:.5rem; }
+  .tryon-pair figure{ margin:0; position:relative; }
+  .tryon-pair img{ width:100%; aspect-ratio:4/5; object-fit:cover; object-position:center top; border-radius: var(--radius); display:block; background:#000; cursor:zoom-in; }
+  .tryon-pair figcaption{ position:absolute; left:.35rem; top:.35rem; font-size:.65rem; font-weight:700; letter-spacing:.1em; background:rgba(0,0,0,.65); color:#fff; padding:.15rem .45rem; border-radius:999px; }
+  .tryon-meta{ font-size: var(--fs-small); color: var(--ink-soft); display:grid; gap:.15rem; }
+  .tryon-meta strong{ color: var(--ink); }
+  .tryon-more{ display:flex; gap:.4rem; flex-wrap:wrap; }
+  .tryon-more img{ width:64px; aspect-ratio:1; object-fit:cover; object-position:center top; border-radius: var(--radius); cursor:zoom-in; border:1px solid var(--line); }
 </style>
 </head>
 <body>
@@ -240,6 +251,15 @@
         <button type="button" class="btn btn-ghost btn-sm" id="refreshAppts">Yenile</button>
       </div>
       <div id="apptList"><p class="booking-empty">Yükleniyor…</p></div>
+    </div>
+
+    <div class="panel">
+      <h2>Saç Denemeleri (AI)</h2>
+      <p class="booking-empty" style="margin-bottom:1rem">Müşterilerin yüklediği fotoğraflar, yapay zeka görselleri ve seçtikleri modeller.</p>
+      <div class="filters">
+        <button type="button" class="btn btn-ghost btn-sm" id="refreshTryons">Yenile</button>
+      </div>
+      <div id="tryonList"><p class="booking-empty">Yükleniyor…</p></div>
     </div>
 
     <div class="panel">
@@ -346,6 +366,7 @@
       loadChats();
       loadRevenue();
       loadReviews();
+      loadTryons();
     }
   }
 
@@ -364,6 +385,94 @@
   });
 
   logoutBtn.addEventListener('click', () => supabase.auth.signOut());
+
+  // ============ SAÇ DENEMELERİ (AI) ============
+  const tryonList = document.getElementById('tryonList');
+  const TRYON_DENSITY = { light: 'Hafif', natural: 'Doğal', full: 'Dolgun' };
+
+  async function signMany(bucket, paths){
+    const uniq = [...new Set(paths.filter(Boolean))];
+    if(!uniq.length) return {};
+    const { data } = await supabase.storage.from(bucket).createSignedUrls(uniq, 3600);
+    const map = {};
+    (data || []).forEach((d) => { if(d.signedUrl) map[d.path] = d.signedUrl; });
+    return map;
+  }
+
+  function tryonImg(src, alt){
+    const img = document.createElement('img');
+    img.src = src; img.alt = alt; img.loading = 'lazy';
+    img.addEventListener('click', () => window.open(src, '_blank', 'noopener'));
+    return img;
+  }
+
+  async function loadTryons(){
+    tryonList.innerHTML = '<p class="booking-empty">Yükleniyor…</p>';
+    const { data, error } = await supabase.rpc('admin_hair_tryons', { p_limit: 40 });
+    if(error){ tryonList.innerHTML = '<p class="booking-empty">Saç denemeleri yüklenemedi.</p>'; return; }
+    if(!data.length){ tryonList.innerHTML = '<p class="booking-empty">Henüz saç denemesi yok.</p>'; return; }
+
+    const [photos, results] = await Promise.all([
+      signMany('tryon-photos', data.map((r) => r.photo_path)),
+      signMany('tryon-results', data.map((r) => r.selected_image_path)),
+    ]);
+
+    tryonList.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'tryon-grid';
+    data.forEach((r) => {
+      const item = document.createElement('div');
+      item.className = 'tryon-item';
+
+      const pair = document.createElement('div');
+      pair.className = 'tryon-pair';
+      const fb = document.createElement('figure');
+      if(photos[r.photo_path]) fb.appendChild(tryonImg(photos[r.photo_path], 'Müşteri fotoğrafı'));
+      fb.insertAdjacentHTML('beforeend', '<figcaption>ÖNCE</figcaption>');
+      pair.appendChild(fb);
+      if(r.selected_image_path && results[r.selected_image_path]){
+        const fa = document.createElement('figure');
+        fa.appendChild(tryonImg(results[r.selected_image_path], 'Seçilen AI görseli'));
+        fa.insertAdjacentHTML('beforeend', '<figcaption>SEÇİLEN AI</figcaption>');
+        pair.appendChild(fa);
+      }
+      item.appendChild(pair);
+
+      const meta = document.createElement('div');
+      meta.className = 'tryon-meta';
+      const line = (label, value) => {
+        const d = document.createElement('span');
+        d.append(label + ' ');
+        const b = document.createElement('strong'); b.textContent = value; d.appendChild(b);
+        meta.appendChild(d);
+      };
+      line('Müşteri:', r.customer_name ? `${r.customer_name} · ${r.customer_phone}` : 'Randevu almadı');
+      line('Model:', r.selected_look ? `${r.selected_look} (${TRYON_DENSITY[r.selected_density] || r.selected_density})` : 'Seçim yapılmadı');
+      line('Üretilen görsel:', String(r.result_count));
+      line('Tarih:', `${dl.format(new Date(r.created_at))} ${tl.format(new Date(r.created_at))}`);
+      item.appendChild(meta);
+
+      if(Number(r.result_count) > 0){
+        const btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'btn btn-ghost btn-sm'; btn.textContent = 'Tüm AI görsellerini göster';
+        const more = document.createElement('div'); more.className = 'tryon-more';
+        btn.addEventListener('click', async () => {
+          btn.disabled = true;
+          const { data: rows } = await supabase.from('hair_tryon_results')
+            .select('id,look_name,density,image_path').eq('tryon_id', r.tryon_id).eq('status', 'completed').order('created_at');
+          const urls = await signMany('tryon-results', (rows || []).map((x) => x.image_path));
+          more.innerHTML = '';
+          (rows || []).forEach((x) => { if(urls[x.image_path]){ const im = tryonImg(urls[x.image_path], x.look_name); im.title = `${x.look_name} · ${TRYON_DENSITY[x.density] || ''}`; more.appendChild(im); } });
+          btn.remove();
+        });
+        item.appendChild(btn);
+        item.appendChild(more);
+      }
+      grid.appendChild(item);
+    });
+    tryonList.appendChild(grid);
+  }
+  document.getElementById('refreshTryons').addEventListener('click', loadTryons);
 
   // ============ APPOINTMENTS ============
   const filterDate = document.getElementById('filterDate');

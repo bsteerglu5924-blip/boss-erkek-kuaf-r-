@@ -963,6 +963,126 @@ footer{ padding-block: 2.5rem 6rem; }
   font-size: var(--fs-small); font-weight:600; color: var(--brass-text);
   cursor:pointer; text-decoration: underline; text-align:left; align-self:flex-start;
 }
+
+/* ============ SAÇINI DENE (AI protez saç simülasyonu) ============ */
+#sacini-dene{ background: var(--bg); }
+.tryon-card{
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: clamp(1.1rem, 3vw, 2rem);
+}
+.tryon-panel[hidden]{ display:none; }
+
+.tryon-drop{
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.6rem;
+  min-height: 260px; padding: 1.5rem; text-align:center; cursor:pointer;
+  border: 1.5px dashed var(--brass); border-radius: var(--radius);
+  background: color-mix(in srgb, var(--brass) 5%, var(--surface-hi));
+  color: var(--ink); position:relative; overflow:hidden;
+  transition: background .18s ease, border-color .18s ease;
+}
+.tryon-drop:hover, .tryon-drop:focus-within{ background: color-mix(in srgb, var(--brass) 11%, var(--surface-hi)); }
+.tryon-drop input[type=file]{ position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+.tryon-drop strong{ font-family: var(--font-display); font-size: 1.5rem; text-transform: uppercase; letter-spacing: .02em; }
+.tryon-drop small{ color: var(--ink-soft); font-size: var(--fs-small); }
+.tryon-drop-icon{ width: 2.6rem; height: 2.6rem; color: var(--brass); }
+.tryon-drop.has-photo{ padding:0; border-style:solid; min-height:0; }
+.tryon-drop.has-photo .tryon-drop-empty{ display:none; }
+.tryon-drop-preview{ display:none; width:100%; max-height: 420px; object-fit:contain; background:#000; }
+.tryon-drop.has-photo .tryon-drop-preview{ display:block; }
+.tryon-drop-change{
+  display:none; position:absolute; right:.6rem; bottom:.6rem; z-index:2;
+  background: rgba(0,0,0,.65); color:#fff; font-size: var(--fs-label);
+  padding:.35rem .7rem; border-radius: 999px; pointer-events:none;
+}
+.tryon-drop.has-photo .tryon-drop-change{ display:block; }
+
+.tryon-tips{ list-style:none; padding:0; margin: 1.1rem 0; display:grid; gap:.4rem; color: var(--ink-soft); font-size: var(--fs-small); }
+.tryon-tips li::before{ content:"✓ "; color: var(--brass-text); font-weight:700; }
+.tryon-consent{ display:flex; gap:.6rem; align-items:flex-start; margin: 1rem 0 1.25rem; font-size: var(--fs-small); color: var(--ink-soft); }
+.tryon-consent input{ margin-top:.2rem; }
+
+.tryon-studio{ display:grid; gap: clamp(1.25rem, 3vw, 2rem); grid-template-columns: 1fr; }
+@media (min-width: 900px){ .tryon-studio{ grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items:start; } }
+
+.tryon-cmp{
+  position:relative; width:100%; overflow:hidden; border-radius: var(--radius);
+  background:#000; border:1px solid var(--line); aspect-ratio: 4 / 5; max-height: 75vh;
+  user-select:none; -webkit-user-select:none; --pos: 50%;
+}
+.tryon-cmp img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; display:block; }
+.tryon-cmp .tryon-after{ display:none; clip-path: inset(0 0 0 var(--pos)); }
+.tryon-cmp.has-after .tryon-after{ display:block; }
+.tryon-handle{
+  display:none; position:absolute; top:0; bottom:0; left: var(--pos); width:2px; background: var(--brass);
+  transform: translateX(-1px); pointer-events:none; z-index:3;
+}
+.tryon-handle::after{
+  content:"↔"; position:absolute; top:50%; left:50%; transform: translate(-50%,-50%);
+  width:2.4rem; height:2.4rem; border-radius:50%; background: var(--brass); color: var(--brass-ink);
+  display:grid; place-items:center; font-weight:700; box-shadow: 0 4px 14px rgba(0,0,0,.45);
+}
+.tryon-cmp.has-after .tryon-handle{ display:block; }
+.tryon-range{
+  display:none; position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:ew-resize; z-index:4;
+  -webkit-appearance:none; appearance:none; touch-action: pan-y;
+}
+.tryon-cmp.has-after .tryon-range{ display:block; }
+.tryon-tag{
+  display:none; position:absolute; top:.6rem; z-index:2; font-size: var(--fs-label); letter-spacing:.12em; font-weight:700;
+  background: rgba(0,0,0,.6); color:#fff; padding:.25rem .55rem; border-radius: 999px; pointer-events:none;
+}
+.tryon-tag.l{ left:.6rem; } .tryon-tag.r{ right:.6rem; }
+.tryon-cmp.has-after .tryon-tag{ display:block; }
+
+.tryon-loader{
+  position:absolute; inset:0; z-index:6; display:none; flex-direction:column; align-items:center; justify-content:center; gap:1rem;
+  background: rgba(10,8,5,.72); backdrop-filter: blur(3px); color:#FBF7EE; text-align:center; padding:1.25rem;
+}
+.tryon-loader.is-on{ display:flex; }
+.tryon-spinner{ width:2.6rem; height:2.6rem; border-radius:50%; border:3px solid rgba(255,255,255,.2); border-top-color: var(--brass); animation: tryonSpin .9s linear infinite; }
+@keyframes tryonSpin{ to{ transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce){ .tryon-spinner{ animation-duration: 3s; } }
+.tryon-loader small{ opacity:.8; }
+
+.tryon-label{ display:block; font-size: var(--fs-label); letter-spacing:.14em; text-transform:uppercase; font-weight:700; color: var(--brass-text); margin: 0 0 .6rem; }
+.tryon-looks{ display:grid; grid-template-columns: repeat(3, 1fr); gap:.6rem; margin-bottom: 1.25rem; }
+@media (min-width: 520px){ .tryon-looks{ grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); } }
+.tryon-look{
+  display:flex; flex-direction:column; text-align:left; padding:0; cursor:pointer; overflow:hidden;
+  background: var(--surface-hi); border:1px solid var(--line); border-radius: var(--radius); color: var(--ink);
+  font-family: var(--font-body); transition: border-color .18s ease, transform .18s ease;
+}
+.tryon-look:hover{ border-color: var(--brass); transform: translateY(-2px); }
+.tryon-look[aria-pressed="true"]{ border-color: var(--brass); box-shadow: 0 0 0 2px var(--brass); }
+.tryon-look img{ width:100%; aspect-ratio: 1; object-fit:cover; display:block; }
+.tryon-look span{ padding:.45rem .5rem .55rem; font-size: .78rem; font-weight:600; line-height:1.2; }
+.tryon-seg{ display:flex; gap:.4rem; margin-bottom: 1.25rem; flex-wrap:wrap; }
+.tryon-seg button{
+  flex:1; min-height:44px; padding:.5rem .8rem; cursor:pointer; font-family: var(--font-body); font-weight:600; font-size: var(--fs-small);
+  background: var(--surface-hi); color: var(--ink); border:1px solid var(--line); border-radius: var(--radius);
+}
+.tryon-seg button[aria-pressed="true"]{ background: var(--brass); color: var(--brass-ink); border-color: var(--brass); }
+.tryon-actions{ display:grid; gap:.6rem; }
+.tryon-actions .btn{ justify-content:center; min-height:48px; }
+.tryon-history{ display:flex; gap:.5rem; overflow-x:auto; padding-bottom:.4rem; margin-bottom:1.25rem; }
+.tryon-history:empty{ display:none; }
+.tryon-history button{
+  flex:0 0 auto; width:68px; padding:0; cursor:pointer; border:1px solid var(--line); border-radius: var(--radius); background:none; overflow:hidden;
+}
+.tryon-history button[aria-pressed="true"]{ border-color: var(--brass); box-shadow: 0 0 0 2px var(--brass); }
+.tryon-history img{ width:100%; aspect-ratio:1; object-fit:cover; object-position:center top; display:block; }
+.tryon-disclaimer{ font-size: var(--fs-label); color: var(--ink-soft); margin-top: 1rem; line-height:1.5; }
+.tryon-note{
+  display:flex; gap:.9rem; align-items:center; margin-bottom:1.25rem; padding:.8rem 1rem;
+  border:1px solid var(--brass); border-radius: var(--radius); background: color-mix(in srgb, var(--brass) 9%, var(--surface-hi));
+  font-size: var(--fs-small);
+}
+.tryon-note img{ width:56px; height:56px; object-fit:cover; object-position:center top; border-radius: var(--radius); flex:none; }
+.tryon-note button{ margin-left:auto; background:none; border:0; color: var(--ink-soft); text-decoration: underline; cursor:pointer; font: inherit; }
+.tryon-note.hidden{ display:none; }
 </style>
 </head>
 <body>
@@ -975,6 +1095,7 @@ footer{ padding-block: 2.5rem 6rem; }
     </button>
     <nav class="nav-links" id="nav-links">
       <a href="#hizmetler">Hizmetler</a>
+      <a href="#sacini-dene">Saçını Dene</a>
       <a href="#bana-ne-yakisir">Ne Yakışır</a>
       <a href="#galeri">Galeri</a>
       <a href="#deneyim">Deneyim</a>
@@ -1014,6 +1135,7 @@ footer{ padding-block: 2.5rem 6rem; }
           <a class="btn btn-primary" href="#randevu">
             Randevu Al
           </a>
+          <a class="btn btn-ghost" href="#sacini-dene">Saçlı Halini Gör</a>
           <a class="btn btn-ghost" href="tel:+905451166205">Hemen Ara — 0545 116 62 05</a>
         </div>
         <div class="hero-meta">
@@ -1130,6 +1252,87 @@ footer{ padding-block: 2.5rem 6rem; }
     </div>
     <!-- NOT: Premium Tıraş bilinçli olarak burada listelenmiyor — sadece
          Toprak Kanık randevu akışında (berber seçince) görünür. -->
+  </section>
+
+  <div class="stripe-band" aria-hidden="true"></div>
+
+  <section id="sacini-dene">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Yapay Zeka · Protez Saç</span>
+        <h2>Saçlı Halini Gör</h2>
+        <p>Fotoğrafını yükle, bir model seç. Yapay zeka yüzünü değiştirmeden sadece saç bölgesini oluşturur. Beğendiğin görünümü seç, randevunu hemen al.</p>
+      </div>
+
+      <div class="tryon-card reveal" id="tryonCard">
+        <!-- 1) Fotoğraf -->
+        <div class="tryon-panel" id="tryonPanel1">
+          <label class="tryon-drop" id="tryonDrop" for="tryonFile">
+            <img class="tryon-drop-preview" id="tryonPreview" alt="Seçtiğiniz fotoğraf önizlemesi">
+            <span class="tryon-drop-change">Değiştirmek için dokunun</span>
+            <span class="tryon-drop-empty" style="display:flex; flex-direction:column; align-items:center; gap:.6rem;">
+              <svg class="tryon-drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8a2 2 0 0 1 2-2h1.5l1.2-1.8A1 1 0 0 1 9.5 4h5a1 1 0 0 1 .8.2L16.5 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.5"/></svg>
+              <strong>Fotoğrafını Yükle</strong>
+              <small>Dokunup selfie çek ya da galeriden seç</small>
+            </span>
+            <input type="file" id="tryonFile" accept="image/*">
+          </label>
+          <ul class="tryon-tips">
+            <li>Yüzün karşıdan, net ve iyi ışıkta görünsün</li>
+            <li>Şapka, gözlük ve saç aksesuarı olmasın</li>
+            <li>Tek kişi olsun, fotoğraf bulanık olmasın</li>
+          </ul>
+          <label class="tryon-consent">
+            <input type="checkbox" id="tryonConsent">
+            <span>Fotoğrafımın yapay zeka ile saç simülasyonu üretilmesi ve seçersem randevumla birlikte BOSS Erkek Kuaförü ekibine iletilmesi için işlenmesini kabul ediyorum (KVKK kapsamında; talep halinde silinir).</span>
+          </label>
+          <div class="booking-msg" id="tryonMsg"></div>
+          <button type="button" class="btn btn-primary" id="tryonContinue" disabled>Devam Et</button>
+        </div>
+
+        <!-- 2) Stüdyo -->
+        <div class="tryon-panel" id="tryonPanel2" hidden>
+          <div class="tryon-studio">
+            <div>
+              <div class="tryon-cmp" id="tryonCmp">
+                <img id="tryonBefore" alt="Fotoğrafınız (önce)">
+                <img class="tryon-after" id="tryonAfter" alt="Yapay zeka ile saçlı hali (sonra)">
+                <span class="tryon-tag l">ÖNCE</span><span class="tryon-tag r">SONRA</span>
+                <div class="tryon-handle" aria-hidden="true"></div>
+                <input type="range" class="tryon-range" id="tryonRange" min="0" max="100" value="50" aria-label="Önce / sonra karşılaştırma">
+                <div class="tryon-loader" id="tryonLoader" role="status" aria-live="polite">
+                  <div class="tryon-spinner" aria-hidden="true"></div>
+                  <strong id="tryonLoaderText">Hazırlanıyor…</strong>
+                  <small>Bu işlem 20–40 saniye sürebilir</small>
+                </div>
+              </div>
+              <p class="tryon-disclaimer">Görseller yapay zeka ile üretilmiş tahmini simülasyondur; gerçek sonuç saç yapınıza ve uygulamaya göre ustamızla birlikte netleşir.</p>
+            </div>
+
+            <div>
+              <span class="tryon-label">1 · Model seç</span>
+              <div class="tryon-looks" id="tryonLooks"><p class="booking-empty">Modeller yükleniyor…</p></div>
+
+              <span class="tryon-label">2 · Saç yoğunluğu</span>
+              <div class="tryon-seg" id="tryonDensity">
+                <button type="button" data-density="light" aria-pressed="false">Hafif</button>
+                <button type="button" data-density="natural" aria-pressed="true">Doğal</button>
+                <button type="button" data-density="full" aria-pressed="false">Dolgun</button>
+              </div>
+
+              <div class="booking-msg" id="tryonStageMsg"></div>
+              <div class="tryon-history" id="tryonHistory" aria-label="Denediğiniz görünümler"></div>
+
+              <div class="tryon-actions">
+                <button type="button" class="btn btn-primary" id="tryonGenerate" disabled>Saçımı Göster</button>
+                <button type="button" class="btn btn-ghost" id="tryonWant" hidden>Bu Görünümü İstiyorum</button>
+                <button type="button" class="btn btn-ghost btn-sm" id="tryonChange">Fotoğrafı Değiştir</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <div class="stripe-band" aria-hidden="true"></div>
@@ -1320,6 +1523,12 @@ footer{ padding-block: 2.5rem 6rem; }
         <span class="eyebrow">Randevu</span>
         <h2>Randevu Al</h2>
         <p>Berberinizi ve hizmetinizi seçin, size uygun saati birlikte belirleyelim.</p>
+      </div>
+
+      <div class="tryon-note hidden" id="tryonBookingNote" role="status">
+        <img id="tryonNoteImg" alt="">
+        <span id="tryonNoteText"></span>
+        <button type="button" id="tryonNoteRemove">Kaldır</button>
       </div>
 
       <div class="booking-card reveal">
@@ -1617,6 +1826,8 @@ footer{ padding-block: 2.5rem 6rem; }
   // state'i if(els.steps){...} icinde blok-kapsamli oldugu icin, ikisi
   // arasinda kopru gorevi gorsun diye modul kapsaminda tutuluyor.
   let selectedStyleAnalysisId = null;
+  // "Saçını Dene" — { tryonId, resultId, lookName, densityLabel, imageUrl }
+  let selectedTryon = null;
 
   const els = {
     steps: document.getElementById('bookingSteps'),
@@ -2086,6 +2297,238 @@ footer{ padding-block: 2.5rem 6rem; }
     });
   }
 
+  // ============ SAÇINI DENE: AI protez saç simülasyonu ============
+  const tryon = (() => {
+    const card = document.getElementById('tryonCard');
+    if(!card) return { updateBookingNote(){} };
+
+    const ENDPOINT = 'https://nvwyaxtwamjsghnxlwol.supabase.co/functions/v1/hair-tryon';
+    const API_KEY = 'sb_publishable_rQoEvjFL3jOueZrPUIS9eA_1KpIS0aJ';
+    const DENSITY_LABELS = { light: 'Hafif', natural: 'Doğal', full: 'Dolgun' };
+    const $ = (id) => document.getElementById(id);
+    const e = {
+      p1: $('tryonPanel1'), p2: $('tryonPanel2'), drop: $('tryonDrop'), file: $('tryonFile'),
+      preview: $('tryonPreview'), consent: $('tryonConsent'), msg: $('tryonMsg'), cont: $('tryonContinue'),
+      cmp: $('tryonCmp'), before: $('tryonBefore'), after: $('tryonAfter'), range: $('tryonRange'),
+      loader: $('tryonLoader'), loaderText: $('tryonLoaderText'), looks: $('tryonLooks'), density: $('tryonDensity'),
+      stageMsg: $('tryonStageMsg'), history: $('tryonHistory'), gen: $('tryonGenerate'), want: $('tryonWant'),
+      change: $('tryonChange'), note: $('tryonBookingNote'), noteImg: $('tryonNoteImg'),
+      noteText: $('tryonNoteText'), noteRemove: $('tryonNoteRemove'),
+    };
+
+    const st = { file: null, tryonId: null, looks: [], lookId: null, density: 'natural', results: [], currentId: null, busy: false };
+
+    function say(el, text, kind){
+      if(!text){ el.innerHTML = ''; return; }
+      el.innerHTML = `<span class="status-badge ${kind === 'error' ? 'is-bad' : 'is-good'}"><span class="status-dot" aria-hidden="true"></span></span>`;
+      el.firstChild.append(document.createTextNode(text));
+    }
+
+    // Telefon fotoğrafları (HEIC, EXIF yönü, çok büyük dosyalar) için güvenli JPEG'e çevirir.
+    async function toJpegBlob(file, maxDim, quality){
+      let working = file;
+      if(/hei[cf]/i.test(file.type) || /\.hei[cf]$/i.test(file.name || '')){
+        try {
+          const mod = await import('https://esm.sh/heic2any@0.0.4');
+          const out = await mod.default({ blob: file, toType: 'image/jpeg', quality: 0.9 });
+          working = Array.isArray(out) ? out[0] : out;
+        } catch(err){ console.error('heic2any failed', err); }
+      }
+      return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(working);
+        const img = new Image();
+        img.onload = () => {
+          let { naturalWidth: w, naturalHeight: h } = img;
+          if(w > maxDim || h > maxDim){ const s = maxDim / Math.max(w, h); w = Math.round(w * s); h = Math.round(h * s); }
+          const c = document.createElement('canvas'); c.width = w; c.height = h;
+          c.getContext('2d').drawImage(img, 0, 0, w, h);
+          URL.revokeObjectURL(url);
+          c.toBlob((b) => {
+            if(!b){ reject(new Error('CONVERT_FAILED')); return; }
+            resolve(b.type === 'image/jpeg' ? b : new Blob([b], { type: 'image/jpeg' }));
+          }, 'image/jpeg', quality);
+        };
+        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('UNSUPPORTED_IMAGE')); };
+        img.src = url;
+      });
+    }
+
+    function refreshContinue(){ e.cont.disabled = !(st.file && e.consent.checked); }
+
+    e.file.addEventListener('change', () => {
+      const f = e.file.files[0];
+      if(!f) return;
+      st.file = f;
+      if(e.preview.dataset.url) URL.revokeObjectURL(e.preview.dataset.url);
+      const url = URL.createObjectURL(f);
+      e.preview.dataset.url = url;
+      e.preview.src = url;
+      e.drop.classList.add('has-photo');
+      say(e.msg, '');
+      refreshContinue();
+    });
+    e.consent.addEventListener('change', refreshContinue);
+
+    async function loadLooks(){
+      const { data, error } = await supabase.rpc('get_hair_looks');
+      if(error || !data?.length){
+        e.looks.innerHTML = '<p class="booking-empty">Modeller yüklenemedi, lütfen sayfayı yenileyin.</p>';
+        return;
+      }
+      st.looks = data;
+      e.looks.innerHTML = '';
+      data.forEach((l) => {
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'tryon-look'; b.dataset.id = l.id; b.setAttribute('aria-pressed', 'false');
+        if(l.thumb_url){ const im = document.createElement('img'); im.src = l.thumb_url; im.alt = ''; im.loading = 'lazy'; b.appendChild(im); }
+        const sp = document.createElement('span'); sp.textContent = l.name; b.appendChild(sp);
+        b.addEventListener('click', () => {
+          st.lookId = l.id;
+          e.looks.querySelectorAll('.tryon-look').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+          e.gen.disabled = st.busy;
+          say(e.stageMsg, '');
+        });
+        e.looks.appendChild(b);
+      });
+    }
+
+    // ---- yükleme: tryon kaydı + foto ----
+    e.cont.addEventListener('click', async () => {
+      if(!st.file || !e.consent.checked) return;
+      e.cont.disabled = true;
+      say(e.msg, 'Fotoğraf hazırlanıyor…');
+      try {
+        const blob = await toJpegBlob(st.file, 1280, 0.88);
+        const { data: id, error: cErr } = await supabase.rpc('create_hair_tryon', { p_consent: true });
+        if(cErr) throw cErr;
+        const path = `${id}/original.jpg`;
+        const { error: uErr } = await supabase.storage.from('tryon-photos').upload(path, blob, { contentType: 'image/jpeg' });
+        if(uErr) throw uErr;
+        const { error: aErr } = await supabase.rpc('attach_hair_tryon_photo', { p_tryon_id: id, p_photo_path: path });
+        if(aErr) throw aErr;
+
+        st.tryonId = id; st.results = []; st.currentId = null;
+        e.before.src = URL.createObjectURL(blob);
+        e.cmp.classList.remove('has-after');
+        e.history.innerHTML = '';
+        e.want.hidden = true;
+        e.p1.hidden = true; e.p2.hidden = false;
+        say(e.msg, '');
+        if(!st.looks.length) await loadLooks();
+        e.gen.disabled = !st.lookId;
+        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch(err){
+        console.error('tryon upload failed', err);
+        say(e.msg, (err?.message === 'UNSUPPORTED_IMAGE' || err?.message === 'CONVERT_FAILED')
+          ? 'Bu fotoğraf işlenemedi, lütfen farklı bir fotoğraf deneyin.'
+          : 'Fotoğraf yüklenemedi, lütfen tekrar deneyin ya da WhatsApp\'tan yazın.', 'error');
+        refreshContinue();
+      }
+    });
+
+    e.change.addEventListener('click', () => {
+      e.p2.hidden = true; e.p1.hidden = false;
+      st.tryonId = null; st.file = null; e.file.value = '';
+      e.drop.classList.remove('has-photo'); e.preview.removeAttribute('src');
+      e.consent.checked = false; refreshContinue();
+    });
+
+    e.density.addEventListener('click', (ev) => {
+      const b = ev.target.closest('button[data-density]');
+      if(!b) return;
+      st.density = b.dataset.density;
+      e.density.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    });
+
+    // ---- karşılaştırma kaydırıcısı ----
+    e.range.addEventListener('input', () => e.cmp.style.setProperty('--pos', e.range.value + '%'));
+
+    function showResult(r){
+      st.currentId = r.id;
+      e.after.src = r.url;
+      e.cmp.classList.add('has-after');
+      e.range.value = 50; e.cmp.style.setProperty('--pos', '50%');
+      e.want.hidden = false;
+      e.want.textContent = (selectedTryon && selectedTryon.resultId === r.id) ? 'Seçildi ✓ — Randevuya Git' : 'Bu Görünümü İstiyorum';
+      e.history.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.id === r.id)));
+    }
+
+    function addHistory(r){
+      const b = document.createElement('button');
+      b.type = 'button'; b.dataset.id = r.id; b.title = `${r.look_name} · ${DENSITY_LABELS[r.density] || ''}`;
+      b.setAttribute('aria-pressed', 'false');
+      const im = document.createElement('img'); im.src = r.url; im.alt = r.look_name; b.appendChild(im);
+      b.addEventListener('click', () => showResult(r));
+      e.history.appendChild(b);
+    }
+
+    const STAGES = ['Yüz hatların analiz ediliyor…', 'Kafa yapına göre saç çizgisi oluşturuluyor…', 'Saç dokusu ve yoğunluk uygulanıyor…', 'Işık ve gölge fotoğrafına uyarlanıyor…', 'Son rötuşlar yapılıyor…'];
+
+    e.gen.addEventListener('click', async () => {
+      if(st.busy || !st.lookId || !st.tryonId) return;
+      st.busy = true; e.gen.disabled = true; say(e.stageMsg, '');
+      let i = 0;
+      e.loaderText.textContent = STAGES[0];
+      e.loader.classList.add('is-on');
+      const timer = setInterval(() => { i = Math.min(i + 1, STAGES.length - 1); e.loaderText.textContent = STAGES[i]; }, 6000);
+      try {
+        const res = await fetch(ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'apikey': API_KEY },
+          body: JSON.stringify({ action: 'generate', tryon_id: st.tryonId, look_id: st.lookId, density: st.density }),
+        });
+        const out = await res.json().catch(() => null);
+        if(!out || out.status !== 'completed'){
+          say(e.stageMsg, out?.message || 'Görsel oluşturulamadı, lütfen tekrar deneyin ya da WhatsApp\'tan yazın.', 'error');
+          return;
+        }
+        const r = { id: out.result_id, look_id: out.look_id, look_name: out.look_name, density: out.density, url: out.image_url };
+        st.results.push(r);
+        addHistory(r);
+        showResult(r);
+      } catch(err){
+        console.error('tryon generate failed', err);
+        say(e.stageMsg, 'Bağlantı sorunu oluştu, lütfen tekrar deneyin.', 'error');
+      } finally {
+        clearInterval(timer);
+        e.loader.classList.remove('is-on');
+        st.busy = false; e.gen.disabled = !st.lookId;
+      }
+    });
+
+    // ---- "Bu görünümü istiyorum" → seçimi kaydet, randevuya geç ----
+    function updateBookingNote(){
+      if(!selectedTryon){ e.note.classList.add('hidden'); return; }
+      e.noteImg.src = selectedTryon.imageUrl;
+      e.noteText.textContent = `Seçtiğiniz görünüm: ${selectedTryon.lookName} (${selectedTryon.densityLabel}). Randevunuzla birlikte ustamıza iletilecek.`;
+      e.note.classList.remove('hidden');
+    }
+    e.noteRemove.addEventListener('click', () => { selectedTryon = null; updateBookingNote(); showResultButtonState(); });
+    function showResultButtonState(){
+      const r = st.results.find((x) => x.id === st.currentId);
+      if(r) e.want.textContent = (selectedTryon && selectedTryon.resultId === r.id) ? 'Seçildi ✓ — Randevuya Git' : 'Bu Görünümü İstiyorum';
+    }
+
+    e.want.addEventListener('click', async () => {
+      const r = st.results.find((x) => x.id === st.currentId);
+      if(!r) return;
+      e.want.disabled = true;
+      const { error } = await supabase.rpc('select_hair_result', { p_tryon_id: st.tryonId, p_result_id: r.id });
+      e.want.disabled = false;
+      if(error){
+        say(e.stageMsg, 'Seçiminiz kaydedilemedi, lütfen tekrar deneyin.', 'error');
+        return;
+      }
+      selectedTryon = { tryonId: st.tryonId, resultId: r.id, lookName: r.look_name, densityLabel: DENSITY_LABELS[r.density] || '', imageUrl: r.url };
+      updateBookingNote();
+      showResultButtonState();
+      document.getElementById('randevu')?.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    loadLooks();
+    return { updateBookingNote };
+  })();
+
   if(els.steps){
     const state = { services: [], barbers: [], service: null, barber: null, date: null, slot: null };
     const tl = new Intl.DateTimeFormat('tr-TR', { timeZone: 'Europe/Istanbul', hour: '2-digit', minute: '2-digit' });
@@ -2226,6 +2669,7 @@ footer{ padding-block: 2.5rem 6rem; }
         <div class="info-row"><div><div class="info-label">Ad Soyad</div><div class="info-value">${els.custName.value.trim()}</div></div></div>
         <div class="info-row"><div><div class="info-label">Telefon</div><div class="info-value tabular">${els.custPhone.value.trim()}</div></div></div>
         ${els.custEmail.value.trim() ? `<div class="info-row"><div><div class="info-label">E-posta</div><div class="info-value">${els.custEmail.value.trim()}</div></div></div>` : ''}
+        ${selectedTryon ? `<div class="info-row"><div><div class="info-label">Seçilen Saç Modeli</div><div class="info-value">${selectedTryon.lookName.replace(/[<>&"]/g, '')} · ${selectedTryon.densityLabel}</div></div></div>` : ''}
       `;
     }
 
@@ -2264,13 +2708,18 @@ footer{ padding-block: 2.5rem 6rem; }
 
     els.confirmBtn.addEventListener('click', async () => {
       els.confirmBtn.disabled = true;
+      // Seçilen AI saç modeli, ustanın Telegram bildiriminde ve admin panelinde
+      // görünsün diye nota da yazılır.
+      const noteParts = [els.custNotes.value.trim()];
+      if(selectedTryon) noteParts.push(`💇 Seçilen saç modeli: ${selectedTryon.lookName} (${selectedTryon.densityLabel})`);
+      const finalNotes = noteParts.filter(Boolean).join(' · ') || null;
       const { data, error } = await supabase.rpc('book_appointment', {
         p_barber_id: state.barber.id,
         p_service_id: state.service.id,
         p_starts_at: state.slot.slot_start,
         p_customer_name: els.custName.value.trim(),
         p_customer_phone: els.custPhone.value.trim(),
-        p_notes: els.custNotes.value.trim() || null,
+        p_notes: finalNotes,
         p_customer_email: els.custEmail.value.trim() || null,
         p_style_analysis_id: selectedStyleAnalysisId,
       });
@@ -2283,6 +2732,19 @@ footer{ padding-block: 2.5rem 6rem; }
           loadSlots();
         }
         return;
+      }
+      // Seçilen AI görünümü randevuya bağla + ustaya Telegram'dan gönder
+      // (başarısız olsa bile randevu zaten oluşmuştur).
+      const newAppt = Array.isArray(data) ? data[0] : data;
+      if(selectedTryon && newAppt?.id){
+        fetch('https://nvwyaxtwamjsghnxlwol.supabase.co/functions/v1/hair-tryon', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'apikey': 'sb_publishable_rQoEvjFL3jOueZrPUIS9eA_1KpIS0aJ' },
+          body: JSON.stringify({ action: 'finalize', tryon_id: selectedTryon.tryonId, appointment_id: newAppt.id }),
+          keepalive: true,
+        }).catch((err) => console.error('tryon finalize failed', err));
+        selectedTryon = null;
+        tryon.updateBookingNote();
       }
       const reminderNote = els.custEmail.value.trim() ? ' Randevunuzdan 2 saat önce e-posta ile hatırlatacağız.' : '';
       els.summary.innerHTML = `<div class="info-row"><div><div class="info-label">Durum</div><div class="info-value">Randevunuz alındı. Onay için sizi arayabiliriz.${reminderNote}</div></div></div>` + els.summary.innerHTML;
