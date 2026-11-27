@@ -389,6 +389,7 @@
   // ============ SAÇ DENEMELERİ (AI) ============
   const tryonList = document.getElementById('tryonList');
   const TRYON_DENSITY = { light: 'Hafif', natural: 'Doğal', full: 'Dolgun' };
+  const TRYON_COLOR = { natural: 'Doğal', black: 'Siyah', dark_brown: 'Koyu Kahve', chestnut: 'Kumral', light_brown: 'Açık Kumral', blonde: 'Sarı', gray: 'Gri' };
 
   async function signMany(bucket, paths){
     const uniq = [...new Set(paths.filter(Boolean))];
@@ -447,7 +448,7 @@
         meta.appendChild(d);
       };
       line('Müşteri:', r.customer_name ? `${r.customer_name} · ${r.customer_phone}` : 'Randevu almadı');
-      line('Model:', r.selected_look ? `${r.selected_look} (${TRYON_DENSITY[r.selected_density] || r.selected_density})` : 'Seçim yapılmadı');
+      line('Model:', r.selected_look ? `${r.selected_look} · ${TRYON_COLOR[r.selected_color] || r.selected_color} renk · ${TRYON_DENSITY[r.selected_density] || r.selected_density} yoğunluk` : 'Seçim yapılmadı');
       line('Üretilen görsel:', String(r.result_count));
       line('Tarih:', `${dl.format(new Date(r.created_at))} ${tl.format(new Date(r.created_at))}`);
       item.appendChild(meta);
@@ -459,10 +460,10 @@
         btn.addEventListener('click', async () => {
           btn.disabled = true;
           const { data: rows } = await supabase.from('hair_tryon_results')
-            .select('id,look_name,density,image_path').eq('tryon_id', r.tryon_id).eq('status', 'completed').order('created_at');
+            .select('id,look_name,density,hair_color,image_path').eq('tryon_id', r.tryon_id).eq('status', 'completed').order('created_at');
           const urls = await signMany('tryon-results', (rows || []).map((x) => x.image_path));
           more.innerHTML = '';
-          (rows || []).forEach((x) => { if(urls[x.image_path]){ const im = tryonImg(urls[x.image_path], x.look_name); im.title = `${x.look_name} · ${TRYON_DENSITY[x.density] || ''}`; more.appendChild(im); } });
+          (rows || []).forEach((x) => { if(urls[x.image_path]){ const im = tryonImg(urls[x.image_path], x.look_name); im.title = `${x.look_name} · ${TRYON_COLOR[x.hair_color] || ''} · ${TRYON_DENSITY[x.density] || ''}`; more.appendChild(im); } });
           btn.remove();
         });
         item.appendChild(btn);

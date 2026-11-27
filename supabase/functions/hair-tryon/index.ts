@@ -84,14 +84,28 @@ const DENSITY_TEXT: Record<string, string> = {
   full: "thick, full, dense coverage with no visible scalp thinning",
 };
 
-function buildPrompt(lookPrompt: string, density: string): string {
+const COLOR_TEXT: Record<string, string> = {
+  natural: "hair color that naturally matches the person's eyebrows, beard and skin tone, with subtle natural color variation",
+  black: "natural jet black hair with soft dark-brown depth in the light",
+  dark_brown: "dark brown hair (espresso brown), natural tonal variation",
+  chestnut: "chestnut medium brown hair (kumral), warm natural tones with subtle lighter strands",
+  light_brown: "light brown hair (light chestnut) with natural lighter highlights",
+  blonde: "dark blonde / sandy blonde hair, natural not bleached",
+  gray: "natural salt-and-pepper gray hair, a realistic mix of gray and dark strands",
+};
+const COLOR_LABEL: Record<string, string> = {
+  natural: "Doğal", black: "Siyah", dark_brown: "Koyu Kahve", chestnut: "Kumral",
+  light_brown: "Açık Kumral", blonde: "Sarı", gray: "Gri (Kırlaşmış)",
+};
+
+function buildPrompt(lookPrompt: string, density: string, color: string): string {
   return (
-    `Edit this photo of a man. Give him a realistic, naturally grown head of hair in this style: ${lookPrompt}. ` +
+    `Edit this photo of a man who is bald or has very thin hair on top. Show how he would look with a high-quality, undetectable natural hair system (hair replacement) fitted to his own head, in this style: ${lookPrompt}. ` +
     `Hair density: ${DENSITY_TEXT[density] ?? DENSITY_TEXT.natural}. ` +
+    `Hair color: ${COLOR_TEXT[color] ?? COLOR_TEXT.natural}. ` +
     "STRICT RULES: keep the person's face, identity, facial features, skin texture, facial hair, eyebrows, ears, " +
     "expression, head pose, clothing, background, framing and camera angle EXACTLY unchanged — only the scalp/hair region may change. " +
     "Create a soft, slightly irregular, natural hairline with fine baby hairs at the forehead and temples (no hard straight line, no wig or toupee look). " +
-    "Match the hair color to the person's eyebrows, beard and any existing hair, with natural color variation. " +
     "Hair must follow the true shape and volume of his skull, with realistic individual strands, natural shine and shadows consistent with the lighting of the original photo. " +
     "Photorealistic, high detail, no blur, no painting or CGI look, no text, no watermark."
   );
@@ -130,6 +144,7 @@ async function handleGenerate(req: Request, body: Record<string, unknown>, db: D
   const tryonId = body.tryon_id;
   const lookId = body.look_id;
   const density = typeof body.density === "string" && body.density in DENSITY_TEXT ? body.density : "natural";
+  const color = typeof body.hair_color === "string" && body.hair_color in COLOR_TEXT ? body.hair_color : "natural";
   if (typeof tryonId !== "string" || !UUID_RE.test(tryonId)) return json({ error: "invalid_tryon_id" }, 400, origin);
   if (typeof lookId !== "string" || !UUID_RE.test(lookId)) return json({ error: "invalid_look_id" }, 400, origin);
 
@@ -165,7 +180,7 @@ async function handleGenerate(req: Request, body: Record<string, unknown>, db: D
   }
 
   const { data: resultRow, error: insErr } = await db.from("hair_tryon_results").insert({
-    tryon_id: tryonId, look_id: look.id, look_name: look.name, density, status: "processing", ip_hash: ipHash,
+    tryon_id: tryonId, look_id: look.id, look_name: look.name, density, hair_color: color, status: "processing", ip_hash: ipHash,
   }).select("id").single();
   if (insErr || !resultRow) {
     console.error("sonuç satırı oluşturulamadı", insErr);
@@ -183,7 +198,7 @@ async function handleGenerate(req: Request, body: Record<string, unknown>, db: D
     const mime = photo.type && photo.type.startsWith("image/") ? photo.type : "image/jpeg";
     const dataUri = `data:${mime};base64,${bytesToBase64(new Uint8Array(await photo.arrayBuffer()))}`;
 
-    const falUrl = await callFal(dataUri, buildPrompt(look.prompt as string, density));
+    const falUrl = await callFal(dataUri, buildPrompt(look.prompt as string, density, color));
 
     const imgRes = await fetch(falUrl);
     if (!imgRes.ok) throw new Error(`sonuç indirilemedi: ${imgRes.status}`);
@@ -200,7 +215,7 @@ async function handleGenerate(req: Request, body: Record<string, unknown>, db: D
 
     const imageUrl = await signed(db, RESULT_BUCKET, resultPath, 3600);
     return json({
-      status: "completed", result_id: resultRow.id, look_id: look.id, look_name: look.name, density, image_url: imageUrl,
+      status: "completed", result_id: resultRow.id, look_id: look.id, look_name: look.name, density, hair_color: color, image_url: imageUrl,
     }, 200, origin);
   } catch (err) {
     console.error("hair-tryon generate hatası", err);
@@ -237,7 +252,7 @@ async function handleFinalize(body: Record<string, unknown>, db: Db, origin: str
       signed(db, RESULT_BUCKET, row.result_path, week),
     ]);
     if (originalUrl && resultUrl) {
-      const caption = `Müşteri: ${row.customer_name}\nİstediği model: ${row.look_name} (${DENSITY_LABEL[row.density] ?? row.density} yoğunluk)`;
+      const caption = `Müşteri: ${row.customer_name}\nİstediği model: ${row.look_name} (${DENSITY_LABEL[row.density] ?? row.density} yoğunluk, ${COLOR_LABEL[row.hair_color] ?? row.hair_color} renk)`;
       const { error: nErr } = await db.rpc("notify_telegram_hair_tryon", {
         p_tryon_id: tryonId, p_original_url: originalUrl, p_result_url: resultUrl, p_caption: caption,
       });

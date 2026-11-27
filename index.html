@@ -1083,6 +1083,19 @@ footer{ padding-block: 2.5rem 6rem; }
 .tryon-note img{ width:56px; height:56px; object-fit:cover; object-position:center top; border-radius: var(--radius); flex:none; }
 .tryon-note button{ margin-left:auto; background:none; border:0; color: var(--ink-soft); text-decoration: underline; cursor:pointer; font: inherit; }
 .tryon-note.hidden{ display:none; }
+.tryon-privacy{ margin-top:.6rem; font-weight:600; color: var(--brass-text); font-size: var(--fs-small); }
+.tryon-colors{ display:grid; grid-template-columns: repeat(4, 1fr); gap:.5rem; margin-bottom:1.25rem; }
+@media (min-width: 520px){ .tryon-colors{ grid-template-columns: repeat(7, 1fr); } }
+.tryon-colors button{
+  display:flex; flex-direction:column; align-items:center; gap:.35rem; padding:.55rem .2rem; cursor:pointer;
+  background: var(--surface-hi); border:1px solid var(--line); border-radius: var(--radius); color: var(--ink);
+  font-family: var(--font-body); font-size:.7rem; font-weight:600; line-height:1.15; text-align:center;
+}
+.tryon-colors button[aria-pressed="true"]{ border-color: var(--brass); box-shadow: 0 0 0 2px var(--brass); }
+.tryon-colors .sw{ display:block; width:1.9rem; height:1.9rem; border-radius:50%; border:1px solid rgba(255,255,255,.25); }
+.tryon-colors .sw-natural{ background: conic-gradient(#16120f, #6b4a30, #98724a, #3b2a1e, #16120f); }
+.tryon-look-ph{ width:100%; aspect-ratio:1; display:grid; place-items:center; background: color-mix(in srgb, var(--brass) 10%, var(--surface-hi)); color: var(--brass); }
+.tryon-look-ph svg{ width:44%; height:44%; }
 </style>
 </head>
 <body>
@@ -1132,16 +1145,110 @@ footer{ padding-block: 2.5rem 6rem; }
           <span id="statusText">Saat bilgisi yükleniyor…</span>
         </span>
         <div class="hero-cta">
-          <a class="btn btn-primary" href="#randevu">
-            Randevu Al
+          <a class="btn btn-primary" href="#sacini-dene">
+            Protez Saçlı Halini Gör
           </a>
-          <a class="btn btn-ghost" href="#sacini-dene">Saçlı Halini Gör</a>
+          <a class="btn btn-ghost" href="#randevu">Randevu Al</a>
           <a class="btn btn-ghost" href="tel:+905451166205">Hemen Ara — 0545 116 62 05</a>
         </div>
         <div class="hero-meta">
           <span><strong>Konum</strong><br>Erzincan Merkez</span>
           <span><strong>Çalışma Saatleri</strong><br>08:30 – 20:30</span>
           <span><strong>Uzmanlık</strong><br>Matematiksel Kesim · Protez Saç</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="stripe-band" aria-hidden="true"></div>
+
+  <section id="sacini-dene">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Yapay Zeka · Protez Saç</span>
+        <h2>Protez Saçlı Halini Gör</h2>
+        <p>Mevcut fotoğrafını yükle, saç modelini ve rengini seç. Yapay zeka yüzünü hiç değiştirmeden sana protez saç yapılmış halini gösterir. Beğendiysen randevunu hemen al.</p>
+        <p class="tryon-privacy">🔒 Fotoğrafın sadece sende ve BOSS ekibinde kalır. Kimseyle paylaşılmaz.</p>
+      </div>
+
+      <div class="tryon-card reveal" id="tryonCard">
+        <!-- 1) Fotoğraf -->
+        <div class="tryon-panel" id="tryonPanel1">
+          <label class="tryon-drop" id="tryonDrop" for="tryonFile">
+            <img class="tryon-drop-preview" id="tryonPreview" alt="Seçtiğiniz fotoğraf önizlemesi">
+            <span class="tryon-drop-change">Değiştirmek için dokunun</span>
+            <span class="tryon-drop-empty" style="display:flex; flex-direction:column; align-items:center; gap:.6rem;">
+              <svg class="tryon-drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8a2 2 0 0 1 2-2h1.5l1.2-1.8A1 1 0 0 1 9.5 4h5a1 1 0 0 1 .8.2L16.5 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.5"/></svg>
+              <strong>Fotoğrafını Yükle</strong>
+              <small>Şu anki halinle bir fotoğraf çek ya da galeriden seç</small>
+            </span>
+            <input type="file" id="tryonFile" accept="image/*">
+          </label>
+          <ul class="tryon-tips">
+            <li>Yüzün ve başın karşıdan, net ve iyi ışıkta görünsün (kafanın üstü de kadrajda olsun)</li>
+            <li>Şapka, gözlük ve saç aksesuarı olmasın</li>
+            <li>Tek kişi olsun, fotoğraf bulanık olmasın</li>
+          </ul>
+          <label class="tryon-consent">
+            <input type="checkbox" id="tryonConsent">
+            <span>Fotoğrafımın yapay zeka ile saç simülasyonu üretilmesi ve seçersem randevumla birlikte BOSS Erkek Kuaförü ekibine iletilmesi için işlenmesini kabul ediyorum (KVKK kapsamında; talep halinde silinir).</span>
+          </label>
+          <div class="booking-msg" id="tryonMsg"></div>
+          <button type="button" class="btn btn-primary" id="tryonContinue" disabled>Devam Et</button>
+        </div>
+
+        <!-- 2) Stüdyo -->
+        <div class="tryon-panel" id="tryonPanel2" hidden>
+          <div class="tryon-studio">
+            <div>
+              <div class="tryon-cmp" id="tryonCmp">
+                <img id="tryonBefore" alt="Fotoğrafınız (önce)">
+                <img class="tryon-after" id="tryonAfter" alt="Yapay zeka ile saçlı hali (sonra)">
+                <span class="tryon-tag l">ÖNCE</span><span class="tryon-tag r">SONRA</span>
+                <div class="tryon-handle" aria-hidden="true"></div>
+                <input type="range" class="tryon-range" id="tryonRange" min="0" max="100" value="50" aria-label="Önce / sonra karşılaştırma">
+                <div class="tryon-loader" id="tryonLoader" role="status" aria-live="polite">
+                  <div class="tryon-spinner" aria-hidden="true"></div>
+                  <strong id="tryonLoaderText">Hazırlanıyor…</strong>
+                  <small>Bu işlem 20–40 saniye sürebilir</small>
+                </div>
+              </div>
+              <p class="tryon-disclaimer">Görseller yapay zeka ile üretilmiş tahmini simülasyondur; gerçek sonuç saç yapınıza ve uygulamaya göre ustamızla birlikte netleşir.</p>
+            </div>
+
+            <div>
+              <span class="tryon-label">1 · Model seç</span>
+              <div class="tryon-looks" id="tryonLooks"><p class="booking-empty">Modeller yükleniyor…</p></div>
+
+              <span class="tryon-label">2 · Saç rengi</span>
+              <div class="tryon-colors" id="tryonColors" role="group" aria-label="Saç rengi">
+                <button type="button" data-color="natural" data-label="Doğal" aria-pressed="true"><i class="sw sw-natural"></i><span>Doğal</span></button>
+                <button type="button" data-color="black" data-label="Siyah" aria-pressed="false"><i class="sw" style="background:#16120f"></i><span>Siyah</span></button>
+                <button type="button" data-color="dark_brown" data-label="Koyu Kahve" aria-pressed="false"><i class="sw" style="background:#3b2a1e"></i><span>Koyu Kahve</span></button>
+                <button type="button" data-color="chestnut" data-label="Kumral" aria-pressed="false"><i class="sw" style="background:#6b4a30"></i><span>Kumral</span></button>
+                <button type="button" data-color="light_brown" data-label="Açık Kumral" aria-pressed="false"><i class="sw" style="background:#98724a"></i><span>Açık Kumral</span></button>
+                <button type="button" data-color="blonde" data-label="Sarı" aria-pressed="false"><i class="sw" style="background:#c7a46a"></i><span>Sarı</span></button>
+                <button type="button" data-color="gray" data-label="Gri" aria-pressed="false"><i class="sw" style="background:linear-gradient(135deg,#8b8b8b 50%,#3c3c3c 50%)"></i><span>Gri</span></button>
+              </div>
+
+              <span class="tryon-label">3 · Saç yoğunluğu</span>
+              <div class="tryon-seg" id="tryonDensity">
+                <button type="button" data-density="light" aria-pressed="false">Hafif</button>
+                <button type="button" data-density="natural" aria-pressed="true">Doğal</button>
+                <button type="button" data-density="full" aria-pressed="false">Dolgun</button>
+              </div>
+
+              <div class="booking-msg" id="tryonStageMsg"></div>
+              <div class="tryon-history" id="tryonHistory" aria-label="Denediğiniz görünümler"></div>
+
+              <div class="tryon-actions">
+                <button type="button" class="btn btn-primary" id="tryonGenerate" disabled>Protez Saçlı Halimi Göster</button>
+                <button type="button" class="btn btn-primary" id="tryonWant" hidden>Bu Saç Modelini İstiyorum</button>
+                <button type="button" class="btn btn-ghost btn-sm" id="tryonSave" hidden>Görseli Telefonuma Kaydet</button>
+                <button type="button" class="btn btn-ghost btn-sm" id="tryonChange">Fotoğrafı Değiştir</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1252,87 +1359,6 @@ footer{ padding-block: 2.5rem 6rem; }
     </div>
     <!-- NOT: Premium Tıraş bilinçli olarak burada listelenmiyor — sadece
          Toprak Kanık randevu akışında (berber seçince) görünür. -->
-  </section>
-
-  <div class="stripe-band" aria-hidden="true"></div>
-
-  <section id="sacini-dene">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="eyebrow">Yapay Zeka · Protez Saç</span>
-        <h2>Saçlı Halini Gör</h2>
-        <p>Fotoğrafını yükle, bir model seç. Yapay zeka yüzünü değiştirmeden sadece saç bölgesini oluşturur. Beğendiğin görünümü seç, randevunu hemen al.</p>
-      </div>
-
-      <div class="tryon-card reveal" id="tryonCard">
-        <!-- 1) Fotoğraf -->
-        <div class="tryon-panel" id="tryonPanel1">
-          <label class="tryon-drop" id="tryonDrop" for="tryonFile">
-            <img class="tryon-drop-preview" id="tryonPreview" alt="Seçtiğiniz fotoğraf önizlemesi">
-            <span class="tryon-drop-change">Değiştirmek için dokunun</span>
-            <span class="tryon-drop-empty" style="display:flex; flex-direction:column; align-items:center; gap:.6rem;">
-              <svg class="tryon-drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8a2 2 0 0 1 2-2h1.5l1.2-1.8A1 1 0 0 1 9.5 4h5a1 1 0 0 1 .8.2L16.5 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.5"/></svg>
-              <strong>Fotoğrafını Yükle</strong>
-              <small>Dokunup selfie çek ya da galeriden seç</small>
-            </span>
-            <input type="file" id="tryonFile" accept="image/*">
-          </label>
-          <ul class="tryon-tips">
-            <li>Yüzün karşıdan, net ve iyi ışıkta görünsün</li>
-            <li>Şapka, gözlük ve saç aksesuarı olmasın</li>
-            <li>Tek kişi olsun, fotoğraf bulanık olmasın</li>
-          </ul>
-          <label class="tryon-consent">
-            <input type="checkbox" id="tryonConsent">
-            <span>Fotoğrafımın yapay zeka ile saç simülasyonu üretilmesi ve seçersem randevumla birlikte BOSS Erkek Kuaförü ekibine iletilmesi için işlenmesini kabul ediyorum (KVKK kapsamında; talep halinde silinir).</span>
-          </label>
-          <div class="booking-msg" id="tryonMsg"></div>
-          <button type="button" class="btn btn-primary" id="tryonContinue" disabled>Devam Et</button>
-        </div>
-
-        <!-- 2) Stüdyo -->
-        <div class="tryon-panel" id="tryonPanel2" hidden>
-          <div class="tryon-studio">
-            <div>
-              <div class="tryon-cmp" id="tryonCmp">
-                <img id="tryonBefore" alt="Fotoğrafınız (önce)">
-                <img class="tryon-after" id="tryonAfter" alt="Yapay zeka ile saçlı hali (sonra)">
-                <span class="tryon-tag l">ÖNCE</span><span class="tryon-tag r">SONRA</span>
-                <div class="tryon-handle" aria-hidden="true"></div>
-                <input type="range" class="tryon-range" id="tryonRange" min="0" max="100" value="50" aria-label="Önce / sonra karşılaştırma">
-                <div class="tryon-loader" id="tryonLoader" role="status" aria-live="polite">
-                  <div class="tryon-spinner" aria-hidden="true"></div>
-                  <strong id="tryonLoaderText">Hazırlanıyor…</strong>
-                  <small>Bu işlem 20–40 saniye sürebilir</small>
-                </div>
-              </div>
-              <p class="tryon-disclaimer">Görseller yapay zeka ile üretilmiş tahmini simülasyondur; gerçek sonuç saç yapınıza ve uygulamaya göre ustamızla birlikte netleşir.</p>
-            </div>
-
-            <div>
-              <span class="tryon-label">1 · Model seç</span>
-              <div class="tryon-looks" id="tryonLooks"><p class="booking-empty">Modeller yükleniyor…</p></div>
-
-              <span class="tryon-label">2 · Saç yoğunluğu</span>
-              <div class="tryon-seg" id="tryonDensity">
-                <button type="button" data-density="light" aria-pressed="false">Hafif</button>
-                <button type="button" data-density="natural" aria-pressed="true">Doğal</button>
-                <button type="button" data-density="full" aria-pressed="false">Dolgun</button>
-              </div>
-
-              <div class="booking-msg" id="tryonStageMsg"></div>
-              <div class="tryon-history" id="tryonHistory" aria-label="Denediğiniz görünümler"></div>
-
-              <div class="tryon-actions">
-                <button type="button" class="btn btn-primary" id="tryonGenerate" disabled>Saçımı Göster</button>
-                <button type="button" class="btn btn-ghost" id="tryonWant" hidden>Bu Görünümü İstiyorum</button>
-                <button type="button" class="btn btn-ghost btn-sm" id="tryonChange">Fotoğrafı Değiştir</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </section>
 
   <div class="stripe-band" aria-hidden="true"></div>
@@ -1826,7 +1852,7 @@ footer{ padding-block: 2.5rem 6rem; }
   // state'i if(els.steps){...} icinde blok-kapsamli oldugu icin, ikisi
   // arasinda kopru gorevi gorsun diye modul kapsaminda tutuluyor.
   let selectedStyleAnalysisId = null;
-  // "Saçını Dene" — { tryonId, resultId, lookName, densityLabel, imageUrl }
+  // "Saçını Dene" — { tryonId, resultId, lookName, densityLabel, colorLabel, imageUrl }
   let selectedTryon = null;
 
   const els = {
@@ -2305,18 +2331,19 @@ footer{ padding-block: 2.5rem 6rem; }
     const ENDPOINT = 'https://nvwyaxtwamjsghnxlwol.supabase.co/functions/v1/hair-tryon';
     const API_KEY = 'sb_publishable_rQoEvjFL3jOueZrPUIS9eA_1KpIS0aJ';
     const DENSITY_LABELS = { light: 'Hafif', natural: 'Doğal', full: 'Dolgun' };
+    const COLOR_LABELS = { natural: 'Doğal', black: 'Siyah', dark_brown: 'Koyu Kahve', chestnut: 'Kumral', light_brown: 'Açık Kumral', blonde: 'Sarı', gray: 'Gri' };
     const $ = (id) => document.getElementById(id);
     const e = {
       p1: $('tryonPanel1'), p2: $('tryonPanel2'), drop: $('tryonDrop'), file: $('tryonFile'),
       preview: $('tryonPreview'), consent: $('tryonConsent'), msg: $('tryonMsg'), cont: $('tryonContinue'),
       cmp: $('tryonCmp'), before: $('tryonBefore'), after: $('tryonAfter'), range: $('tryonRange'),
-      loader: $('tryonLoader'), loaderText: $('tryonLoaderText'), looks: $('tryonLooks'), density: $('tryonDensity'),
+      loader: $('tryonLoader'), loaderText: $('tryonLoaderText'), looks: $('tryonLooks'), density: $('tryonDensity'), colors: $('tryonColors'), save: $('tryonSave'),
       stageMsg: $('tryonStageMsg'), history: $('tryonHistory'), gen: $('tryonGenerate'), want: $('tryonWant'),
       change: $('tryonChange'), note: $('tryonBookingNote'), noteImg: $('tryonNoteImg'),
       noteText: $('tryonNoteText'), noteRemove: $('tryonNoteRemove'),
     };
 
-    const st = { file: null, tryonId: null, looks: [], lookId: null, density: 'natural', results: [], currentId: null, busy: false };
+    const st = { file: null, tryonId: null, looks: [], lookId: null, density: 'natural', color: 'natural', results: [], currentId: null, busy: false };
 
     function say(el, text, kind){
       if(!text){ el.innerHTML = ''; return; }
@@ -2381,6 +2408,7 @@ footer{ padding-block: 2.5rem 6rem; }
         const b = document.createElement('button');
         b.type = 'button'; b.className = 'tryon-look'; b.dataset.id = l.id; b.setAttribute('aria-pressed', 'false');
         if(l.thumb_url){ const im = document.createElement('img'); im.src = l.thumb_url; im.alt = ''; im.loading = 'lazy'; b.appendChild(im); }
+        else { const ph = document.createElement('div'); ph.className = 'tryon-look-ph'; ph.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 14c0-5 3-9 7-9s7 4 7 9"/><path d="M5 14c1.5-1 3-3 4-5 1.5 2 3.500 3 10 3"/><path d="M6 14v3a6 6 0 0 0 12 0v-3"/></svg>'; b.appendChild(ph); }
         const sp = document.createElement('span'); sp.textContent = l.name; b.appendChild(sp);
         b.addEventListener('click', () => {
           st.lookId = l.id;
@@ -2411,7 +2439,7 @@ footer{ padding-block: 2.5rem 6rem; }
         e.before.src = URL.createObjectURL(blob);
         e.cmp.classList.remove('has-after');
         e.history.innerHTML = '';
-        e.want.hidden = true;
+        e.want.hidden = true; e.save.hidden = true;
         e.p1.hidden = true; e.p2.hidden = false;
         say(e.msg, '');
         if(!st.looks.length) await loadLooks();
@@ -2440,6 +2468,13 @@ footer{ padding-block: 2.5rem 6rem; }
       e.density.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
     });
 
+    e.colors.addEventListener('click', (ev) => {
+      const b = ev.target.closest('button[data-color]');
+      if(!b) return;
+      st.color = b.dataset.color;
+      e.colors.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    });
+
     // ---- karşılaştırma kaydırıcısı ----
     e.range.addEventListener('input', () => e.cmp.style.setProperty('--pos', e.range.value + '%'));
 
@@ -2448,14 +2483,14 @@ footer{ padding-block: 2.5rem 6rem; }
       e.after.src = r.url;
       e.cmp.classList.add('has-after');
       e.range.value = 50; e.cmp.style.setProperty('--pos', '50%');
-      e.want.hidden = false;
-      e.want.textContent = (selectedTryon && selectedTryon.resultId === r.id) ? 'Seçildi ✓ — Randevuya Git' : 'Bu Görünümü İstiyorum';
+      e.want.hidden = false; e.save.hidden = false;
+      e.want.textContent = (selectedTryon && selectedTryon.resultId === r.id) ? 'Seçildi ✓ — Randevuya Git' : 'Bu Saç Modelini İstiyorum';
       e.history.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.id === r.id)));
     }
 
     function addHistory(r){
       const b = document.createElement('button');
-      b.type = 'button'; b.dataset.id = r.id; b.title = `${r.look_name} · ${DENSITY_LABELS[r.density] || ''}`;
+      b.type = 'button'; b.dataset.id = r.id; b.title = `${r.look_name} · ${COLOR_LABELS[r.hair_color] || ''} · ${DENSITY_LABELS[r.density] || ''}`;
       b.setAttribute('aria-pressed', 'false');
       const im = document.createElement('img'); im.src = r.url; im.alt = r.look_name; b.appendChild(im);
       b.addEventListener('click', () => showResult(r));
@@ -2475,14 +2510,14 @@ footer{ padding-block: 2.5rem 6rem; }
         const res = await fetch(ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'apikey': API_KEY },
-          body: JSON.stringify({ action: 'generate', tryon_id: st.tryonId, look_id: st.lookId, density: st.density }),
+          body: JSON.stringify({ action: 'generate', tryon_id: st.tryonId, look_id: st.lookId, density: st.density, hair_color: st.color }),
         });
         const out = await res.json().catch(() => null);
         if(!out || out.status !== 'completed'){
           say(e.stageMsg, out?.message || 'Görsel oluşturulamadı, lütfen tekrar deneyin ya da WhatsApp\'tan yazın.', 'error');
           return;
         }
-        const r = { id: out.result_id, look_id: out.look_id, look_name: out.look_name, density: out.density, url: out.image_url };
+        const r = { id: out.result_id, look_id: out.look_id, look_name: out.look_name, density: out.density, hair_color: out.hair_color, url: out.image_url };
         st.results.push(r);
         addHistory(r);
         showResult(r);
@@ -2500,13 +2535,13 @@ footer{ padding-block: 2.5rem 6rem; }
     function updateBookingNote(){
       if(!selectedTryon){ e.note.classList.add('hidden'); return; }
       e.noteImg.src = selectedTryon.imageUrl;
-      e.noteText.textContent = `Seçtiğiniz görünüm: ${selectedTryon.lookName} (${selectedTryon.densityLabel}). Randevunuzla birlikte ustamıza iletilecek.`;
+      e.noteText.textContent = `Seçtiğiniz saç: ${selectedTryon.lookName} · ${selectedTryon.colorLabel} renk · ${selectedTryon.densityLabel} yoğunluk. Randevunuzla birlikte ustamıza iletilecek.`;
       e.note.classList.remove('hidden');
     }
     e.noteRemove.addEventListener('click', () => { selectedTryon = null; updateBookingNote(); showResultButtonState(); });
     function showResultButtonState(){
       const r = st.results.find((x) => x.id === st.currentId);
-      if(r) e.want.textContent = (selectedTryon && selectedTryon.resultId === r.id) ? 'Seçildi ✓ — Randevuya Git' : 'Bu Görünümü İstiyorum';
+      if(r) e.want.textContent = (selectedTryon && selectedTryon.resultId === r.id) ? 'Seçildi ✓ — Randevuya Git' : 'Bu Saç Modelini İstiyorum';
     }
 
     e.want.addEventListener('click', async () => {
@@ -2519,10 +2554,23 @@ footer{ padding-block: 2.5rem 6rem; }
         say(e.stageMsg, 'Seçiminiz kaydedilemedi, lütfen tekrar deneyin.', 'error');
         return;
       }
-      selectedTryon = { tryonId: st.tryonId, resultId: r.id, lookName: r.look_name, densityLabel: DENSITY_LABELS[r.density] || '', imageUrl: r.url };
+      selectedTryon = { tryonId: st.tryonId, resultId: r.id, lookName: r.look_name, densityLabel: DENSITY_LABELS[r.density] || '', colorLabel: COLOR_LABELS[r.hair_color] || 'Doğal', imageUrl: r.url };
       updateBookingNote();
       showResultButtonState();
       document.getElementById('randevu')?.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    e.save.addEventListener('click', async () => {
+      const r = st.results.find((x) => x.id === st.currentId);
+      if(!r) return;
+      try {
+        const blob = await (await fetch(r.url)).blob();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `boss-sacli-halim-${r.look_name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.jpg`;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      } catch(err){ window.open(r.url, '_blank', 'noopener'); }
     });
 
     loadLooks();
@@ -2669,7 +2717,7 @@ footer{ padding-block: 2.5rem 6rem; }
         <div class="info-row"><div><div class="info-label">Ad Soyad</div><div class="info-value">${els.custName.value.trim()}</div></div></div>
         <div class="info-row"><div><div class="info-label">Telefon</div><div class="info-value tabular">${els.custPhone.value.trim()}</div></div></div>
         ${els.custEmail.value.trim() ? `<div class="info-row"><div><div class="info-label">E-posta</div><div class="info-value">${els.custEmail.value.trim()}</div></div></div>` : ''}
-        ${selectedTryon ? `<div class="info-row"><div><div class="info-label">Seçilen Saç Modeli</div><div class="info-value">${selectedTryon.lookName.replace(/[<>&"]/g, '')} · ${selectedTryon.densityLabel}</div></div></div>` : ''}
+        ${selectedTryon ? `<div class="info-row"><div><div class="info-label">Seçilen Saç Modeli</div><div class="info-value">${selectedTryon.lookName.replace(/[<>&"]/g, '')} · ${selectedTryon.colorLabel} · ${selectedTryon.densityLabel}</div></div></div>` : ''}
       `;
     }
 
@@ -2711,7 +2759,7 @@ footer{ padding-block: 2.5rem 6rem; }
       // Seçilen AI saç modeli, ustanın Telegram bildiriminde ve admin panelinde
       // görünsün diye nota da yazılır.
       const noteParts = [els.custNotes.value.trim()];
-      if(selectedTryon) noteParts.push(`💇 Seçilen saç modeli: ${selectedTryon.lookName} (${selectedTryon.densityLabel})`);
+      if(selectedTryon) noteParts.push(`💇 Seçilen saç modeli: ${selectedTryon.lookName}, ${selectedTryon.colorLabel} renk, ${selectedTryon.densityLabel} yoğunluk`);
       const finalNotes = noteParts.filter(Boolean).join(' · ') || null;
       const { data, error } = await supabase.rpc('book_appointment', {
         p_barber_id: state.barber.id,
